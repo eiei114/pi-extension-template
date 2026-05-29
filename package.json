@@ -63,6 +63,6 @@
     "@earendil-works/pi-coding-agent": "latest",
     "@earendil-works/pi-tui": "latest",
     "typebox": "latest",
-    "typescript": "^5.8.3"
+    "typescript": "^6.0.3"
   }
 }
