@@ -34,3 +34,16 @@ Replace it with your real workflow instructions.
 ## Theme
 
 `themes/example-theme.json` is a placeholder theme. Replace it or remove `themes/` if your package does not ship themes.
+
+## Typed custom tool
+
+`extensions/index.ts` registers:
+
+- `/template-info`
+- `template_greet` custom tool
+
+The tool demonstrates:
+
+- TypeBox object parameters
+- a string enum schema via `StringEnum`
+- shared logic imported from `lib/greeting.ts`

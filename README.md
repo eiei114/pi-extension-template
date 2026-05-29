@@ -8,11 +8,11 @@
 [![Pi package](https://img.shields.io/badge/pi-package-purple.svg)](https://pi.dev/packages)
 [![Trusted Publishing](https://img.shields.io/badge/npm-Trusted%20Publishing-blue.svg)](docs/release.md)
 
-> One-line pitch for this Pi package.
+> One-line pitch for this TypeScript-first Pi package.
 
 ## What this is
 
-Briefly explain what this package adds to Pi and who should use it.
+Briefly explain what this TypeScript-first package adds to Pi and who should use it.
 
 ## Features
 
@@ -50,7 +50,8 @@ Then run:
 
 | Path | Purpose |
 |---|---|
-| `extensions/` | Pi TypeScript extensions |
+| `extensions/` | Pi TypeScript extension entrypoints (`*.ts` and `index.ts`) |
+| `lib/` | Shared TypeScript helpers |
 | `skills/` | Agent Skills |
 | `prompts/` | Prompt templates |
 | `themes/` | Pi themes |
@@ -80,6 +81,7 @@ After creating a repository from this template, follow [`docs/template-checklist
 
 More docs:
 
+- [`docs/typescript.md`](docs/typescript.md)
 - [`docs/examples.md`](docs/examples.md)
 - [`docs/github-template.md`](docs/github-template.md)
 - [`docs/repository-settings.md`](docs/repository-settings.md)

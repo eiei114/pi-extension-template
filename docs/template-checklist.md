@@ -45,6 +45,17 @@
 - [ ] 不要なら `themes/` を消す
 - [ ] サンプル名を実名に変える
 
+## TypeScript
+
+- [ ] `extensions/index.ts` を実装に合わせて更新する
+- [ ] `extensions/hello.ts` が不要なら削除する
+- [ ] 共通ロジックを `lib/` に切り出す
+- [ ] `strict: true` を維持する
+- [ ] custom tool parameters は TypeBox schema で定義する
+- [ ] string choices は `StringEnum` helper を使う
+- [ ] runtime dependency は `dependencies`、Pi提供packageは `peerDependencies` に置く
+- [ ] `package.json.files` に公開対象だけを入れる
+
 ## GitHub Template repo
 
 - [ ] `gh repo create --template OWNER/pi-extension-template` で作成できることを確認する
