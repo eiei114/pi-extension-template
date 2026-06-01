@@ -2,6 +2,16 @@
 
 このテンプレートから新しい Pi 拡張OSSを作った後に埋めること。
 
+## Recommended flow
+
+- [ ] Vault project notes を `4_Project/<ProjectName>/` に作る
+- [ ] `CONTEXT.md` / `README.md` / `ROADMAP.md` / `Docs/` / `Issues/` / `Progress/` を揃える
+- [ ] PRD を `4_Project/<ProjectName>/Docs/` に置く
+- [ ] approved issue を `4_Project/<ProjectName>/Issues/` に切る
+- [ ] OSS repo 側で実装する
+- [ ] `npm run ci` / `npm test` / `npm pack --dry-run` を通す
+- [ ] release 後に Vault へ learnings / release notes を戻す
+
 ## Repository
 
 - [ ] GitHub repository name を決める
@@ -66,8 +76,11 @@
 - [ ] `npm run ci` が通る
 - [ ] `npm pack --dry-run` が通る
 - [ ] npm Trusted Publishing を設定する
+- [ ] npm Trusted Publisher の workflow filename が `publish.yml` になっている
 - [ ] `NPM_TOKEN` を使っていないことを確認する
-- [ ] tag publish が動くことを初回リリースで確認する
+- [ ] `auto-release.yml` が `main` の version bump から tag/release を作ることを確認する
+- [ ] `publish.yml` が `workflow_dispatch` と `release.published` に対応していることを確認する
+- [ ] 初回リリースで npm provenance が付いているか確認する
 
 ## npm page
 
@@ -82,4 +95,4 @@
 - [ ] `pi install git:github.com/OWNER/REPO` を試す
 - [ ] `pi -e .` を試す
 - [ ] README のコマンドがコピペで動くか確認する
-- [ ] CHANGELOG に `0.1.0` を書く
+- [ ] CHANGELOG に `0.1.0` を書く\n

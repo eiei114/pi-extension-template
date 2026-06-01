@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
-          node-version: "22"
-          cache: npm
+          node-version: 24
+          package-manager-cache: false
       - run: npm ci
-      - run: npm run ci
+      - run: npm run ci\n

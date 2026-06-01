@@ -1,5 +1,23 @@
 # GitHub Template Repository
 
+## Recommended development flow
+
+After generating a repo from this template, use this default order:
+
+```txt
+Vault notes -> PRD -> Issues -> implement -> ci/check -> release -> save learnings
+```
+
+In practice:
+
+1. Create Vault notes under `4_Project/<ProjectName>/`.
+2. Add `CONTEXT.md`, `README.md`, `ROADMAP.md`, `Docs/`, `Issues/`, and `Progress/`.
+3. Write the PRD in `Docs/`.
+4. Split approved issue files into `Issues/`.
+5. Implement in the OSS repo created from this template.
+6. Run CI and package checks before release.
+7. Save release notes and follow-up decisions back to the Vault project.
+
 Enable template mode on the source repository:
 
 ```txt
@@ -40,4 +58,4 @@ After creation:
 cd new-pi-extension
 npm install
 npm run ci
-```
+```\n
