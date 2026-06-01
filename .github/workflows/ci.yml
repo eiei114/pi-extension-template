@@ -15,4 +15,4 @@ jobs:
           node-version: 24
           package-manager-cache: false
       - run: npm ci
-      - run: npm run ci\n
+      - run: npm run ci
