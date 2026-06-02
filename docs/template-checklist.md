@@ -82,6 +82,15 @@
 - [ ] `publish.yml` が `workflow_dispatch` と `release.published` に対応していることを確認する
 - [ ] 初回リリースで npm provenance が付いているか確認する
 
+### Workflow handoff guard
+
+- [ ] `.github/workflows/auto-release.yml` exists before first release
+- [ ] `.github/workflows/publish.yml` exists before first release
+- [ ] `auto-release.yml` has `permissions: actions: write` and `contents: write`
+- [ ] `publish.yml` has `permissions: id-token: write` for npm Trusted Publishing
+- [ ] Auto release explicitly hands off to publish: `gh workflow run publish.yml --ref "$TAG" -f ref="$TAG"`, or `publish.yml` has an equivalent `workflow_run` / `repository_dispatch` trigger
+- [ ] Do not rely only on `push.tags` or `release.published` when the tag/release is created by `GITHUB_TOKEN`; that can leave npm unchanged after merge
+
 ## npm page
 
 - [ ] npm package URL を README に追加する
