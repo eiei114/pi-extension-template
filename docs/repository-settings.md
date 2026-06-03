@@ -1,5 +1,7 @@
 # Repository Settings
 
+> **Template bootstrap doc.** Use while configuring GitHub About, topics, and branch protection after generating a repo. Delete this file or merge needed settings into README once setup is done, unless it still adds maintainer value.
+
 Use this file after creating a real repository from the template.
 
 ## GitHub About

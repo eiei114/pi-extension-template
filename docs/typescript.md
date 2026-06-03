@@ -1,5 +1,7 @@
 # TypeScript Guide
 
+> **Template bootstrap doc.** Use while learning this template's TypeScript layout and dependency rules. Delete this file or summarize the policies you keep in README Development once setup is done, unless it still adds maintainer value.
+
 This is a TypeScript-first Pi package template.
 
 ## Layout

@@ -82,7 +82,7 @@ Then run:
 | `skills/` | Agent Skills |
 | `prompts/` | Prompt templates |
 | `themes/` | Pi themes |
-| `docs/` | Release and setup docs |
+| `docs/` | Optional supporting docs (usage, examples, release, ADRs) |
 
 ## Development
 
@@ -121,16 +121,30 @@ git push
 
 See [`docs/release.md`](docs/release.md) for setup details.
 
-## Template checklist
+## Docs
 
-After creating a repository from this template, follow [`docs/template-checklist.md`](docs/template-checklist.md).
+`docs/` is optional supporting documentation, not a fixed six-file set. README stays the GitHub/npm entrypoint; add `docs/*.md` only when they help users or maintainers.
 
-More docs:
+After creating a repository from this template:
 
-- [`docs/typescript.md`](docs/typescript.md)
-- [`docs/examples.md`](docs/examples.md)
-- [`docs/github-template.md`](docs/github-template.md)
-- [`docs/repository-settings.md`](docs/repository-settings.md)
+1. Follow [`docs/template-checklist.md`](docs/template-checklist.md) for setup.
+2. Run the **post-generation docs cleanup** in that checklist: delete or merge template bootstrap docs that no longer add project value.
+
+Useful docs to keep when they add value:
+
+- [`docs/examples.md`](docs/examples.md) — examples for extensions, skills, prompts, and themes
+- [`docs/release.md`](docs/release.md) — Trusted Publishing details (README Release summarizes the flow)
+- `docs/usage.md` — create when usage does not fit in README
+
+Optional maintainer guidance (not a public-user navigation target in mature repos):
+
+- [`docs/template-checklist.md`](docs/template-checklist.md)
+
+Template bootstrap docs to delete or merge after setup unless they still teach something project-specific:
+
+- `docs/github-template.md`
+- `docs/repository-settings.md`
+- `docs/typescript.md`
 
 ## Security
 
