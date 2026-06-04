@@ -1,5 +1,7 @@
 # GitHub Template Repository
 
+> **Template bootstrap doc.** Use while setting up a new repo from this template. Delete this file or merge any project-specific steps into README / Vault notes once setup is done, unless it still adds maintainer value.
+
 ## Recommended development flow
 
 After generating a repo from this template, use this default order:
