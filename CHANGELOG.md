@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
+## [0.1.3] - 2026-06-19
+
+### Changed
+
+- CONTRIBUTING now reminds maintainers to run `npm pack --dry-run` after changing which `docs/` files ship in the package.
+
+### Fixed
+
+- README License section no longer ends with a literal `\n` placeholder.
+
 ## [0.1.2] - 2026-06-04
 
 ### Changed

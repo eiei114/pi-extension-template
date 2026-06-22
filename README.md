@@ -160,4 +160,4 @@ For vulnerability reporting, see [`SECURITY.md`](SECURITY.md).
 
 ## License
 
-MIT\n
+MIT

@@ -23,6 +23,7 @@ Before opening a PR:
 - Update docs when behavior changes
 - Update `CHANGELOG.md` for user-facing changes
 - Keep package contents small and intentional
+- Run `npm pack --dry-run` when you add, remove, or rename `docs/` files so `package.json` `files` matches what you ship
 
 ## Release
 
