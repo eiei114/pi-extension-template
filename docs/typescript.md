@@ -45,12 +45,12 @@ const parameters = Type.Object({
 
 ## String enums
 
-For string choices, use the local `StringEnum` helper from `lib/schema.ts`.
+For string choices, use `StringEnum` from `@earendil-works/pi-ai`.
 
 ```ts
-import { StringEnum } from "../lib/schema.ts";
+import { StringEnum } from "@earendil-works/pi-ai";
 
-const mode = StringEnum(["short", "friendly"], {
+const mode = StringEnum(["short", "friendly"] as const, {
   description: "Greeting style",
 });
 ```
