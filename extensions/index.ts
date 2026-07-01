@@ -1,4 +1,4 @@
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { defineTool, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { formatGreeting } from "../lib/greeting.ts";
 import { StringEnum } from "@earendil-works/pi-ai";
@@ -10,6 +10,25 @@ const greetParameters = Type.Object({
   }),
 });
 
+const templateGreet = defineTool({
+  name: "template_greet",
+  label: "Template Greet",
+  description: "Return a typed greeting from the Pi package template",
+  promptSnippet: "template_greet: return a typed greeting from the template package",
+  promptGuidelines: [
+    "Use template_greet only when testing this template package or greeting the user.",
+  ],
+  parameters: greetParameters,
+  async execute(_toolCallId, params) {
+    const message = formatGreeting(params);
+
+    return {
+      content: [{ type: "text", text: message }],
+      details: { message, mode: params.mode },
+    };
+  },
+});
+
 export default function (pi: ExtensionAPI) {
   pi.registerCommand("template-info", {
     description: "Show TypeScript template information",
@@ -18,22 +37,5 @@ export default function (pi: ExtensionAPI) {
     },
   });
 
-  pi.registerTool({
-    name: "template_greet",
-    label: "Template Greet",
-    description: "Return a typed greeting from the Pi package template",
-    promptSnippet: "template_greet: return a typed greeting from the template package",
-    promptGuidelines: [
-      "Use template_greet only when testing this template package or greeting the user.",
-    ],
-    parameters: greetParameters,
-    async execute(_toolCallId, params) {
-      const message = formatGreeting(params);
-
-      return {
-        content: [{ type: "text", text: message }],
-        details: { message, mode: params.mode },
-      };
-    },
-  });
+  pi.registerTool(templateGreet);
 }
