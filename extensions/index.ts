@@ -1,11 +1,11 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { formatGreeting } from "../lib/greeting.ts";
-import { StringEnum } from "../lib/schema.ts";
+import { StringEnum } from "@earendil-works/pi-ai";
 
 const greetParameters = Type.Object({
   name: Type.String({ description: "Name to greet" }),
-  mode: StringEnum(["short", "friendly"], {
+  mode: StringEnum(["short", "friendly"] as const, {
     description: "Greeting style. Prefer short unless the user asks for more warmth.",
   }),
 });
