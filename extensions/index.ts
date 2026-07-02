@@ -1,4 +1,5 @@
 import { defineTool, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Text } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
 import { formatGreeting } from "../lib/greeting.ts";
 import { StringEnum } from "@earendil-works/pi-ai";
@@ -26,6 +27,26 @@ const templateGreet = defineTool({
       content: [{ type: "text", text: message }],
       details: { message, mode: params.mode },
     };
+  },
+
+  renderCall(args, theme, _context) {
+    let text = theme.fg("toolTitle", theme.bold("template_greet "));
+    text += theme.fg("accent", `name=${args.name}`);
+    text += theme.fg("dim", ` mode=${args.mode}`);
+    return new Text(text, 0, 0);
+  },
+
+  renderResult(result, { expanded }, theme, _context) {
+    const details = result.details as { message: string; mode: string } | undefined;
+    const content = result.content[0];
+    const message =
+      details?.message ?? (content?.type === "text" ? content.text : "");
+
+    let text = theme.fg("success", "→ ") + theme.fg("text", message);
+    if (expanded && details) {
+      text += `\n${theme.fg("dim", `mode: ${details.mode}`)}`;
+    }
+    return new Text(text, 0, 0);
   },
 });
 
