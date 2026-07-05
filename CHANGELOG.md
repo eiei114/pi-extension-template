@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add Buy Me a Coffee sponsor button to README and native GitHub funding link via `.github/FUNDING.yml`.
+- Update devDependencies @earendil-works/pi-ai and @earendil-works/pi-tui to 0.80.3.
 
 All notable changes to this project will be documented in this file.
 
