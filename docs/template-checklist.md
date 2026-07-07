@@ -121,6 +121,7 @@
 - [ ] `.github/workflows/publish.yml` exists before first release
 - [ ] `auto-release.yml` has `permissions: actions: write` and `contents: write`
 - [ ] `publish.yml` has `permissions: id-token: write` for npm Trusted Publishing
+- [ ] `publish.yml` skips already-published versions via the public npm registry API and logs `publish intentionally skipped` on reruns
 - [ ] Auto release explicitly hands off to publish: `gh workflow run publish.yml --ref "$TAG" -f ref="$TAG"`, or `publish.yml` has an equivalent `workflow_run` / `repository_dispatch` trigger
 - [ ] Do not rely only on `push.tags` or `release.published` when the tag/release is created by `GITHUB_TOKEN`; that can leave npm unchanged after merge
 

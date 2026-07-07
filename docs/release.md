@@ -26,6 +26,20 @@ Publishing also runs when a GitHub Release is published, and can be run manually
 
 The workflow skips `name@version` if that exact package version already exists on npm.
 
+### Rerun and manual dispatch
+
+`publish.yml` checks the public npm registry API before `setup-node` configures OIDC auth. That keeps already-published reruns green:
+
+- `workflow_dispatch` on an existing tag/ref
+- duplicate `publish.yml` runs for the same `v<version>`
+- auto-release handoff retries after a successful publish
+
+When the version already exists, the job still runs validation but logs `publish intentionally skipped` and exits without calling `npm publish`.
+
+Do not use `npm view` after `setup-node` with `registry-url` for this guard. Trusted Publishing OIDC can make authenticated metadata reads look like `404`, which leads to duplicate `E403` publish failures.
+
+See also `docs/publish-rerun-rollout.md` for downstream rollout notes.
+
 ## Workflow guardrail
 
 Do not ship a new Pi OSS package or version bump with only `package.json` changes.

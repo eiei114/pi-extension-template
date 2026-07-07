@@ -2,12 +2,20 @@
 
 ## Unreleased
 
-- Add Buy Me a Coffee sponsor button to README and native GitHub funding link via `.github/FUNDING.yml`.
-- Update devDependencies @earendil-works/pi-ai and @earendil-works/pi-tui to 0.80.3.
-
 All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
+
+## [0.1.5] - 2026-07-07
+
+### Fixed
+
+- Publish workflow now checks the public npm registry API before OIDC setup so reruns for already-published versions exit green and skip `npm publish` intentionally.
+
+### Changed
+
+- Release docs and template checklist now describe canonical publish handoff and rerun behavior.
+- Added `docs/publish-rerun-rollout.md` for downstream template consumers.
 
 ## [0.1.3] - 2026-06-19
 
@@ -41,4 +49,3 @@ This project follows semantic versioning.
 - Initial Pi package template.
 - Example extension, Agent Skill, prompt, and theme.
 - CI and npm Trusted Publishing workflow.
-

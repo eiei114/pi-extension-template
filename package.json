@@ -1,6 +1,6 @@
 {
   "name": "pi-extension-template",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Template for building Pi packages with extensions, Agent Skills, prompts, and themes.",
   "type": "module",
   "license": "MIT",
