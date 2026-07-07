@@ -59,6 +59,9 @@
     "@earendil-works/pi-tui": "*",
     "typebox": "*"
   },
+  "overrides": {
+    "protobufjs": ">=7.6.3"
+  },
   "devDependencies": {
     "@earendil-works/pi-ai": "latest",
     "@earendil-works/pi-coding-agent": "latest",
