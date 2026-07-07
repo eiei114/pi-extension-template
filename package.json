@@ -60,7 +60,7 @@
     "typebox": "*"
   },
   "overrides": {
-    "protobufjs": ">=7.6.3"
+    "protobufjs": ">=7.6.3 <8.0.0"
   },
   "devDependencies": {
     "@earendil-works/pi-ai": "latest",
