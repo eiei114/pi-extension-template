@@ -29,3 +29,10 @@ test("template includes npm release workflow handoff", () => {
   assert.match(publishWorkflow, /workflow_dispatch:/);
   assert.match(publishWorkflow, /npm publish --access public/);
 });
+
+test("publish workflow targets create-pi-extension monorepo package", () => {
+  assert.match(publishWorkflow, /packages\/create-pi-extension/);
+  assert.match(publishWorkflow, /sync:template/);
+  assert.match(publishWorkflow, /create-pi-extension/);
+  assert.match(publishWorkflow, /template\//);
+});

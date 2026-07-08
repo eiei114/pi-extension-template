@@ -11,6 +11,11 @@ This project follows semantic versioning.
 - `create-pi-extension` interactive scaffold CLI with template copy, placeholder replacement, `git init`, and `bun install`.
 - CLI smoke tests for unscoped and scoped package names.
 
+### Changed
+
+- Publish workflow now targets `create-pi-extension` in the monorepo: runs `sync:template`, validates CI, and publishes only `packages/create-pi-extension` through npm Trusted Publishing.
+- Release docs updated for `create-pi-extension` Trusted Publisher settings and monorepo publish path.
+
 ### Fixed
 
 - CI now runs `sync:template` before CLI scaffold tests so the gitignored template bundle exists in clean checkouts.
