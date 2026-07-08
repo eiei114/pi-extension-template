@@ -2,12 +2,18 @@
 
 ## Unreleased
 
+All notable changes to this project will be documented in this file.
+
+This project follows semantic versioning.
+
 ### Added
 
 - `create-pi-extension` interactive scaffold CLI with template copy, placeholder replacement, `git init`, and `bun install`.
 - CLI smoke tests for unscoped and scoped package names.
 
-This project follows semantic versioning.
+### Fixed
+
+- CI now runs `sync:template` before CLI scaffold tests so the gitignored template bundle exists in clean checkouts.
 
 ## [0.1.6] - 2026-07-08
 
