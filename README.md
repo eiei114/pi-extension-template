@@ -133,6 +133,7 @@ After creating a repository from this template:
 
 Useful docs to keep when they add value:
 
+- [`docs/template-sync.md`](docs/template-sync.md) — regenerate `packages/create-pi-extension/template/` before CLI publish
 - [`docs/examples.md`](docs/examples.md) — examples for extensions, skills, prompts, and themes
 - [`docs/release.md`](docs/release.md) — Trusted Publishing details (README Release summarizes the flow)
 - `docs/usage.md` — create when usage does not fit in README
