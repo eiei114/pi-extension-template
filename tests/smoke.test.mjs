@@ -36,3 +36,11 @@ test("publish workflow targets create-pi-extension monorepo package", () => {
   assert.match(publishWorkflow, /create-pi-extension/);
   assert.match(publishWorkflow, /template\//);
 });
+
+test("ci pack check targets create-pi-extension workspace", () => {
+  assert.equal(
+    packageJson.scripts.ci,
+    "npm run typecheck && npm run sync:template && npm test && npm run pack:check && node --test tests/sync-template.test.mjs",
+  );
+  assert.equal(packageJson.scripts["pack:check"], "npm pack --dry-run --workspace create-pi-extension");
+});
