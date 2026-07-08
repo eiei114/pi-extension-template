@@ -4,6 +4,7 @@ import { cwd } from "node:process";
 import { collectProjectOptions } from "./prompts.mjs";
 import {
   assertOutputDirectoryAvailable,
+  cleanupBootstrapDocs,
   resolveOutputDirectory,
   runPostSetup,
   scaffoldProject,
@@ -63,8 +64,20 @@ async function main() {
   });
 
   scaffoldProject(outputDir, options);
+  const removedDocs = cleanupBootstrapDocs(outputDir);
   runPostSetup(outputDir);
 
+  if (removedDocs.length > 0) {
+    console.log("\nRemoved bootstrap docs:");
+    for (const doc of removedDocs) {
+      console.log(`  - ${doc}`);
+    }
+  }
+
+  console.log("\nNext steps:");
+  console.log("  1. Edit extensions/");
+  console.log("  2. Run bun run ci");
+  console.log("  3. Try pi -e .");
   console.log(`\nCreated ${packageName} at ${outputDir}`);
 }
 
