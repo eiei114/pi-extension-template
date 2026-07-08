@@ -5,6 +5,7 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
+  rmSync,
   statSync,
   writeFileSync,
 } from "node:fs";
@@ -16,6 +17,12 @@ const PACKAGE_ROOT = fileURLToPath(new URL("..", import.meta.url));
 const TEMPLATE_ROOT = join(PACKAGE_ROOT, "template");
 
 const PLACEHOLDER_PATTERN = /PACKAGE_NAME|PACKAGE_DISPLAY_NAME|OWNER\/REPO|YOUR_NAME|\bOWNER\b|\bREPO\b/;
+
+export const BOOTSTRAP_DOC_PATHS = [
+  "docs/github-template.md",
+  "docs/repository-settings.md",
+  "docs/typescript.md",
+];
 
 export function resolveTemplateRoot() {
   if (!existsSync(TEMPLATE_ROOT)) {
@@ -151,6 +158,18 @@ export function scaffoldProject(outputDir, options) {
 
   patchPackageJson(join(outputDir, "package.json"), options);
   assertNoPlaceholders(outputDir);
+}
+
+export function cleanupBootstrapDocs(outputDir) {
+  const removed = [];
+  for (const relativePath of BOOTSTRAP_DOC_PATHS) {
+    const filePath = join(outputDir, relativePath);
+    if (existsSync(filePath)) {
+      rmSync(filePath);
+      removed.push(relativePath);
+    }
+  }
+  return removed;
 }
 
 export function runPostSetup(outputDir) {

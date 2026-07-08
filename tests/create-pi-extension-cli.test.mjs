@@ -5,12 +5,22 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { BOOTSTRAP_DOC_PATHS, scaffoldProject } from "../packages/create-pi-extension/src/scaffold.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const CLI = join(ROOT, "packages", "create-pi-extension", "src", "cli.mjs");
 
+const FIXTURE_OPTIONS = {
+  packageName: "fixture-pi-package",
+  displayName: "fixture-pi-package",
+  description: "Fixture Pi package",
+  author: "Fixture Author",
+  ownerRepo: "fixture-owner/fixture-pi-package",
+  licenseYear: 2026,
+};
+
 function runCli(packageName, cwd, env = {}) {
-  execFileSync(process.execPath, [CLI, packageName], {
+  return execFileSync(process.execPath, [CLI, packageName], {
     cwd,
     env: {
       ...process.env,
@@ -19,7 +29,7 @@ function runCli(packageName, cwd, env = {}) {
       CREATE_PI_EXTENSION_AUTHOR: "Test Author",
       ...env,
     },
-    stdio: "pipe",
+    encoding: "utf8",
   });
 }
 
@@ -59,6 +69,84 @@ test("create-pi-extension scaffolds a scoped package without extra scope prompt"
 
     assert.equal(packageJson.name, "@my-scope/my-pi-tool");
     assert.ok(existsSync(join(tempRoot, "my-pi-tool", "package.json")));
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("create-pi-extension removes bootstrap docs and prints next steps", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-"));
+  try {
+    const output = runCli("cleanup-pkg", tempRoot);
+    const projectDir = join(tempRoot, "cleanup-pkg");
+
+    for (const relativePath of BOOTSTRAP_DOC_PATHS) {
+      assert.equal(existsSync(join(projectDir, relativePath)), false, `expected ${relativePath} to be removed`);
+    }
+
+    assert.match(output, /Removed bootstrap docs:/);
+    assert.match(output, /docs\/github-template\.md/);
+    assert.match(output, /docs\/repository-settings\.md/);
+    assert.match(output, /docs\/typescript\.md/);
+    assert.match(output, /Edit extensions\//);
+    assert.match(output, /Run bun run ci/);
+    assert.match(output, /Try pi -e \./);
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("create-pi-extension replaces template placeholders in scaffold output", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-"));
+  const projectDir = join(tempRoot, "fixture-pi-package");
+  try {
+    scaffoldProject(projectDir, FIXTURE_OPTIONS);
+
+    const packageJson = JSON.parse(readFileSync(join(projectDir, "package.json"), "utf8"));
+    const readme = readFileSync(join(projectDir, "README.md"), "utf8");
+    const license = readFileSync(join(projectDir, "LICENSE"), "utf8");
+
+    assert.deepEqual(
+      {
+        name: packageJson.name,
+        author: packageJson.author,
+        description: packageJson.description,
+        repository: packageJson.repository,
+        homepage: packageJson.homepage,
+        bugs: packageJson.bugs,
+      },
+      {
+        name: "fixture-pi-package",
+        author: "Fixture Author",
+        description: "Fixture Pi package",
+        repository: {
+          type: "git",
+          url: "https://github.com/fixture-owner/fixture-pi-package",
+        },
+        homepage: "https://github.com/fixture-owner/fixture-pi-package#readme",
+        bugs: {
+          url: "https://github.com/fixture-owner/fixture-pi-package/issues",
+        },
+      },
+    );
+    assert.match(readme, /fixture-pi-package/);
+    assert.doesNotMatch(readme, /PACKAGE_NAME|OWNER\/REPO|YOUR_NAME|\bOWNER\b|\bREPO\b/);
+    assert.match(license, /Copyright \(c\) 2026 Fixture Author/);
+    assert.doesNotMatch(license, /YOUR_NAME/);
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("create-pi-extension scaffold output excludes monorepo paths from bundled template", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-"));
+  const projectDir = join(tempRoot, "fixture-pi-package");
+  try {
+    scaffoldProject(projectDir, FIXTURE_OPTIONS);
+
+    assert.equal(existsSync(join(projectDir, "packages")), false);
+    assert.equal(existsSync(join(projectDir, ".git")), false);
+    assert.equal(existsSync(join(projectDir, "node_modules")), false);
   } finally {
     rmSync(tempRoot, { recursive: true, force: true });
   }
