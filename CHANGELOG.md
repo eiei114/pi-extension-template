@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-All notable changes to this project will be documented in this file.
+### Added
+
+- `create-pi-extension` interactive scaffold CLI with template copy, placeholder replacement, `git init`, and `bun install`.
+- CLI smoke tests for unscoped and scoped package names.
 
 This project follows semantic versioning.
 
