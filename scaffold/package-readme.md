@@ -133,7 +133,6 @@ After creating a repository from this template:
 
 Useful docs to keep when they add value:
 
-- [`docs/template-sync.md`](docs/template-sync.md) — regenerate `packages/create-pi-extension/template/` before CLI publish
 - [`docs/examples.md`](docs/examples.md) — examples for extensions, skills, prompts, and themes
 - [`docs/release.md`](docs/release.md) — Trusted Publishing details (README Release summarizes the flow)
 - `docs/usage.md` — create when usage does not fit in README
@@ -146,6 +145,7 @@ Template bootstrap docs to delete or merge after setup unless they still teach s
 
 - `docs/github-template.md`
 - `docs/repository-settings.md`
+- `docs/template-sync.md` — monorepo maintainer notes for refreshing the bundled CLI template
 - `docs/typescript.md`
 
 ## Security

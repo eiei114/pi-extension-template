@@ -43,7 +43,7 @@ Then follow the **Secondary path** section in [`docs/template-checklist.md`](doc
 
 ## Legacy npm package
 
-Do **not** use `pi install npm:pi-extension-template` as the main onboarding path. That legacy install flow is being deprecated in favor of **`create-pi-extension`** (final deprecation wording ships with issue 09). After you publish your own extension, install it with `pi install npm:YOUR_PACKAGE_NAME` as documented in that project's README.
+Do **not** use `pi install npm:pi-extension-template` as the main onboarding path. Use **`create-pi-extension`** to scaffold a new project instead. The legacy root-package install will be removed from npm in a future release. After you publish your own extension, install it with `pi install npm:YOUR_PACKAGE_NAME` as documented in that project's README.
 
 ## Repository layout
 
