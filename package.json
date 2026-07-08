@@ -35,8 +35,8 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/greeting.test.mjs tests/smoke.test.mjs",
-    "ci": "npm run typecheck && npm test && npm run pack:check && npm run sync:template:check",
+    "test": "node --test tests/greeting.test.mjs tests/smoke.test.mjs tests/create-pi-extension-cli.test.mjs",
+    "ci": "npm run typecheck && npm run sync:template && npm test && npm run pack:check && node --test tests/sync-template.test.mjs",
     "pack:check": "npm pack --dry-run",
     "sync:template": "bun run scripts/sync-template.ts",
     "sync:template:check": "bun run scripts/sync-template.ts && node --test tests/sync-template.test.mjs"
