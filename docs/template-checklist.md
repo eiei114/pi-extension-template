@@ -107,8 +107,8 @@
 ## CI / Release
 
 - [ ] `npm run ci` が通る
-- [ ] `npm pack --dry-run` が通る
-- [ ] npm Trusted Publishing を設定する
+- [ ] `packages/create-pi-extension` で `npm pack --dry-run` が通り、`template/` が含まれる
+- [ ] npm Trusted Publishing を **`create-pi-extension`** に設定する（ルート `pi-extension-template` は公開しない）
 - [ ] npm Trusted Publisher の workflow filename が `publish.yml` になっている
 - [ ] `NPM_TOKEN` を使っていないことを確認する
 - [ ] `auto-release.yml` が `main` の version bump から tag/release を作ることを確認する
