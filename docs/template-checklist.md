@@ -23,16 +23,16 @@
   - [ ] `typescript`
 - [ ] GitHub Settingsで `Template repository` をONにする
 - [ ] Repository URL を `package.json` に反映する
-- [ ] README の `OWNER/REPO` を実リポジトリに置き換える
+- [ ] 生成先 repo では `package.json` / README 内の `OWNER/REPO` を実リポジトリに置き換える
 
 ## Package metadata
 
 - [ ] `package.json` の `name` を変更する
 - [ ] `description` を書く
 - [ ] `author` を入れる
-- [ ] `repository.url` を埋める
-- [ ] `bugs.url` を埋める
-- [ ] `homepage` を埋める
+- [ ] `repository.url` を `https://github.com/OWNER/REPO` 形式の実リポジトリ URL に置き換える
+- [ ] `bugs.url` を `https://github.com/OWNER/REPO/issues` 形式に置き換える
+- [ ] `homepage` を `https://github.com/OWNER/REPO#readme` 形式に置き換える
 - [ ] `keywords` を見直す
 - [ ] `LICENSE` の年・名前を更新する
 
