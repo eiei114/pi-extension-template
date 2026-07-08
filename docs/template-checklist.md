@@ -2,6 +2,28 @@
 
 このテンプレートから新しい Pi 拡張OSSを作った後に埋めること。
 
+## Start paths
+
+### Primary path: `create-pi-extension` (recommended)
+
+CLI が placeholder 置換・bootstrap doc 削除・`git init` / `bun install` を担当する。手動作業は最小限でよい。
+
+- [ ] `bunx create-pi-extension <package-name>` でプロジェクトを生成する
+- [ ] CLI の next steps（`npm run ci` など）に従う
+- [ ] 下記 **Recommended flow** の Vault / PRD / Issues フローに入る
+- [ ] README / feature list / quick start をプロジェクト向けに更新する
+- [ ] `npm run ci` と `npm pack --dry-run` を通す
+
+Primary path では **Repository** / **README placeholders** / **GitHub Template repo** の多くは CLI が済ませる。残タスクはカスタマイズと release 準備。
+
+### Secondary path: GitHub Template
+
+`gh repo create --template eiei114/pi-extension-template --clone` で repo を作った場合は、以下の manual checklist を順に埋める。
+
+- [ ] `gh repo create OWNER/my-pi-package --template eiei114/pi-extension-template --clone` で作成する
+- [ ] 下記 **Repository** 以降のセクションをすべて確認する
+- [ ] post-generation cleanup（bootstrap docs 削除）を実施する
+
 ## Recommended flow
 
 - [ ] Vault project notes を `4_Project/<ProjectName>/` に作る

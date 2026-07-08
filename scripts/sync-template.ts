@@ -19,10 +19,17 @@ const TOP_LEVEL_EXCLUSIONS = new Set([
   ".git",
   "bun.lock",
   "bun.lockb",
+  "scaffold",
 ]);
+
+const PACKAGE_README = join(ROOT, "scaffold", "package-readme.md");
 
 function shouldExclude(relativePath: string): boolean {
   const normalized = relativePath.replaceAll("\\", "/");
+  if (normalized === "README.md") {
+    return true;
+  }
+
   const topLevel = normalized.split("/")[0];
   if (TOP_LEVEL_EXCLUSIONS.has(topLevel)) {
     return true;
@@ -85,6 +92,10 @@ function main(): void {
   mkdirSync(TEMPLATE_DEST, { recursive: true });
 
   copyDirectory(ROOT, TEMPLATE_DEST);
+  if (!existsSync(PACKAGE_README)) {
+    throw new Error(`Missing scaffold README source: ${relative(ROOT, PACKAGE_README)}`);
+  }
+  copyFileSync(PACKAGE_README, join(TEMPLATE_DEST, "README.md"));
   stripMonorepoFields(join(TEMPLATE_DEST, "package.json"));
   syncRepositoryVersion();
 

@@ -10,11 +10,15 @@ This project follows semantic versioning.
 
 - `create-pi-extension` interactive scaffold CLI with template copy, placeholder replacement, `git init`, and `bun install`.
 - CLI smoke tests for unscoped and scoped package names.
+- Repository README documents Primary (`bunx create-pi-extension`) and Secondary (`gh repo create --template`) start paths.
+- `docs/template-checklist.md` splits Primary vs Secondary setup flows.
+- CI `pack:check` validates the published `create-pi-extension` tarball (includes bundled `template/`).
 
 ### Changed
 
 - Publish workflow now targets `create-pi-extension` in the monorepo: runs `sync:template`, validates CI, and publishes only `packages/create-pi-extension` through npm Trusted Publishing.
 - Release docs updated for `create-pi-extension` Trusted Publisher settings and monorepo publish path.
+- Template sync copies `scaffold/package-readme.md` into the bundled template instead of the repository README.
 
 ### Fixed
 

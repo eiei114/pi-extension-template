@@ -36,3 +36,8 @@ test("publish workflow targets create-pi-extension monorepo package", () => {
   assert.match(publishWorkflow, /create-pi-extension/);
   assert.match(publishWorkflow, /template\//);
 });
+
+test("ci pack check targets create-pi-extension workspace", () => {
+  assert.match(packageJson.scripts.ci, /sync:template/);
+  assert.match(packageJson.scripts["pack:check"], /create-pi-extension/);
+});

@@ -37,6 +37,14 @@ test("synced template package.json is standalone", () => {
   assert.equal(templatePackageJson.name, "pi-extension-template");
 });
 
+test("synced template README comes from scaffold source", () => {
+  const scaffoldReadme = readFileSync(join(ROOT, "scaffold", "package-readme.md"), "utf8");
+  const templateReadme = readFileSync(templatePath("README.md"), "utf8");
+  assert.equal(templateReadme, scaffoldReadme);
+  assert.match(templateReadme, /PACKAGE_DISPLAY_NAME/);
+  assert.doesNotMatch(templateReadme, /bunx create-pi-extension/);
+});
+
 test("create-pi-extension version matches repository version", () => {
   const rootPackageJson = JSON.parse(readFileSync(ROOT_PACKAGE_JSON, "utf8"));
   const cliPackageJson = JSON.parse(readFileSync(CLI_PACKAGE_JSON, "utf8"));
