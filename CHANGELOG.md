@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
+## [0.1.6] - 2026-07-08
+
+### Fixed
+
+- Package metadata now points to the real GitHub repository so npm Trusted Publishing provenance validation can match this repo.
+
 ## [0.1.5] - 2026-07-07
 
 ### Fixed
