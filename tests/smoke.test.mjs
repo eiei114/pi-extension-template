@@ -5,6 +5,27 @@ import test from "node:test";
 const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 const autoReleaseWorkflow = await readFile(new URL("../.github/workflows/auto-release.yml", import.meta.url), "utf8");
 const publishWorkflow = await readFile(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8");
+const exampleTheme = JSON.parse(await readFile(new URL("../themes/example-theme.json", import.meta.url), "utf8"));
+const examplePrompt = await readFile(new URL("../prompts/example.md", import.meta.url), "utf8");
+
+// Every Pi theme must define all 51 required color tokens.
+// See https://pi.dev docs: "There are no optional colors."
+const REQUIRED_THEME_COLOR_TOKENS = [
+  // Core UI (11)
+  "accent", "border", "borderAccent", "borderMuted", "success", "error", "warning", "muted", "dim", "text", "thinkingText",
+  // Backgrounds & Content (11)
+  "selectedBg", "userMessageBg", "userMessageText", "customMessageBg", "customMessageText", "customMessageLabel", "toolPendingBg", "toolSuccessBg", "toolErrorBg", "toolTitle", "toolOutput",
+  // Markdown (10)
+  "mdHeading", "mdLink", "mdLinkUrl", "mdCode", "mdCodeBlock", "mdCodeBlockBorder", "mdQuote", "mdQuoteBorder", "mdHr", "mdListBullet",
+  // Tool Diffs (3)
+  "toolDiffAdded", "toolDiffRemoved", "toolDiffContext",
+  // Syntax Highlighting (9)
+  "syntaxComment", "syntaxKeyword", "syntaxFunction", "syntaxVariable", "syntaxString", "syntaxNumber", "syntaxType", "syntaxOperator", "syntaxPunctuation",
+  // Thinking Level Borders (6)
+  "thinkingOff", "thinkingMinimal", "thinkingLow", "thinkingMedium", "thinkingHigh", "thinkingXhigh",
+  // Bash Mode (1)
+  "bashMode",
+];
 
 test("package declares pi resources", () => {
   assert.deepEqual(packageJson.pi.extensions, ["./extensions"]);
@@ -43,4 +64,22 @@ test("ci pack check targets create-pi-extension workspace", () => {
     "npm run typecheck && npm run sync:template && npm test && npm run pack:check && node --test tests/sync-template.test.mjs",
   );
   assert.equal(packageJson.scripts["pack:check"], "npm pack --dry-run --workspace create-pi-extension");
+});
+
+test("example theme defines all required Pi color tokens", () => {
+  assert.equal(typeof exampleTheme.name, "string");
+  assert.ok(exampleTheme.name.trim().length > 0, "theme name is required");
+  assert.ok(!exampleTheme.name.includes("/"), "theme name must not contain /");
+  assert.ok(exampleTheme.colors && typeof exampleTheme.colors === "object", "theme colors object is required");
+
+  const present = Object.keys(exampleTheme.colors);
+  const missing = REQUIRED_THEME_COLOR_TOKENS.filter((token) => !present.includes(token));
+  assert.deepEqual(missing, [], `theme is missing required color tokens: ${missing.join(", ")}`);
+});
+
+test("example prompt template uses supported positional argument syntax", () => {
+  // Pi prompt templates support $1, $@, $ARGUMENTS, ${N:-default}, ${@:N}. They do
+  // NOT support Mustache-style {{var}} interpolation or a frontmatter `arguments` map.
+  assert.doesNotMatch(examplePrompt, /\{\{/, "prompt template must not use unsupported {{...}} interpolation");
+  assert.doesNotMatch(examplePrompt, /^arguments:/m, "prompt template must not declare an unsupported `arguments` frontmatter map");
 });

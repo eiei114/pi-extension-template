@@ -29,11 +29,16 @@ Replace it with your real workflow instructions.
 
 ## Prompt template
 
-`prompts/example.md` demonstrates a tiny prompt template with one variable.
+`prompts/example.md` demonstrates a tiny prompt template with one positional
+argument (`/example <topic>`). Pi expands templates with `$1`, `$@`, and
+`${1:-default}` — it does not support Mustache-style `{{var}}` placeholders.
 
 ## Theme
 
-`themes/example-theme.json` is a placeholder theme. Replace it or remove `themes/` if your package does not ship themes.
+`themes/example-theme.json` ships a complete, loadable dark theme as a starting
+point. Pi requires every theme to define all 51 color tokens, so edit the
+palette in place rather than trimming tokens. Remove `themes/` (and the
+`pi.themes` manifest entry) if your package does not ship themes.
 
 ## Typed custom tool
 
