@@ -7,7 +7,10 @@ const autoReleaseWorkflow = await readFile(new URL("../.github/workflows/auto-re
 const publishWorkflow = await readFile(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8");
 
 test("package declares pi resources", () => {
-  assert.deepEqual(packageJson.pi.extensions, ["./extensions"]);
+  assert.deepEqual(packageJson.pi.extensions, [
+    "./extensions/hello.ts",
+    "./extensions/index.ts",
+  ]);
   assert.deepEqual(packageJson.pi.skills, ["./skills"]);
   assert.deepEqual(packageJson.pi.prompts, ["./prompts"]);
   assert.deepEqual(packageJson.pi.themes, ["./themes"]);
