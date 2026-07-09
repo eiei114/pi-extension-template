@@ -52,10 +52,13 @@ test("create-pi-extension scaffolds an unscoped package", () => {
     assert.match(packageJson.repository.url, /github\.com\/.+\/my-pi-package$/);
     assert.equal(packageJson.scripts.ci, "npm run typecheck && npm test && npm run pack:check");
     assert.equal(packageJson.scripts["sync:template"], undefined);
+    assert.equal(packageJson.scripts["sync:template:check"], undefined);
+    assert.equal(packageJson.scripts["pack:check"], "npm pack --dry-run");
     assert.match(readme, /my-pi-package/);
     assert.doesNotMatch(readme, /PACKAGE_NAME|OWNER\/REPO|YOUR_NAME/);
     assert.match(license, /Test Author/);
     assert.doesNotMatch(license, /YOUR_NAME/);
+    assert.equal(existsSync(join(tempRoot, "my-pi-package", "package-lock.json")), false);
   } finally {
     rmSync(tempRoot, { recursive: true, force: true });
   }

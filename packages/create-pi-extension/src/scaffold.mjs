@@ -101,6 +101,7 @@ function patchPackageJson(packageJsonPath, options) {
     delete scripts["sync:template"];
     delete scripts["sync:template:check"];
     scripts.ci = "npm run typecheck && npm test && npm run pack:check";
+    scripts["pack:check"] = "npm pack --dry-run";
     packageJson.scripts = scripts;
   }
 
