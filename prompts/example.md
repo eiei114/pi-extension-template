@@ -1,9 +1,6 @@
 ---
 description: Example prompt template for this Pi package.
-arguments:
-  topic:
-    description: Topic to explain
-    required: true
+argument-hint: "<topic>"
 ---
 
-Explain {{topic}} in a concise, practical way.
+Explain ${1:-Pi} in a concise, practical way.
