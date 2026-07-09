@@ -20,7 +20,7 @@ const templateGreet = defineTool({
     "Use template_greet only when testing this template package or greeting the user.",
   ],
   parameters: greetParameters,
-  async execute(_toolCallId, params) {
+  async execute(_toolCallId, params, _signal, _onUpdate, _ctx) {
     const message = formatGreeting(params);
 
     return {

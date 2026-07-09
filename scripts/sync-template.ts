@@ -20,6 +20,7 @@ const TOP_LEVEL_EXCLUSIONS = new Set([
   "bun.lock",
   "bun.lockb",
   "scaffold",
+  "package-lock.json",
 ]);
 
 const PACKAGE_README = join(ROOT, "scaffold", "package-readme.md");
@@ -69,6 +70,10 @@ function stripMonorepoFields(packageJsonPath: string): void {
   if (packageJson.scripts && typeof packageJson.scripts === "object") {
     const scripts = { ...(packageJson.scripts as Record<string, string>) };
     delete scripts["sync:template"];
+    delete scripts["sync:template:check"];
+    // Remove monorepo-specific workspace references from CI and pack:check
+    scripts.ci = "npm run typecheck && npm test && npm run pack:check";
+    scripts["pack:check"] = "npm pack --dry-run";
     packageJson.scripts = scripts;
   }
   writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
