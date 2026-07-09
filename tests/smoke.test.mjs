@@ -28,7 +28,10 @@ const REQUIRED_THEME_COLOR_TOKENS = [
 ];
 
 test("package declares pi resources", () => {
-  assert.deepEqual(packageJson.pi.extensions, ["./extensions"]);
+  assert.deepEqual(packageJson.pi.extensions, [
+    "./extensions/hello.ts",
+    "./extensions/index.ts",
+  ]);
   assert.deepEqual(packageJson.pi.skills, ["./skills"]);
   assert.deepEqual(packageJson.pi.prompts, ["./prompts"]);
   assert.deepEqual(packageJson.pi.themes, ["./themes"]);
