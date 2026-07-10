@@ -2,6 +2,16 @@
 
 This template ships one minimal example for each Pi package resource type.
 
+Scaffold a new project to get a copy of these examples:
+
+```bash
+bunx create-pi-extension my-pi-package
+```
+
+Then try the examples in your scaffolded project with `pi -e .`.
+
+For a full walkthrough, see the [README](../README.md).
+
 ## Extension
 
 `extensions/hello.ts` registers:

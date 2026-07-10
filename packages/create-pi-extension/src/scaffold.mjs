@@ -21,6 +21,7 @@ const PLACEHOLDER_PATTERN = /PACKAGE_NAME|PACKAGE_DISPLAY_NAME|OWNER\/REPO|YOUR_
 export const BOOTSTRAP_DOC_PATHS = [
   "docs/github-template.md",
   "docs/repository-settings.md",
+  "docs/template-sync.md",
   "docs/typescript.md",
 ];
 
