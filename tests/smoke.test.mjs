@@ -7,6 +7,7 @@ const autoReleaseWorkflow = await readFile(new URL("../.github/workflows/auto-re
 const publishWorkflow = await readFile(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8");
 const exampleTheme = JSON.parse(await readFile(new URL("../themes/example-theme.json", import.meta.url), "utf8"));
 const examplePrompt = await readFile(new URL("../prompts/example.md", import.meta.url), "utf8");
+const exampleSkill = await readFile(new URL("../skills/example-skill/SKILL.md", import.meta.url), "utf8");
 
 // Every Pi theme must define all 51 required color tokens.
 // See https://pi.dev docs: "There are no optional colors."
@@ -85,4 +86,36 @@ test("example prompt template uses supported positional argument syntax", () => 
   // NOT support Mustache-style {{var}} interpolation or a frontmatter `arguments` map.
   assert.doesNotMatch(examplePrompt, /\{\{/, "prompt template must not use unsupported {{...}} interpolation");
   assert.doesNotMatch(examplePrompt, /^arguments:/m, "prompt template must not declare an unsupported `arguments` frontmatter map");
+});
+
+test("example skill follows the Agent Skills frontmatter spec", () => {
+  // Pi validates SKILL.md frontmatter against the Agent Skills standard
+  // (see docs/skills.md). `name` and `description` are required; `name` must be
+  // 1-64 lowercase a-z/0-9/hyphen chars with no leading/trailing/consecutive
+  // hyphens; skills with a missing description are not loaded. `license` is a
+  // documented optional field this template models for OSS packages.
+  const fence = exampleSkill.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  assert.ok(fence, "SKILL.md must open with --- frontmatter fences");
+
+  const frontmatter = fence[1];
+  const field = (key) => {
+    const m = frontmatter.match(new RegExp(`^${key}:\\s*(.*)$`, "m"));
+    return m ? m[1].trim().replace(/^["']|["']$/g, "") : undefined;
+  };
+
+  const name = field("name");
+  assert.ok(name, "skill must define `name`");
+  assert.match(
+    name,
+    /^[a-z0-9]+(-[a-z0-9]+)*$/,
+    "skill `name` must be lowercase a-z/0-9/hyphens with no leading/trailing/consecutive hyphens",
+  );
+  assert.ok(name.length >= 1 && name.length <= 64, "skill `name` must be 1-64 chars");
+
+  const description = field("description");
+  assert.ok(description, "skill must define `description` (skills without it are not loaded)");
+  assert.ok(description.length <= 1024, "skill `description` must be <= 1024 chars");
+
+  const license = field("license");
+  assert.ok(license, "example skill models the documented optional `license` field");
 });

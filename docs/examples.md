@@ -23,7 +23,10 @@ Then run:
 
 ## Agent Skill
 
-`skills/example-skill/SKILL.md` demonstrates a minimal Agent Skill.
+`skills/example-skill/SKILL.md` demonstrates a minimal Agent Skill. Its
+frontmatter uses the required `name` and `description` fields plus the optional
+`license` field, following the Agent Skills spec that Pi validates against
+(see `docs/skills.md`).
 
 Replace it with your real workflow instructions.
 
