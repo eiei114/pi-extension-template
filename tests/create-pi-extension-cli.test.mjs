@@ -90,6 +90,7 @@ test("create-pi-extension removes bootstrap docs and prints next steps", () => {
     assert.match(output, /Removed bootstrap docs:/);
     assert.match(output, /docs\/github-template\.md/);
     assert.match(output, /docs\/repository-settings\.md/);
+    assert.match(output, /docs\/template-sync\.md/);
     assert.match(output, /docs\/typescript\.md/);
     assert.match(output, /Edit extensions\//);
     assert.match(output, /Run bun run ci/);
