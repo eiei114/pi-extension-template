@@ -39,7 +39,7 @@ export default function (pi: ExtensionAPI) {
     return {
       systemPrompt:
         event.systemPrompt +
-        "\n\n[pi-extension-template] Event handlers in extensions/hello.ts are active. Type ?template for a quick help hint.",
+        "\n\n[pi-extension-template] Event handlers in extensions/hello.ts are active. Type ?template for help, or try /template-dashboard and /template-layout.",
     };
   });
 
@@ -52,7 +52,7 @@ export default function (pi: ExtensionAPI) {
 
     if (event.text.trim() === "?template") {
       ctx.ui.notify(
-        "Pi extension template loaded. Try /template-hello [name] or inspect console logs for tool_call / tool_result events.",
+        "Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.",
         "info",
       );
       return { action: "handled" };

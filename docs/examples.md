@@ -1,6 +1,6 @@
 # Examples
 
-This template ships one minimal example for each Pi package resource type.
+This template ships examples for each Pi package resource type and several extension API patterns.
 
 These source files (`extensions/`, `skills/`, `prompts/`, `themes/`) are the **single source of truth**:
 the `sync:template` script copies them into the `create-pi-extension` CLI bundle before publish.
@@ -40,7 +40,7 @@ Then run:
 ?template
 ```
 
-## Agent Skill
+## Agent Skill (package manifest)
 
 `skills/example-skill/SKILL.md` demonstrates a minimal Agent Skill. Its
 frontmatter uses the required `name` and `description` fields plus the optional
@@ -49,18 +49,21 @@ frontmatter uses the required `name` and `description` fields plus the optional
 
 Replace it with your real workflow instructions.
 
-## Prompt template
+## Agent Skill (extension `resources_discover`)
 
-`prompts/example.md` demonstrates a tiny prompt template with one positional
-argument (`/example <topic>`). Pi expands templates with `$1`, `$@`, and
-`${1:-default}` — it does not support Mustache-style `{{var}}` placeholders.
+`extensions/skill-bridge/` contributes `template-skill-bridge` at runtime:
 
-## Theme
+- `index.ts` returns `skillPaths` from the `resources_discover` event
+- `SKILL.md` lives beside the extension entrypoint
 
-`themes/example-theme.json` ships a complete, loadable dark theme as a starting
-point. Pi requires every theme to define all 51 color tokens, so edit the
-palette in place rather than trimming tokens. Remove `themes/` (and the
-`pi.themes` manifest entry) if your package does not ship themes.
+Commands:
+
+```txt
+/template-skill-info
+/skill:template-skill-bridge
+```
+
+Use this pattern when a skill should ship with an extension instead of the top-level `skills/` directory.
 
 ## Typed custom tool
 
@@ -76,3 +79,55 @@ The tool demonstrates:
 - `prepareArguments()` for legacy argument compatibility before schema validation
 - custom `renderCall` / `renderResult` rendering
 - shared logic imported from `lib/greeting.ts`
+- TUI `renderCall` / `renderResult` via `Text`
+
+## TUI component composition
+
+`extensions/tui-dashboard.ts` demonstrates composing `@earendil-works/pi-tui` primitives:
+
+- `Box` for padded, themed containers
+- `Loader` for spinner-style progress feedback
+- column-aligned tables built with shared `lib/format-table.ts` and rendered via `Text`
+
+Command:
+
+```txt
+/template-dashboard
+```
+
+`pi-tui` does not ship a dedicated `Table` or `Spinner` component; this example uses `Loader` for spinners and a small table formatter for aligned columns.
+
+## Multi-file extension layout
+
+`extensions/package-layout/` demonstrates a subdirectory extension with local modules:
+
+- `lib/config.ts` — typed configuration defaults
+- `lib/stats.ts` — resource metadata helpers
+- imports from package-wide `lib/format-table.ts`
+
+Commands:
+
+```txt
+/template-layout
+/template-layout-clear
+```
+
+## Prompt template
+
+`prompts/example.md` demonstrates a tiny prompt template with one positional
+argument (`/example <topic>`). Pi expands templates with `$1`, `$@`, and
+`${1:-default}` — it does not support Mustache-style `{{var}}` placeholders.
+
+## Theme
+
+`themes/example-theme.json` ships a complete, loadable dark theme as a starting
+point. Pi requires every theme to define all 51 color tokens, so edit the
+palette in place rather than trimming tokens. Remove `themes/` (and the
+`pi.themes` manifest entry) if your package does not ship themes.
+
+## Shared library helpers
+
+| File | Purpose |
+|---|---|
+| `lib/greeting.ts` | Greeting helpers used by `template_greet` |
+| `lib/format-table.ts` | Monospace table formatter for widgets and TUI examples |
