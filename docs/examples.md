@@ -2,7 +2,10 @@
 
 This template ships one minimal example for each Pi package resource type.
 
-Scaffold a new project to get a copy of these examples:
+These source files (`extensions/`, `skills/`, `prompts/`, `themes/`) are the **single source of truth**:
+the `sync:template` script copies them into the `create-pi-extension` CLI bundle before publish.
+To update what the CLI generates, edit these files and re-run `bun run sync:template`.
+Scaffold a new project to get a copy of the latest examples:
 
 ```bash
 bunx create-pi-extension my-pi-package
@@ -11,6 +14,8 @@ bunx create-pi-extension my-pi-package
 Then try the examples in your scaffolded project with `pi -e .`.
 
 For a full walkthrough, see the [README](../README.md).
+
+For maintainers, see [`docs/template-sync-checklist.md`](template-sync-checklist.md) for the sync procedure before publish.
 
 ## Extension
 
