@@ -75,6 +75,7 @@ See [`docs/release.md`](docs/release.md) for setup details.
 
 - [`docs/template-checklist.md`](docs/template-checklist.md) — Primary vs Secondary setup flows
 - [`docs/template-sync.md`](docs/template-sync.md) — refresh `packages/create-pi-extension/template/` before CLI publish
+- [`docs/template-sync-checklist.md`](docs/template-sync-checklist.md) — checklist for syncing and verifying the bundled template
 - [`docs/examples.md`](docs/examples.md) — extension, skill, prompt, and theme examples
 - [`docs/release.md`](docs/release.md) — Trusted Publishing and monorepo publish path
 
