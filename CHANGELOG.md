@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
+### Changed
+
+- Refreshed extension examples to match current Pi 0.80.x docs: lifecycle events (`tool_execution_*`, `session_shutdown`), TUI-only custom entries (`appendEntry` + `registerEntryRenderer`), `ctx.hasUI` guards, and inline `pi.registerTool()` with `prepareArguments()` compatibility shims.
+- Updated `docs/examples.md` and `docs/typescript.md` to document the refreshed patterns.
+
 ### Added
 
 - `create-pi-extension` interactive scaffold CLI with template copy, placeholder replacement, `git init`, and `bun install`.

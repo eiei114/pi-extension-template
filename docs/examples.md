@@ -17,6 +17,8 @@ For a full walkthrough, see the [README](../README.md).
 `extensions/hello.ts` registers:
 
 - `/template-hello`
+- `/template-status` (TUI-only custom entry via `appendEntry` + `registerEntryRenderer`)
+- session, turn, and tool lifecycle event handlers
 - a small session status indicator
 
 Try it with:
@@ -29,6 +31,8 @@ Then run:
 
 ```txt
 /template-hello YourName
+/template-status Package ready
+?template
 ```
 
 ## Agent Skill
@@ -62,6 +66,8 @@ palette in place rather than trimming tokens. Remove `themes/` (and the
 
 The tool demonstrates:
 
-- TypeBox object parameters
+- `pi.registerTool()` with TypeBox object parameters
 - a string enum schema via `StringEnum`
+- `prepareArguments()` for legacy argument compatibility before schema validation
+- custom `renderCall` / `renderResult` rendering
 - shared logic imported from `lib/greeting.ts`

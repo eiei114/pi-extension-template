@@ -70,6 +70,7 @@ Pi bundles core packages for extension authors. Keep Pi-provided packages as `pe
 Use `peerDependencies` for:
 
 - `@earendil-works/pi-coding-agent`
+- `@earendil-works/pi-agent-core`
 - `@earendil-works/pi-ai`
 - `@earendil-works/pi-tui`
 - `typebox`

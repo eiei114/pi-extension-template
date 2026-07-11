@@ -8,6 +8,8 @@ const publishWorkflow = await readFile(new URL("../.github/workflows/publish.yml
 const exampleTheme = JSON.parse(await readFile(new URL("../themes/example-theme.json", import.meta.url), "utf8"));
 const examplePrompt = await readFile(new URL("../prompts/example.md", import.meta.url), "utf8");
 const exampleSkill = await readFile(new URL("../skills/example-skill/SKILL.md", import.meta.url), "utf8");
+const helloExtension = await readFile(new URL("../extensions/hello.ts", import.meta.url), "utf8");
+const indexExtension = await readFile(new URL("../extensions/index.ts", import.meta.url), "utf8");
 
 // Every Pi theme must define all 51 required color tokens.
 // See https://pi.dev docs: "There are no optional colors."
@@ -118,4 +120,19 @@ test("example skill follows the Agent Skills frontmatter spec", () => {
 
   const license = field("license");
   assert.ok(license, "example skill models the documented optional `license` field");
+});
+
+test("hello extension demonstrates current lifecycle and entry renderer patterns", () => {
+  assert.match(helloExtension, /registerEntryRenderer/);
+  assert.match(helloExtension, /appendEntry/);
+  assert.match(helloExtension, /session_shutdown/);
+  assert.match(helloExtension, /tool_execution_start/);
+  assert.match(helloExtension, /tool_execution_end/);
+  assert.match(helloExtension, /ctx\.hasUI/);
+});
+
+test("index extension registers tools with prepareArguments compatibility shim", () => {
+  assert.match(indexExtension, /pi\.registerTool\(/);
+  assert.match(indexExtension, /prepareArguments/);
+  assert.doesNotMatch(indexExtension, /defineTool/);
 });
