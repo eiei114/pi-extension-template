@@ -1,6 +1,7 @@
 ---
 name: example-skill
 description: Example Agent Skill shipped by this Pi package template. Use when testing that package skill discovery works.
+license: MIT
 ---
 
 # Example Skill

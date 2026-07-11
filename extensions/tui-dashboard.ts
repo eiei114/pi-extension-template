@@ -42,7 +42,24 @@ async function showDashboard(ctx: ExtensionCommandContext): Promise<void> {
 
       loader.start();
 
-      const timer = setTimeout(() => {
+      let closed = false;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      const close = () => {
+        if (closed) {
+          return;
+        }
+        closed = true;
+        if (timer !== undefined) {
+          clearTimeout(timer);
+        }
+        loader.stop();
+        done(undefined);
+      };
+
+      timer = setTimeout(() => {
+        if (closed) {
+          return;
+        }
         loader.stop();
         box.removeChild(loader);
         box.addChild(table);
@@ -55,9 +72,7 @@ async function showDashboard(ctx: ExtensionCommandContext): Promise<void> {
         invalidate: () => container.invalidate(),
         handleInput: (data: string) => {
           if (matchesKey(data, "enter") || matchesKey(data, "escape")) {
-            clearTimeout(timer);
-            loader.stop();
-            done(undefined);
+            close();
           }
         },
       };

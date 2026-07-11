@@ -31,6 +31,12 @@ Two entrypoint styles are shown:
 
 For larger packages, keep entrypoints thin and put reusable logic in `lib/`.
 
+Both files are listed explicitly under `pi.extensions` in `package.json`. Do not
+"simplify" this to the directory shorthand `["./extensions"]`: Pi resolves a
+manifest directory entry to its `index.ts`, so `hello.ts` (and its
+`/template-hello` command) would silently fail to load. Listing each entry file
+keeps every documented entrypoint active.
+
 ## TypeBox schemas
 
 Use TypeBox schemas for custom tool parameters.
@@ -64,6 +70,7 @@ Pi bundles core packages for extension authors. Keep Pi-provided packages as `pe
 Use `peerDependencies` for:
 
 - `@earendil-works/pi-coding-agent`
+- `@earendil-works/pi-agent-core`
 - `@earendil-works/pi-ai`
 - `@earendil-works/pi-tui`
 - `typebox`

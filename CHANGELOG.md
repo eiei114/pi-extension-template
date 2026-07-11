@@ -6,6 +6,29 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
+### Changed
+
+- Refreshed extension examples to match current Pi 0.80.x docs: lifecycle events (`tool_execution_*`, `session_shutdown`), TUI-only custom entries (`appendEntry` + `registerEntryRenderer`), `ctx.hasUI` guards, and inline `pi.registerTool()` with `prepareArguments()` compatibility shims.
+- Updated `docs/examples.md` and `docs/typescript.md` to document the refreshed patterns.
+
+### Added
+
+- `create-pi-extension` interactive scaffold CLI with template copy, placeholder replacement, `git init`, and `bun install`.
+- CLI smoke tests for unscoped and scoped package names.
+- Repository README documents Primary (`bunx create-pi-extension`) and Secondary (`gh repo create --template`) start paths.
+- `docs/template-checklist.md` splits Primary vs Secondary setup flows.
+- CI `pack:check` validates the published `create-pi-extension` tarball (includes bundled `template/`).
+
+### Changed
+
+- Publish workflow now targets `create-pi-extension` in the monorepo: runs `sync:template`, validates CI, and publishes only `packages/create-pi-extension` through npm Trusted Publishing.
+- Release docs updated for `create-pi-extension` Trusted Publisher settings and monorepo publish path.
+- Template sync copies `scaffold/package-readme.md` into the bundled template instead of the repository README.
+
+### Fixed
+
+- CI now runs `sync:template` before CLI scaffold tests so the gitignored template bundle exists in clean checkouts.
+
 ## [0.1.6] - 2026-07-08
 
 ### Fixed

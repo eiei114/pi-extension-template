@@ -19,10 +19,18 @@ const TOP_LEVEL_EXCLUSIONS = new Set([
   ".git",
   "bun.lock",
   "bun.lockb",
+  "scaffold",
+  "package-lock.json",
 ]);
+
+const PACKAGE_README = join(ROOT, "scaffold", "package-readme.md");
 
 function shouldExclude(relativePath: string): boolean {
   const normalized = relativePath.replaceAll("\\", "/");
+  if (normalized === "README.md") {
+    return true;
+  }
+
   const topLevel = normalized.split("/")[0];
   if (TOP_LEVEL_EXCLUSIONS.has(topLevel)) {
     return true;
@@ -62,6 +70,10 @@ function stripMonorepoFields(packageJsonPath: string): void {
   if (packageJson.scripts && typeof packageJson.scripts === "object") {
     const scripts = { ...(packageJson.scripts as Record<string, string>) };
     delete scripts["sync:template"];
+    delete scripts["sync:template:check"];
+    // Remove monorepo-specific workspace references from CI and pack:check
+    scripts.ci = "npm run typecheck && npm test && npm run pack:check";
+    scripts["pack:check"] = "npm pack --dry-run";
     packageJson.scripts = scripts;
   }
   writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
@@ -85,6 +97,10 @@ function main(): void {
   mkdirSync(TEMPLATE_DEST, { recursive: true });
 
   copyDirectory(ROOT, TEMPLATE_DEST);
+  if (!existsSync(PACKAGE_README)) {
+    throw new Error(`Missing scaffold README source: ${relative(ROOT, PACKAGE_README)}`);
+  }
+  copyFileSync(PACKAGE_README, join(TEMPLATE_DEST, "README.md"));
   stripMonorepoFields(join(TEMPLATE_DEST, "package.json"));
   syncRepositoryVersion();
 

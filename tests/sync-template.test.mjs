@@ -28,13 +28,24 @@ test("synced template contains expected scaffold files", () => {
 test("synced template excludes monorepo paths", () => {
   assert.equal(existsSync(templatePath("packages")), false);
   assert.equal(existsSync(templatePath(".git")), false);
+  assert.equal(existsSync(templatePath("package-lock.json")), false);
 });
 
 test("synced template package.json is standalone", () => {
   const templatePackageJson = JSON.parse(readFileSync(templatePath("package.json"), "utf8"));
   assert.equal(templatePackageJson.workspaces, undefined);
   assert.equal(templatePackageJson.scripts?.["sync:template"], undefined);
+  assert.equal(templatePackageJson.scripts?.["sync:template:check"], undefined);
   assert.equal(templatePackageJson.name, "pi-extension-template");
+  assert.equal(templatePackageJson.scripts?.["pack:check"], "npm pack --dry-run");
+});
+
+test("synced template README comes from scaffold source", () => {
+  const scaffoldReadme = readFileSync(join(ROOT, "scaffold", "package-readme.md"), "utf8");
+  const templateReadme = readFileSync(templatePath("README.md"), "utf8");
+  assert.equal(templateReadme, scaffoldReadme);
+  assert.match(templateReadme, /PACKAGE_DISPLAY_NAME/);
+  assert.doesNotMatch(templateReadme, /bunx create-pi-extension/);
 });
 
 test("create-pi-extension version matches repository version", () => {
