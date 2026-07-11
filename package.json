@@ -35,7 +35,7 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/greeting.test.mjs tests/smoke.test.mjs",
+    "test": "node --test tests/greeting.test.mjs tests/format-table.test.mjs tests/smoke.test.mjs",
     "ci": "npm run typecheck && npm test && npm run pack:check && npm run sync:template:check",
     "pack:check": "npm pack --dry-run",
     "sync:template": "bun run scripts/sync-template.ts",
