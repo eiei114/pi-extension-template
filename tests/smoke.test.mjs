@@ -30,11 +30,28 @@ const REQUIRED_THEME_COLOR_TOKENS = [
   "bashMode",
 ];
 
+const EXPECTED_EXTENSION_ENTRIES = [
+  "./extensions/hello.ts",
+  "./extensions/index.ts",
+  "./extensions/tui-dashboard.ts",
+  "./extensions/skill-bridge/index.ts",
+  "./extensions/package-layout/index.ts",
+];
+
 test("package declares pi resources", () => {
-  assert.deepEqual(packageJson.pi.extensions, ["./extensions"]);
+  assert.deepEqual(packageJson.pi.extensions, EXPECTED_EXTENSION_ENTRIES);
   assert.deepEqual(packageJson.pi.skills, ["./skills"]);
   assert.deepEqual(packageJson.pi.prompts, ["./prompts"]);
   assert.deepEqual(packageJson.pi.themes, ["./themes"]);
+});
+
+test("pi.extensions lists each entrypoint explicitly (not directory shorthand)", () => {
+  assert.notDeepEqual(packageJson.pi.extensions, ["./extensions"]);
+  assert.ok(
+    packageJson.pi.extensions.includes("./extensions/hello.ts"),
+    "hello.ts must be listed so /template-hello loads",
+  );
+  assert.match(helloExtension, /registerCommand\(["']template-hello["']/);
 });
 
 test("package is discoverable as a Pi package", () => {

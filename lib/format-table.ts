@@ -25,9 +25,11 @@ export function formatTable<T>(
 ): string[] {
   const gap = options.gap ?? 2;
   const gapText = " ".repeat(gap);
-  const widths = columns.map((column) => {
+  const renderedRows = rows.map((row) => columns.map((column) => column.render(row)));
+
+  const widths = columns.map((column, colIndex) => {
     const headerWidth = column.header.length;
-    const dataWidth = rows.reduce((max, row) => Math.max(max, column.render(row).length), 0);
+    const dataWidth = renderedRows.reduce((max, row) => Math.max(max, row[colIndex]!.length), 0);
     return column.width ?? Math.max(headerWidth, dataWidth);
   });
 
@@ -38,7 +40,7 @@ export function formatTable<T>(
 
   const header = formatRow(columns.map((column) => column.header));
   const divider = formatRow(widths.map((width) => "─".repeat(width)));
-  const body = rows.map((row) => formatRow(columns.map((column) => column.render(row))));
+  const body = renderedRows.map((row) => formatRow(row));
 
   return [header, divider, ...body];
 }
