@@ -9,7 +9,7 @@ export function getPackageResourceRows(): PackageResourceRow[] {
     {
       kind: "extensions",
       path: "extensions/",
-      examples: "hello.ts, index.ts, skill-bridge/, package-layout/",
+      examples: "hello.ts, index.ts, tui-dashboard.ts, skill-bridge/, package-layout/",
     },
     {
       kind: "skills",

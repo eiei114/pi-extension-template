@@ -83,7 +83,9 @@ async function showDashboard(ctx: ExtensionCommandContext): Promise<void> {
 
 export default function (pi: ExtensionAPI) {
   pi.on("session_start", async (_event, ctx) => {
-    ctx.ui.setStatus("template-tui", "dashboard ready");
+    if (ctx.hasUI) {
+      ctx.ui.setStatus("template-tui", "dashboard ready");
+    }
   });
 
   pi.registerCommand("template-dashboard", {

@@ -51,10 +51,12 @@ export default function (pi: ExtensionAPI) {
     }
 
     if (event.text.trim() === "?template") {
-      ctx.ui.notify(
-        "Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.",
-        "info",
-      );
+      if (ctx.hasUI) {
+        ctx.ui.notify(
+          "Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.",
+          "info",
+        );
+      }
       return { action: "handled" };
     }
 

@@ -20,7 +20,7 @@
 - [ ] `packages/create-pi-extension/template/` に必要なファイルがすべて含まれている
   - [ ] `package.json`（workspaces 削除・sync:template script 削除済み）
   - [ ] `README.md`（scaffold/package-readme.md の内容）
-  - [ ] `extensions/hello.ts` と `extensions/index.ts`
+  - [ ] `extensions/hello.ts`, `extensions/index.ts`, `extensions/tui-dashboard.ts`, `extensions/skill-bridge/`, `extensions/package-layout/`
   - [ ] `skills/example-skill/SKILL.md`
   - [ ] `prompts/example.md`
   - [ ] `themes/example-theme.json`
@@ -45,6 +45,7 @@
 - [ ] `npm run typecheck` が通る
 - [ ] `npm test` がすべてのテストにパスする
   - [ ] `tests/greeting.test.mjs`
+  - [ ] `tests/format-table.test.mjs`
   - [ ] `tests/smoke.test.mjs`
   - [ ] `tests/create-pi-extension-cli.test.mjs`
 - [ ] `npm run sync:template` を再実行して `tests/sync-template.test.mjs` がパスする
