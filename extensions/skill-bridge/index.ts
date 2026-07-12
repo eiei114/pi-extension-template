@@ -12,6 +12,10 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand("template-skill-info", {
     description: "Explain how this extension contributes an Agent Skill",
     handler: async (_args, ctx) => {
+      if (!ctx.hasUI) {
+        return;
+      }
+
       ctx.ui.notify(
         "Skill bridge active. Try /skill:template-skill-bridge or ask the agent to use the template skill.",
         "info",
