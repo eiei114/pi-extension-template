@@ -12,6 +12,7 @@ const helloExtension = await readFile(new URL("../extensions/hello.ts", import.m
 const indexExtension = await readFile(new URL("../extensions/index.ts", import.meta.url), "utf8");
 const tuiDashboardExtension = await readFile(new URL("../extensions/tui-dashboard.ts", import.meta.url), "utf8");
 const packageLayoutExtension = await readFile(new URL("../extensions/package-layout/index.ts", import.meta.url), "utf8");
+const skillBridgeExtension = await readFile(new URL("../extensions/skill-bridge/index.ts", import.meta.url), "utf8");
 
 // Every Pi theme must define all 51 required color tokens.
 // See https://pi.dev docs: "There are no optional colors."
@@ -159,4 +160,12 @@ test("tui-dashboard extension guards UI calls with ctx.hasUI", () => {
 
 test("package-layout extension guards UI calls with ctx.hasUI", () => {
   assert.match(packageLayoutExtension, /ctx\.hasUI/);
+});
+
+test("hello extension guards UI calls with ctx.hasUI", () => {
+  assert.match(helloExtension, /ctx\.hasUI/);
+});
+
+test("skill-bridge extension guards UI calls with ctx.hasUI", () => {
+  assert.match(skillBridgeExtension, /ctx\.hasUI/);
 });
