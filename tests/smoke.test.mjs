@@ -162,6 +162,10 @@ test("package-layout extension guards UI calls with ctx.hasUI", () => {
   assert.match(packageLayoutExtension, /ctx\.hasUI/);
 });
 
+test("hello extension guards UI calls with ctx.hasUI", () => {
+  assert.match(helloExtension, /ctx\.hasUI/);
+});
+
 test("skill-bridge extension guards UI calls with ctx.hasUI", () => {
   assert.match(skillBridgeExtension, /ctx\.hasUI/);
 });
