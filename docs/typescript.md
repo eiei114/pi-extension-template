@@ -63,6 +63,19 @@ const mode = StringEnum(["short", "friendly"] as const, {
 
 This emits a JSON Schema `enum`, which is friendlier to model providers than a union of string literals.
 
+## TUI availability (`ctx.hasUI`)
+
+Extensions may run in headless or RPC-only sessions where `ctx.ui` is unavailable.
+Guard every `ctx.ui` call with `ctx.hasUI` (or return early from command handlers when `!ctx.hasUI`).
+
+```ts
+pi.on("session_start", async (_event, ctx) => {
+  if (ctx.hasUI) {
+    ctx.ui.setStatus("my-ext", "ready");
+  }
+});
+```
+
 ## Runtime dependencies vs peer dependencies
 
 Pi bundles core packages for extension authors. Keep Pi-provided packages as `peerDependencies` and also install them as `devDependencies` for local typechecking.

@@ -7,12 +7,18 @@ const config = defaultPackageLayoutConfig;
 
 export default function (pi: ExtensionAPI) {
   pi.on("session_start", async (_event, ctx) => {
-    ctx.ui.setStatus(config.statusLabel, config.title);
+    if (ctx.hasUI) {
+      ctx.ui.setStatus(config.statusLabel, config.title);
+    }
   });
 
   pi.registerCommand("template-layout", {
     description: "Show Pi package resource layout from a multi-file extension",
     handler: async (_args, ctx) => {
+      if (!ctx.hasUI) {
+        return;
+      }
+
       const rows = getPackageResourceRows();
       const tableLines = formatTable(rows, [
         { header: "Kind", render: (row) => row.kind },
@@ -33,6 +39,10 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand("template-layout-clear", {
     description: "Clear the package layout widget",
     handler: async (_args, ctx) => {
+      if (!ctx.hasUI) {
+        return;
+      }
+
       ctx.ui.setWidget("template-layout", undefined);
     },
   });

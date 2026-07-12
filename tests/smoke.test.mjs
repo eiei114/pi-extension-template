@@ -10,6 +10,8 @@ const examplePrompt = await readFile(new URL("../prompts/example.md", import.met
 const exampleSkill = await readFile(new URL("../skills/example-skill/SKILL.md", import.meta.url), "utf8");
 const helloExtension = await readFile(new URL("../extensions/hello.ts", import.meta.url), "utf8");
 const indexExtension = await readFile(new URL("../extensions/index.ts", import.meta.url), "utf8");
+const tuiDashboardExtension = await readFile(new URL("../extensions/tui-dashboard.ts", import.meta.url), "utf8");
+const packageLayoutExtension = await readFile(new URL("../extensions/package-layout/index.ts", import.meta.url), "utf8");
 
 // Every Pi theme must define all 51 required color tokens.
 // See https://pi.dev docs: "There are no optional colors."
@@ -149,4 +151,12 @@ test("index extension registers tools with prepareArguments compatibility shim",
   assert.match(indexExtension, /pi\.registerTool\(/);
   assert.match(indexExtension, /prepareArguments/);
   assert.doesNotMatch(indexExtension, /defineTool/);
+});
+
+test("tui-dashboard extension guards UI calls with ctx.hasUI", () => {
+  assert.match(tuiDashboardExtension, /ctx\.hasUI/);
+});
+
+test("package-layout extension guards UI calls with ctx.hasUI", () => {
+  assert.match(packageLayoutExtension, /ctx\.hasUI/);
 });
