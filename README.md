@@ -78,6 +78,7 @@ See [`docs/release.md`](docs/release.md) for setup details.
 - [`docs/template-sync-checklist.md`](docs/template-sync-checklist.md) — checklist for syncing and verifying the bundled template
 - [`docs/examples.md`](docs/examples.md) — extension, skill, prompt, and theme examples
 - [`docs/release.md`](docs/release.md) — Trusted Publishing and monorepo publish path
+- [`ROADMAP.md`](ROADMAP.md) — current status, priorities, and the maintenance seed backlog
 
 ## Security
 
