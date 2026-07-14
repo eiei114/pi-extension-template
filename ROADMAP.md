@@ -120,7 +120,7 @@ load time, not just statically.
 | TD-04 | `CHANGELOG.md` has duplicate `### Changed` headers under `Unreleased` and an undated `[0.1.0] - YYYY-MM-DD` | Low | AI | Covered by seed S-04. |
 | TD-05 | Docs still reference resolved follow-up placeholders (e.g. `05-implement-create-pi-extension-cli` / DOT-710 in `docs/template-sync.md`) | Low | AI | Covered by seed S-05. |
 | TD-06 | Bootstrap docs (`github-template.md`, `repository-settings.md`, `typescript.md`) labeled delete-or-merge but still standalone | Low | AI | Minimal-docs policy. Covered by seed S-07. |
-| TD-07 | Root `package.json` `author` is still the `YOUR_NAME` placeholder | Low | AI | Cosmetic; template source only. |
+| TD-07 | Root `package.json` `author` is still the `YOUR_NAME` placeholder | Low | AI | Cosmetic; template source only. Tracked here only — not a bounded seed (the one-field change is <30 min). |
 | TD-08 | `publish.yml` log shows `npm warn publish npm auto-corrected some errors in your package.json` | Low | AI | Re-run `npm pkg fix` in `packages/create-pi-extension/`; verify warning clears. |
 
 > **Human-owned areas** (per project policy): release/publish, npm ownership,
@@ -138,7 +138,7 @@ it through and move the detail into the relevant release section above.
 
 | Seed | Title | Estimate | Depends on | Blocks |
 |---|---|---|---|---|
-| **S-01** | Add `ROADMAP.md` to the repository | ~30 min | — | Planning |
+| **S-01** ✅ | ~~Add `ROADMAP.md` to the repository~~ — done (PR #63, DOT-858) | — | — | — |
 | **S-02** | Diagnose + clarify `publish.yml` `E404` failure | ~60 min | — | TD-01 (code side) |
 | **S-03** | Hardening: README must not advertise a 404 npm package | ~30 min | — | TD-01 (docs side) |
 | **S-04** | Reconcile `CHANGELOG.md` (dates, no dup headers) | ~45 min | — | TD-04 |
@@ -148,15 +148,14 @@ it through and move the detail into the relevant release section above.
 | **S-08** | Non-interactive flags for `create-pi-extension` CLI | ~90 min | — | v0.2.0 |
 | **S-09** | Group `@earendil-works/*` Dependabot updates | ~30 min | — | Hygiene |
 | **S-10** | Apply `npm pkg fix` and verify publish warning clears | ~30 min | — | TD-08 |
-| **S-11** | Real `author` in root `package.json` | ~15 min | — | TD-07 |
 
 ### Seed detail + acceptance criteria
 
-**S-01 — Add `ROADMAP.md`**
-- [ ] `ROADMAP.md` exists at repo root and is linked from `README.md` (Docs section).
-- [ ] `npm run ci` passes; `scaffold/package-readme.md` cross-link considered.
-- [ ] Status snapshot, priorities, and ≥3 seeds with acceptance criteria present.
-- *Status: in progress (this issue, DOT-858).*
+**S-01 — Add `ROADMAP.md`** ✅
+- [x] `ROADMAP.md` exists at repo root and is linked from `README.md` (Docs section).
+- [x] `npm run ci` passes; `scaffold/package-readme.md` cross-link considered.
+- [x] Status snapshot, priorities, and ≥3 seeds with acceptance criteria present.
+- *Status: ✅ complete — `ROADMAP.md` added and linked from `README.md` in PR #63 (DOT-858). Struck in the table above; the weekly planner should skip it.*
 
 **S-02 — Diagnose + clarify `publish.yml` `E404` failure**
 - [ ] `publish.yml` distinguishes "package name not registered on npm" from "version already published" and prints an actionable message for the former.
@@ -200,10 +199,6 @@ it through and move the detail into the relevant release section above.
 **S-10 — Apply `npm pkg fix`**
 - [ ] `npm pkg fix` is a no-op on both root and `packages/create-pi-extension` `package.json`.
 - [ ] Publish warning ("auto-corrected some errors") does not recur on the next `publish.yml` run.
-- [ ] `npm run ci` passes.
-
-**S-11 — Real `author` in root `package.json`**
-- [ ] Root `package.json` `author` is a real value (not `YOUR_NAME`); the synced **template** still uses the placeholder for consumers.
 - [ ] `npm run ci` passes.
 
 ---
