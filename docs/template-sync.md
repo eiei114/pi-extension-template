@@ -17,9 +17,12 @@ This writes to `packages/create-pi-extension/template/`. The directory is gitign
 Everything under the repository root is copied recursively, except the **sync exclusion list**:
 
 - `packages/`
+- `scaffold/`
 - `node_modules/`
 - `.git/`
+- root `package-lock.json`
 - root `bun.lock` / `bun.lockb`
+- `ROADMAP.md` (maintainer-only planning doc for this repository)
 
 ## Version sync
 

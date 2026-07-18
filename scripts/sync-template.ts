@@ -21,6 +21,8 @@ const TOP_LEVEL_EXCLUSIONS = new Set([
   "bun.lockb",
   "scaffold",
   "package-lock.json",
+  // Maintainer-only planning doc for pi-extension-template; not for scaffolded packages.
+  "ROADMAP.md",
 ]);
 
 const PACKAGE_README = join(ROOT, "scaffold", "package-readme.md");
