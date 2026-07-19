@@ -29,6 +29,7 @@ test("synced template excludes monorepo paths", () => {
   assert.equal(existsSync(templatePath("packages")), false);
   assert.equal(existsSync(templatePath(".git")), false);
   assert.equal(existsSync(templatePath("package-lock.json")), false);
+  assert.equal(existsSync(templatePath("ROADMAP.md")), false);
 });
 
 test("synced template package.json is standalone", () => {
