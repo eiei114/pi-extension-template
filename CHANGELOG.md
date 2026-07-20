@@ -11,6 +11,7 @@ This project follows semantic versioning.
 - Guard all example extension `ctx.ui` calls with `ctx.hasUI` so headless/RPC sessions stay safe (DOT-784, DOT-815).
 - Refreshed extension examples to match current Pi 0.80.x docs: lifecycle events (`tool_execution_*`, `session_shutdown`), TUI-only custom entries (`appendEntry` + `registerEntryRenderer`), `ctx.hasUI` guards, and inline `pi.registerTool()` with `prepareArguments()` compatibility shims.
 - Updated `docs/examples.md` and `docs/typescript.md` to document the refreshed patterns.
+- Bump package version to `0.1.7` for the next patch release.
 
 ### Added
 
