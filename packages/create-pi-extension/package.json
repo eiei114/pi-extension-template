@@ -1,6 +1,6 @@
 {
   "name": "create-pi-extension",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Scaffold a new Pi extension project from the pi-extension-template",
   "type": "module",
   "license": "MIT",
