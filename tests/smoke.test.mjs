@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
+
+const DOCS_DIR = fileURLToPath(new URL("../docs", import.meta.url));
+const STALE_DOC_PATTERNS = [
+  /DOT-710/,
+  /05-implement-create-pi-extension-cli/,
+  /follow-up issue `[0-9]/,
+];
 
 const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 const autoReleaseWorkflow = await readFile(new URL("../.github/workflows/auto-release.yml", import.meta.url), "utf8");
@@ -168,4 +177,20 @@ test("hello extension guards UI calls with ctx.hasUI", () => {
 
 test("skill-bridge extension guards UI calls with ctx.hasUI", () => {
   assert.match(skillBridgeExtension, /ctx\.hasUI/);
+});
+
+test("docs do not reference resolved follow-up issue placeholders", async () => {
+  const entries = await readdir(DOCS_DIR, { withFileTypes: true });
+  const markdownFiles = entries.filter((entry) => entry.isFile() && entry.name.endsWith(".md"));
+
+  for (const entry of markdownFiles) {
+    const content = await readFile(join(DOCS_DIR, entry.name), "utf8");
+    for (const pattern of STALE_DOC_PATTERNS) {
+      assert.doesNotMatch(
+        content,
+        pattern,
+        `${entry.name} must not contain stale follow-up reference ${pattern}`,
+      );
+    }
+  }
 });
