@@ -36,6 +36,7 @@ The synced `template/package.json` has monorepo-only fields removed (`workspaces
 
 `npm run ci` runs `sync:template:check`, which regenerates the template and runs `tests/sync-template.test.mjs`.
 
-## Related issues
+## See also
 
-- Scaffold CLI behavior: follow-up issue `05-implement-create-pi-extension-cli` (DOT-710).
+- [`docs/template-sync-checklist.md`](template-sync-checklist.md) — maintainer checklist before publishing the CLI
+- [`packages/create-pi-extension/`](../packages/create-pi-extension/) — scaffold CLI source

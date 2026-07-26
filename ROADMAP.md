@@ -142,7 +142,7 @@ it through and move the detail into the relevant release section above.
 | **S-02** | Diagnose + clarify `publish.yml` `E404` failure | ~60 min | — | TD-01 (code side) |
 | **S-03** | Hardening: README must not advertise a 404 npm package | ~30 min | — | TD-01 (docs side) |
 | **S-04** | Reconcile `CHANGELOG.md` (dates, no dup headers) | ~45 min | — | TD-04 |
-| **S-05** | Remove stale follow-up issue references from docs | ~30 min | — | TD-05 |
+| **S-05** ✅ | ~~Remove stale follow-up issue references from docs~~ — done (DOT-1218) | ~30 min | — | TD-05 |
 | **S-06** | Add extension entrypoint shape assertion test | ~60 min | — | TD-03 |
 | **S-07** | Consolidate bootstrap docs (minimal-docs policy) | ~75 min | — | TD-06 |
 | **S-08** | Non-interactive flags for `create-pi-extension` CLI | ~90 min | — | v0.2.0 |
@@ -172,10 +172,11 @@ it through and move the detail into the relevant release section above.
 - [ ] No duplicate `### Changed` blocks under `Unreleased`; move released items under their version headers.
 - [ ] `npm run ci` passes.
 
-**S-05 — Remove stale follow-up issue references from docs**
-- [ ] `grep -rn "DOT-710\|05-implement-create-pi-extension-cli\|follow-up issue \`[0-9]" docs/` returns nothing stale.
-- [ ] Cross-links point to current docs or are removed.
-- [ ] `npm run ci` passes.
+**S-05 — Remove stale follow-up issue references from docs** ✅
+- [x] `grep -rn "DOT-710\|05-implement-create-pi-extension-cli\|follow-up issue \`[0-9]" docs/` returns nothing stale.
+- [x] Cross-links point to current docs or are removed.
+- [x] `npm run ci` passes.
+- *Status: ✅ complete — stale DOT-710 reference removed from `docs/template-sync.md`; regression test added in `tests/smoke.test.mjs` (DOT-1218).*
 
 **S-06 — Extension entrypoint shape assertion test**
 - [ ] A test asserts each `pi.extensions` entrypoint exports the shape Pi loads (default export / named handlers as appropriate) beyond the current static string checks.
