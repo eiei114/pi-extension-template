@@ -39,4 +39,4 @@ The synced `template/package.json` has monorepo-only fields removed (`workspaces
 ## See also
 
 - [`docs/template-sync-checklist.md`](template-sync-checklist.md) — maintainer checklist before publishing the CLI
-- [`packages/create-pi-extension/`](../../packages/create-pi-extension/) — scaffold CLI source
+- [`packages/create-pi-extension/`](../packages/create-pi-extension/) — scaffold CLI source
