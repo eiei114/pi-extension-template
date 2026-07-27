@@ -48,6 +48,34 @@ Do not use `npm view` after `setup-node` with `registry-url` for this guard. Tru
 
 See also `docs/publish-rerun-rollout.md` for downstream rollout notes.
 
+### First publish / Trusted Publisher not configured
+
+`publish.yml` logs two different situations before `npm publish`:
+
+| Registry check | Meaning | Workflow behavior |
+| --- | --- | --- |
+| `GET /create-pi-extension` returns **404** | Package name is **not registered** on npm yet | Continues to publish; logs Trusted Publisher setup guidance |
+| `GET /create-pi-extension/<version>` returns **200** | That exact version is **already published** | Logs `publish intentionally skipped` and exits green without `npm publish` |
+| Package exists, version returns **404** | New version for an existing package | Continues to publish |
+
+If Trusted Publisher is missing or still targets the legacy `pi-extension-template` package, `npm publish` fails with:
+
+```text
+npm error code E404
+npm error 404 Not Found - PUT https://registry.npmjs.org/create-pi-extension - Not found
+```
+
+That `E404` is **not** the rerun skip path. It means npm rejected the publish because the package name is not registered under your account yet, or OIDC Trusted Publishing is not authorized for `create-pi-extension` + `publish.yml`.
+
+Fix (human-owned, one-time on npmjs.com):
+
+1. Open **create-pi-extension** on npm (or create the package name under your npm org/user if npm allows pre-registration).
+2. Add **Trusted Publisher**: GitHub Actions, repository `eiei114/pi-extension-template`, workflow filename `publish.yml`, permissions **publish** (and stage publish if used).
+3. Remove or update any Trusted Publisher entry that still targets the legacy root package `pi-extension-template`.
+4. Re-run `publish.yml` via `workflow_dispatch` on the release tag/ref (for example `v0.1.7`).
+
+Do not add `NPM_TOKEN` to GitHub Secrets; this repository uses OIDC Trusted Publishing only.
+
 ## Workflow guardrail
 
 Do not ship a new Pi OSS package or version bump with only `package.json` changes.

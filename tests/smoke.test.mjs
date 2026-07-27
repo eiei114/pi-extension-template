@@ -90,6 +90,13 @@ test("publish workflow targets create-pi-extension monorepo package", () => {
   assert.match(publishWorkflow, /template\//);
 });
 
+test("publish workflow distinguishes unregistered package from already-published version", () => {
+  assert.match(publishWorkflow, /not registered on npm yet/);
+  assert.match(publishWorkflow, /publish intentionally skipped/);
+  assert.match(publishWorkflow, /first-publish--trusted-publisher-not-configured/);
+  assert.match(publishWorkflow, /npm error code E404/);
+});
+
 test("ci pack check targets create-pi-extension workspace", () => {
   assert.equal(
     packageJson.scripts.ci,
