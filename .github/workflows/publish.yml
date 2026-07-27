@@ -48,20 +48,38 @@ jobs:
           name=$(node -p "require('./packages/create-pi-extension/package.json').name")
           version=$(node -p "require('./package.json').version")
           encoded_name="${name//\//%2F}"
-          registry_url="https://registry.npmjs.org/${encoded_name}/${version}"
+          package_url="https://registry.npmjs.org/${encoded_name}"
+          version_url="${package_url}/${version}"
 
-          http_status=$(curl -sS -o /dev/null -w '%{http_code}' "$registry_url")
-          case "$http_status" in
-            200)
-              echo "${name}@${version} is already published on npm; publish intentionally skipped."
-              echo "skip=true" >> "$GITHUB_OUTPUT"
-              ;;
+          package_status=$(curl -sS -o /dev/null -w '%{http_code}' "$package_url")
+          case "$package_status" in
             404)
-              echo "Version ${name}@${version} is not on npm yet; continuing to publish."
+              echo "Package ${name} is not registered on npm yet (registry returned 404 for the package name)."
+              echo "This is not the same as an already-published version skip. First publish requires npm Trusted Publisher setup for ${name} on npmjs.com."
+              echo "Configure: Publisher GitHub Actions, repository eiei114/pi-extension-template, workflow filename publish.yml."
+              echo "See docs/release.md#first-publish--trusted-publisher-not-configured"
+              echo "Continuing to npm publish ${name}@${version}; without Trusted Publisher, npm publish fails with E404 Not Found on PUT."
               echo "skip=false" >> "$GITHUB_OUTPUT"
               ;;
+            200)
+              version_status=$(curl -sS -o /dev/null -w '%{http_code}' "$version_url")
+              case "$version_status" in
+                200)
+                  echo "${name}@${version} is already published on npm; publish intentionally skipped."
+                  echo "skip=true" >> "$GITHUB_OUTPUT"
+                  ;;
+                404)
+                  echo "Package ${name} exists on npm but ${name}@${version} is not published yet; continuing to publish."
+                  echo "skip=false" >> "$GITHUB_OUTPUT"
+                  ;;
+                *)
+                  echo "Unexpected npm registry response for ${name}@${version}: HTTP ${version_status}" >&2
+                  exit 1
+                  ;;
+              esac
+              ;;
             *)
-              echo "Unexpected npm registry response for ${name}@${version}: HTTP ${http_status}" >&2
+              echo "Unexpected npm registry response for package ${name}: HTTP ${package_status}" >&2
               exit 1
               ;;
           esac
@@ -106,4 +124,19 @@ jobs:
       - name: Publish create-pi-extension to npm
         if: steps.published.outputs.skip != 'true'
         working-directory: packages/create-pi-extension
-        run: npm publish --access public
+        shell: bash
+        run: |
+          set +e
+          publish_output=$(npm publish --access public 2>&1)
+          publish_status=$?
+          echo "$publish_output"
+          if [ "$publish_status" -ne 0 ]; then
+            if echo "$publish_output" | grep -q 'npm error code E404'; then
+              echo "::error::npm publish failed with E404 Not Found."
+              echo "Diagnosis: create-pi-extension is not registered on npm, or Trusted Publisher is not configured for this repository/workflow."
+              echo "This is different from publish intentionally skipped (version already on npm)."
+              echo "Action: npmjs.com -> create-pi-extension -> Trusted Publisher -> GitHub Actions -> eiei114/pi-extension-template -> publish.yml"
+              echo "See docs/release.md#first-publish--trusted-publisher-not-configured"
+            fi
+            exit "$publish_status"
+          fi
