@@ -6,12 +6,7 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
-### Changed
-
-- Guard all example extension `ctx.ui` calls with `ctx.hasUI` so headless/RPC sessions stay safe (DOT-784, DOT-815).
-- Refreshed extension examples to match current Pi 0.80.x docs: lifecycle events (`tool_execution_*`, `session_shutdown`), TUI-only custom entries (`appendEntry` + `registerEntryRenderer`), `ctx.hasUI` guards, and inline `pi.registerTool()` with `prepareArguments()` compatibility shims.
-- Updated `docs/examples.md` and `docs/typescript.md` to document the refreshed patterns.
-- Bump package version to `0.1.7` for the next patch release.
+## [0.1.7] - 2026-07-20
 
 ### Added
 
@@ -23,6 +18,9 @@ This project follows semantic versioning.
 
 ### Changed
 
+- Guard all example extension `ctx.ui` calls with `ctx.hasUI` so headless/RPC sessions stay safe (DOT-784, DOT-815).
+- Refreshed extension examples to match current Pi 0.80.x docs: lifecycle events (`tool_execution_*`, `session_shutdown`), TUI-only custom entries (`appendEntry` + `registerEntryRenderer`), `ctx.hasUI` guards, and inline `pi.registerTool()` with `prepareArguments()` compatibility shims.
+- Updated `docs/examples.md` and `docs/typescript.md` to document the refreshed patterns.
 - Publish workflow now targets `create-pi-extension` in the monorepo: runs `sync:template`, validates CI, and publishes only `packages/create-pi-extension` through npm Trusted Publishing.
 - Release docs updated for `create-pi-extension` Trusted Publisher settings and monorepo publish path.
 - Template sync copies `scaffold/package-readme.md` into the bundled template instead of the repository README.
@@ -73,7 +71,7 @@ This project follows semantic versioning.
 - Publish workflow now installs a current npm CLI so npm Trusted Publishing OIDC is supported.
 - CI and publish workflow commands no longer include literal trailing `\\n` text.
 
-## [0.1.0] - YYYY-MM-DD
+## [0.1.0] - 2026-05-29
 
 ### Added
 
