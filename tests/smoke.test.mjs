@@ -191,6 +191,11 @@ test("CHANGELOG has no placeholder dates or duplicate Unreleased section headers
   assert.doesNotMatch(changelog, /YYYY-MM-DD/, "released version headers must use real ISO dates");
 
   const unreleased = changelog.split(/^## \[/m)[0];
+  const unreleasedHeaders = changelog.match(/^## Unreleased$/gm) ?? [];
+  assert.ok(
+    unreleasedHeaders.length <= 1,
+    "CHANGELOG must not contain duplicate ## Unreleased headers",
+  );
   const changedHeaders = unreleased.match(/^### Changed$/gm) ?? [];
   assert.ok(
     changedHeaders.length <= 1,
