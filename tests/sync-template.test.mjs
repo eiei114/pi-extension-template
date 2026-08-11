@@ -8,6 +8,33 @@ const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const TEMPLATE_ROOT = join(ROOT, "packages", "create-pi-extension", "template");
 const CLI_PACKAGE_JSON = join(ROOT, "packages", "create-pi-extension", "package.json");
 const ROOT_PACKAGE_JSON = join(ROOT, "package.json");
+const ROOT_PACKAGE_LOCK = join(ROOT, "package-lock.json");
+const ROOT_README = join(ROOT, "README.md");
+
+const STANDARD_BADGES = [
+  "Join dotfield.xyz on Discord",
+  "CI",
+  "Publish",
+  "npm version",
+  "npm downloads",
+  "License: MIT",
+  "Pi package",
+  "Trusted Publishing",
+];
+
+const STANDARD_HEADINGS = [
+  "## What this is",
+  "## Features",
+  "## Install",
+  "## Quick start",
+  "## Package contents",
+  "## Development",
+  "## Release",
+  "## Docs",
+  "## Security",
+  "## Links",
+  "## License",
+];
 
 function templatePath(...segments) {
   return join(TEMPLATE_ROOT, ...segments);
@@ -49,9 +76,32 @@ test("synced template README comes from scaffold source", () => {
   assert.doesNotMatch(templateReadme, /bunx create-pi-extension/);
 });
 
+test("repository and scaffold READMEs keep the standard public contract", () => {
+  for (const readmePath of [ROOT_README, join(ROOT, "scaffold", "package-readme.md")]) {
+    const readme = readFileSync(readmePath, "utf8");
+
+    for (const badge of STANDARD_BADGES) {
+      assert.ok(readme.includes(`[![${badge}]`), `${badge} badge missing in ${readmePath}`);
+    }
+
+    let previousIndex = -1;
+    for (const heading of STANDARD_HEADINGS) {
+      const headingIndex = readme.indexOf(heading);
+      assert.ok(headingIndex > previousIndex, `${heading} missing or out of order in ${readmePath}`);
+      previousIndex = headingIndex;
+    }
+
+    assert.match(readme, /buymeacoffee\.com\/ekawano114m/);
+  }
+});
+
 test("create-pi-extension version matches repository version", () => {
   const rootPackageJson = JSON.parse(readFileSync(ROOT_PACKAGE_JSON, "utf8"));
   const cliPackageJson = JSON.parse(readFileSync(CLI_PACKAGE_JSON, "utf8"));
+  const packageLock = JSON.parse(readFileSync(ROOT_PACKAGE_LOCK, "utf8"));
   assert.equal(cliPackageJson.version, rootPackageJson.version);
   assert.equal(cliPackageJson.name, "create-pi-extension");
+  assert.equal(packageLock.version, rootPackageJson.version);
+  assert.equal(packageLock.packages?.[""]?.version, rootPackageJson.version);
+  assert.equal(packageLock.packages?.["packages/create-pi-extension"]?.version, cliPackageJson.version);
 });

@@ -1,15 +1,37 @@
-# pi-extension-template
+# Pi Extension Template
+
+[![Join dotfield.xyz on Discord](https://img.shields.io/badge/Join%20dotfield.xyz%20on%20Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/4945dXZVW5)
 
 [![CI](https://github.com/eiei114/pi-extension-template/actions/workflows/ci.yml/badge.svg)](https://github.com/eiei114/pi-extension-template/actions/workflows/ci.yml)
 [![Publish](https://github.com/eiei114/pi-extension-template/actions/workflows/publish.yml/badge.svg)](https://github.com/eiei114/pi-extension-template/actions/workflows/publish.yml)
 [![npm version](https://img.shields.io/npm/v/create-pi-extension.svg)](https://www.npmjs.com/package/create-pi-extension)
+[![npm downloads](https://img.shields.io/npm/dm/create-pi-extension.svg)](https://www.npmjs.com/package/create-pi-extension)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Pi package](https://img.shields.io/badge/pi-package-purple.svg)](https://pi.dev/packages)
 [![Trusted Publishing](https://img.shields.io/badge/npm-Trusted%20Publishing-blue.svg)](docs/release.md)
+<a href="https://buymeacoffee.com/ekawano114m"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="217" height="60"></a>
 
 > Template for building Pi packages with extensions, Agent Skills, prompts, and themes.
 
+## What this is
+
 This repository is the **template source** for new Pi extension OSS projects. The published npm package is [`create-pi-extension`](https://www.npmjs.com/package/create-pi-extension), not the root `pi-extension-template` name.
+
+## Features
+
+- Interactive `create-pi-extension` CLI for scoped and unscoped package names.
+- TypeScript-first examples for extensions, Agent Skills, prompts, themes, tools, and TUI components.
+- GitHub Actions CI, npm Trusted Publishing, security policy, issue templates, and release automation.
+- Canonical public README with standard badges, install paths, quick start, package contents, and security guidance.
+- Canonical scaffold README shared by CLI-first generation and the GitHub Template setup checklist.
+
+## Install
+
+Create a new Pi extension package with the published CLI:
+
+```bash
+bunx create-pi-extension@latest my-pi-package
+```
 
 ## Quick start
 
@@ -40,12 +62,13 @@ gh repo create OWNER/my-pi-package \
 ```
 
 Then follow the **Secondary path** section in [`docs/template-checklist.md`](docs/template-checklist.md) for manual placeholder replacement, metadata, and post-generation cleanup.
+That checklist first copies `scaffold/package-readme.md` to `README.md`, giving GitHub Template users the same standard badges and README structure as CLI-generated packages.
 
 ## Legacy npm package
 
 Do **not** use `pi install npm:pi-extension-template` as the main onboarding path. Use **`create-pi-extension`** to scaffold a new project instead. The legacy root-package install will be removed from npm in a future release. After you publish your own extension, install it with `pi install npm:YOUR_PACKAGE_NAME` as documented in that project's README.
 
-## Repository layout
+## Package contents
 
 | Path | Purpose |
 |---|---|
