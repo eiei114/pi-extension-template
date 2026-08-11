@@ -6,6 +6,15 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
+## [0.1.8] - 2026-08-11
+
+### Changed
+
+- Align the repository README with the public Pi extension README contract: standard community, CI, publish, npm, license, Pi package, Trusted Publishing, and funding badges plus canonical user-facing sections.
+- Add the Discord community badge to `scaffold/package-readme.md` so CLI-generated packages start with the same badge set as maintained Pi extensions.
+- Make the GitHub Template checklist copy the canonical scaffold README before placeholder replacement, giving the secondary setup path the same public README contract.
+- Add sync tests that prevent required badges, funding links, canonical README sections, or workspace version metadata from drifting.
+
 ## [0.1.7] - 2026-07-20
 
 ### Added
