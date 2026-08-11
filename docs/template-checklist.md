@@ -21,7 +21,7 @@ Primary path では **Repository** / **README placeholders** / **GitHub Template
 `gh repo create --template eiei114/pi-extension-template --clone` で repo を作った場合は、以下の manual checklist を順に埋める。
 
 - [ ] `gh repo create OWNER/my-pi-package --template eiei114/pi-extension-template --clone` で作成する
-- [ ] package向けの標準READMEを配置する: macOS/Linuxは `cp scaffold/package-readme.md README.md`、Windows PowerShellは `Copy-Item scaffold/package-readme.md README.md -Force`
+- [ ] clone先へ移動してpackage向けの標準READMEを配置する: macOS/Linuxは `cd my-pi-package && cp scaffold/package-readme.md README.md`、Windows PowerShellは `Set-Location my-pi-package; Copy-Item scaffold/package-readme.md README.md -Force`
 - [ ] 下記 **Repository** 以降のセクションをすべて確認する
 - [ ] post-generation cleanup（bootstrap docs 削除）を実施する
 

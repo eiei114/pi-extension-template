@@ -84,9 +84,10 @@ test("repository and scaffold READMEs keep the standard public contract", () => 
       assert.ok(readme.includes(`[![${badge}]`), `${badge} badge missing in ${readmePath}`);
     }
 
+    const headings = [...readme.matchAll(/^##[ \t]+.*$/gm)].map(([heading]) => heading);
     let previousIndex = -1;
     for (const heading of STANDARD_HEADINGS) {
-      const headingIndex = readme.indexOf(heading);
+      const headingIndex = headings.indexOf(heading);
       assert.ok(headingIndex > previousIndex, `${heading} missing or out of order in ${readmePath}`);
       previousIndex = headingIndex;
     }
