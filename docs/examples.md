@@ -131,3 +131,4 @@ palette in place rather than trimming tokens. Remove `themes/` (and the
 |---|---|
 | `lib/greeting.ts` | Greeting helpers used by `template_greet` |
 | `lib/format-table.ts` | Monospace table formatter for widgets and TUI examples |
+| `lib/config-contract.ts` | Schema-derived runtime config validation with valid/invalid contract tests |

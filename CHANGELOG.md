@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
+## [0.2.0] - 2026-08-12
+
+### Added
+
+- Add generated-package review guardrails for release/version consistency and npm tarball/document link integrity.
+- Add a schema-derived runtime config contract example with paired valid, missing, wrong-type, empty, and extra-field tests.
+
 ## [0.1.8] - 2026-08-11
 
 ### Changed

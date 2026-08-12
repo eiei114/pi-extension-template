@@ -16,7 +16,7 @@ import { parseOwnerRepo } from "./utils.mjs";
 const PACKAGE_ROOT = fileURLToPath(new URL("..", import.meta.url));
 const TEMPLATE_ROOT = join(PACKAGE_ROOT, "template");
 
-const PLACEHOLDER_PATTERN = /PACKAGE_NAME|PACKAGE_DISPLAY_NAME|OWNER\/REPO|YOUR_NAME|\bOWNER\b|\bREPO\b/;
+const PLACEHOLDER_PATTERN = /PACKAGE_NAME|PACKAGE_DISPLAY_NAME|PACKAGE_VERSION|OWNER\/REPO|YOUR_NAME|\bOWNER\b|\bREPO\b/;
 
 export const BOOTSTRAP_DOC_PATHS = [
   "docs/github-template.md",
@@ -101,7 +101,7 @@ function patchPackageJson(packageJsonPath, options) {
     const scripts = { ...packageJson.scripts };
     delete scripts["sync:template"];
     delete scripts["sync:template:check"];
-    scripts.ci = "npm run typecheck && npm test && npm run pack:check";
+    scripts.ci = "npm run typecheck && npm test && npm run review:guardrails && npm run pack:check";
     scripts["pack:check"] = "npm pack --dry-run";
     packageJson.scripts = scripts;
   }
@@ -138,10 +138,12 @@ export function scaffoldProject(outputDir, options) {
   copyDirectory(templateRoot, outputDir);
 
   const { owner, repo } = parseOwnerRepo(options.ownerRepo);
+  const templatePackageJson = JSON.parse(readFileSync(join(templateRoot, "package.json"), "utf8"));
   const replacements = [
     ["OWNER/REPO", `${owner}/${repo}`],
     ["PACKAGE_NAME", options.packageName],
     ["PACKAGE_DISPLAY_NAME", options.displayName],
+    ["PACKAGE_VERSION", templatePackageJson.version],
     ["YOUR_NAME", options.author],
     ["OWNER", owner],
     ["REPO", repo],
