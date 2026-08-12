@@ -100,6 +100,14 @@ function checkPackageDocs() {
   }
 }
 
+function checkErrorFailClosedContract() {
+  const testScript = packageJson.scripts?.test ?? "";
+  assert.ok(testScript.includes("tests/error-contract.test.mjs"), "npm test must run G5 error-path contract fixtures");
+  assert.ok(existsSync(join(ROOT, "lib", "error-contract.ts")), "G5 fail-closed error classifier must exist");
+  assert.ok(existsSync(join(ROOT, "tests", "error-contract.test.mjs")), "G5 valid/invalid error fixtures must exist");
+}
+
 checkReleaseState();
 checkPackageDocs();
-console.log("Review guardrails G1/G2 passed");
+checkErrorFailClosedContract();
+console.log("Review guardrails G1/G2/G5 passed");
