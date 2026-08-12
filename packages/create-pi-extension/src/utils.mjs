@@ -1,5 +1,7 @@
 import { execFileSync } from "node:child_process";
 
+const PACKAGE_SEGMENT_PATTERN = /^[a-z0-9][a-z0-9._-]*$/i;
+
 export function parsePackageArg(arg) {
   const trimmed = arg.trim();
   if (!trimmed) {
@@ -8,7 +10,7 @@ export function parsePackageArg(arg) {
 
   if (trimmed.startsWith("@")) {
     const match = /^@([^/]+)\/([^/]+)$/.exec(trimmed);
-    if (!match) {
+    if (!match || !PACKAGE_SEGMENT_PATTERN.test(match[1]) || !PACKAGE_SEGMENT_PATTERN.test(match[2])) {
       throw new Error(`Invalid scoped package name: ${arg}`);
     }
     return {
@@ -18,7 +20,7 @@ export function parsePackageArg(arg) {
     };
   }
 
-  if (!/^[a-z0-9][a-z0-9._-]*$/i.test(trimmed)) {
+  if (!PACKAGE_SEGMENT_PATTERN.test(trimmed)) {
     throw new Error(`Invalid package name: ${arg}`);
   }
 

@@ -9,7 +9,7 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseOwnerRepo } from "./utils.mjs";
 
@@ -185,8 +185,31 @@ export function runPostSetup(outputDir) {
   execFileSync("bun", ["install"], { cwd: outputDir, stdio: "inherit" });
 }
 
+function assertSafeOutputDirectoryName(directoryName) {
+  if (typeof directoryName !== "string" || !directoryName) {
+    throw new Error("Output directory name is required.");
+  }
+  if (
+    directoryName !== directoryName.trim() ||
+    directoryName === "." ||
+    directoryName === ".." ||
+    directoryName.includes("/") ||
+    directoryName.includes("\\") ||
+    directoryName.includes(":")
+  ) {
+    throw new Error(`Output directory must be a single relative directory name: ${directoryName}`);
+  }
+}
+
 export function resolveOutputDirectory(cwd, directoryName) {
-  return join(cwd, directoryName);
+  assertSafeOutputDirectoryName(directoryName);
+  const root = resolve(cwd);
+  const outputDir = resolve(root, directoryName);
+  const relativePath = relative(root, outputDir);
+  if (!relativePath || relativePath === ".." || relativePath.startsWith(`..${sep}`) || isAbsolute(relativePath)) {
+    throw new Error(`Output directory escapes current working directory: ${directoryName}`);
+  }
+  return outputDir;
 }
 
 export function assertOutputDirectoryAvailable(outputDir) {

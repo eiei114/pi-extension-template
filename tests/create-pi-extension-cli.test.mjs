@@ -5,7 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { BOOTSTRAP_DOC_PATHS, scaffoldProject } from "../packages/create-pi-extension/src/scaffold.mjs";
+import { BOOTSTRAP_DOC_PATHS, resolveOutputDirectory, scaffoldProject } from "../packages/create-pi-extension/src/scaffold.mjs";
+import { parsePackageArg } from "../packages/create-pi-extension/src/utils.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const CLI = join(ROOT, "packages", "create-pi-extension", "src", "cli.mjs");
@@ -76,6 +77,58 @@ test("create-pi-extension scaffolds a scoped package without extra scope prompt"
     assert.ok(existsSync(join(tempRoot, "my-pi-tool", "package.json")));
   } finally {
     rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("create-pi-extension keeps output directories inside the current root", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-path-"));
+  try {
+    assert.equal(resolveOutputDirectory(tempRoot, "safe-package"), join(tempRoot, "safe-package"));
+
+    const invalidDirectoryNames = [
+      ".",
+      "..",
+      "../outside",
+      "..\\outside",
+      "nested/project",
+      "nested\\project",
+      "/absolute-project",
+      "C:\\absolute-project",
+      "C:drive-relative",
+    ];
+
+    for (const fixture of invalidDirectoryNames) {
+      assert.throws(
+        () => resolveOutputDirectory(tempRoot, fixture),
+        /Output directory must be a single relative directory name|Output directory escapes current working directory/,
+        `expected ${fixture} to be rejected before any filesystem probe`,
+      );
+    }
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("create-pi-extension rejects scoped package names that smuggle path syntax", () => {
+  assert.deepEqual(parsePackageArg("@my-scope/safe-package"), {
+    packageName: "@my-scope/safe-package",
+    directoryName: "safe-package",
+    isScoped: true,
+  });
+
+  const invalidPackageNames = [
+    "@my-scope/..",
+    "@my-scope/nested/project",
+    "@my-scope/nested\\project",
+    "@my-scope/C:drive-relative",
+  ];
+
+  for (const fixture of invalidPackageNames) {
+    assert.throws(
+      () => parsePackageArg(fixture),
+      /Invalid scoped package name/,
+      `expected ${fixture} to be rejected as a path-boundary fixture`,
+    );
   }
 });
 
