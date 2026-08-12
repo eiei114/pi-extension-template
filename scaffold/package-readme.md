@@ -41,7 +41,7 @@ pi install npm:@your-scope/your-pi-package
 Pin a specific version when you want reproducible installs:
 
 ```bash
-pi install npm:PACKAGE_NAME@0.1.0
+pi install npm:PACKAGE_NAME@PACKAGE_VERSION
 ```
 
 Install into the current project instead of your user Pi settings:

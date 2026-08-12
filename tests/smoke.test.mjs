@@ -100,8 +100,9 @@ test("publish workflow distinguishes unregistered package from already-published
 test("ci pack check targets create-pi-extension workspace", () => {
   assert.equal(
     packageJson.scripts.ci,
-    "npm run typecheck && npm run sync:template && npm test && npm run pack:check && node --test tests/sync-template.test.mjs",
+    "npm run typecheck && npm run sync:template && npm test && npm run review:guardrails && npm run pack:check && node --test tests/sync-template.test.mjs",
   );
+  assert.equal(packageJson.scripts["review:guardrails"], "node scripts/check-review-guardrails.mjs");
   assert.equal(packageJson.scripts["pack:check"], "npm pack --dry-run --workspace create-pi-extension");
 });
 

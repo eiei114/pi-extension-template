@@ -26,10 +26,19 @@ const TOP_LEVEL_EXCLUSIONS = new Set([
 ]);
 
 const PACKAGE_README = join(ROOT, "scaffold", "package-readme.md");
+const CLI_TEMPLATE_EXCLUSIONS = new Set([
+  "docs/github-template.md",
+  "docs/repository-settings.md",
+  "docs/template-sync.md",
+  "docs/typescript.md",
+]);
 
 function shouldExclude(relativePath: string): boolean {
   const normalized = relativePath.replaceAll("\\", "/");
   if (normalized === "README.md") {
+    return true;
+  }
+  if (CLI_TEMPLATE_EXCLUSIONS.has(normalized)) {
     return true;
   }
 
@@ -74,7 +83,7 @@ function stripMonorepoFields(packageJsonPath: string): void {
     delete scripts["sync:template"];
     delete scripts["sync:template:check"];
     // Remove monorepo-specific workspace references from CI and pack:check
-    scripts.ci = "npm run typecheck && npm test && npm run pack:check";
+    scripts.ci = "npm run typecheck && npm test && npm run review:guardrails && npm run pack:check";
     scripts["pack:check"] = "npm pack --dry-run";
     packageJson.scripts = scripts;
   }

@@ -50,12 +50,14 @@ test("create-pi-extension scaffolds an unscoped package", () => {
     assert.equal(packageJson.name, "my-pi-package");
     assert.equal(packageJson.author, "Test Author");
     assert.match(packageJson.repository.url, /github\.com\/.+\/my-pi-package$/);
-    assert.equal(packageJson.scripts.ci, "npm run typecheck && npm test && npm run pack:check");
+    assert.equal(packageJson.scripts.ci, "npm run typecheck && npm test && npm run review:guardrails && npm run pack:check");
     assert.equal(packageJson.scripts["sync:template"], undefined);
     assert.equal(packageJson.scripts["sync:template:check"], undefined);
     assert.equal(packageJson.scripts["pack:check"], "npm pack --dry-run");
+    assert.equal(packageJson.scripts["review:guardrails"], "node scripts/check-review-guardrails.mjs");
     assert.match(readme, /my-pi-package/);
     assert.doesNotMatch(readme, /PACKAGE_NAME|OWNER\/REPO|YOUR_NAME/);
+    assert.match(readme, new RegExp(`npm:my-pi-package@${packageJson.version.replaceAll(".", "\\.")}`));
     assert.match(license, /Test Author/);
     assert.doesNotMatch(license, /YOUR_NAME/);
     assert.equal(existsSync(join(tempRoot, "my-pi-package", "package-lock.json")), false);
@@ -77,7 +79,7 @@ test("create-pi-extension scaffolds a scoped package without extra scope prompt"
   }
 });
 
-test("create-pi-extension removes bootstrap docs and prints next steps", () => {
+test("create-pi-extension omits bootstrap docs and prints next steps", () => {
   const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-"));
   try {
     const output = runCli("cleanup-pkg", tempRoot);
@@ -87,11 +89,7 @@ test("create-pi-extension removes bootstrap docs and prints next steps", () => {
       assert.equal(existsSync(join(projectDir, relativePath)), false, `expected ${relativePath} to be removed`);
     }
 
-    assert.match(output, /Removed bootstrap docs:/);
-    assert.match(output, /docs\/github-template\.md/);
-    assert.match(output, /docs\/repository-settings\.md/);
-    assert.match(output, /docs\/template-sync\.md/);
-    assert.match(output, /docs\/typescript\.md/);
+    assert.doesNotMatch(output, /Removed bootstrap docs:/);
     assert.match(output, /Edit extensions\//);
     assert.match(output, /Run bun run ci/);
     assert.match(output, /Try pi -e \./);

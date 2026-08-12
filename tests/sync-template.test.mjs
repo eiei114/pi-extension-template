@@ -57,6 +57,14 @@ test("synced template excludes monorepo paths", () => {
   assert.equal(existsSync(templatePath(".git")), false);
   assert.equal(existsSync(templatePath("package-lock.json")), false);
   assert.equal(existsSync(templatePath("ROADMAP.md")), false);
+  for (const path of [
+    "docs/github-template.md",
+    "docs/repository-settings.md",
+    "docs/template-sync.md",
+    "docs/typescript.md",
+  ]) {
+    assert.equal(existsSync(templatePath(path)), false, `CLI template must omit bootstrap-only ${path}`);
+  }
 });
 
 test("synced template package.json is standalone", () => {
@@ -66,6 +74,8 @@ test("synced template package.json is standalone", () => {
   assert.equal(templatePackageJson.scripts?.["sync:template:check"], undefined);
   assert.equal(templatePackageJson.name, "pi-extension-template");
   assert.equal(templatePackageJson.scripts?.["pack:check"], "npm pack --dry-run");
+  assert.equal(templatePackageJson.scripts?.["review:guardrails"], "node scripts/check-review-guardrails.mjs");
+  assert.match(templatePackageJson.scripts?.ci, /npm run review:guardrails/);
 });
 
 test("synced template README comes from scaffold source", () => {
@@ -74,6 +84,7 @@ test("synced template README comes from scaffold source", () => {
   assert.equal(templateReadme, scaffoldReadme);
   assert.match(templateReadme, /PACKAGE_DISPLAY_NAME/);
   assert.doesNotMatch(templateReadme, /bunx create-pi-extension/);
+  assert.match(templateReadme, /PACKAGE_NAME@PACKAGE_VERSION/);
 });
 
 test("repository and scaffold READMEs keep the standard public contract", () => {
