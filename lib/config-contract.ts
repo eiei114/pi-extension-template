@@ -25,13 +25,19 @@ export function parsePackageLayoutConfig(input: unknown): PackageLayoutConfig {
     throw new TypeError("Package layout config must be an object");
   }
   const record = input as Record<string, unknown>;
+  const prototype = Object.getPrototypeOf(input);
+  if (prototype !== Object.prototype && prototype !== null) {
+    throw new TypeError("Package layout config must be a plain object");
+  }
   const allowed = new Set(Object.keys(packageLayoutConfigRules));
   for (const key of Object.keys(record)) {
     if (!allowed.has(key)) throw new TypeError(`Unknown package layout config field: ${key}`);
   }
   for (const [key, rule] of Object.entries(packageLayoutConfigRules)) {
     const value = record[key];
-    if (typeof value !== rule.type) throw new TypeError(`${key} must be ${rule.type}`);
+    if (!Object.hasOwn(record, key) || typeof value !== rule.type) {
+      throw new TypeError(`${key} must be ${rule.type}`);
+    }
     if (rule.type === "string" && typeof value === "string" && value.length < rule.minLength) {
       throw new TypeError(`${key} must contain at least ${rule.minLength} character`);
     }

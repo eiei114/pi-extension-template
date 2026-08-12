@@ -29,3 +29,10 @@ test("runtime rejects wrong types, empty strings, and extra fields", () => {
   assert.throws(() => parsePackageLayoutConfig({ ...valid, title: "" }), /title must contain at least 1 character/);
   assert.throws(() => parsePackageLayoutConfig({ ...valid, extra: true }), /Unknown package layout config field: extra/);
 });
+
+test("runtime rejects inherited config fields", () => {
+  assert.throws(
+    () => parsePackageLayoutConfig(Object.create(valid)),
+    /Package layout config must be a plain object/,
+  );
+});

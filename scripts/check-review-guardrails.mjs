@@ -27,15 +27,20 @@ function walkMarkdown(directory) {
   return files;
 }
 
-function packTarget() {
+function releaseTarget() {
   if (Array.isArray(packageJson.workspaces) && packageJson.workspaces.includes("packages/*")) {
-    return { args: ["pack", "--dry-run", "--json", "--workspace", "create-pi-extension"], prefix: "template/" };
+    return {
+      args: ["pack", "--dry-run", "--json", "--workspace", "create-pi-extension"],
+      lockKey: "packages/create-pi-extension",
+      manifest: readJson(join(ROOT, "packages", "create-pi-extension", "package.json")),
+      prefix: "template/",
+    };
   }
-  return { args: ["pack", "--dry-run", "--json"], prefix: "" };
+  return { args: ["pack", "--dry-run", "--json"], lockKey: "", manifest: packageJson, prefix: "" };
 }
 
 function packedFiles() {
-  const target = packTarget();
+  const target = releaseTarget();
   const npmCli = process.env.npm_execpath;
   assert.ok(npmCli, "npm_execpath is required; run this guard through npm run review:guardrails");
   const output = execFileSync(process.execPath, [npmCli, ...target.args], { cwd: ROOT, encoding: "utf8" });
@@ -45,15 +50,20 @@ function packedFiles() {
 }
 
 function checkReleaseState() {
+  const target = releaseTarget();
+  const releasePackage = target.manifest;
   const lockPath = join(ROOT, "package-lock.json");
   if (existsSync(lockPath)) {
     const lock = readJson(lockPath);
-    assert.equal(lock.version, packageJson.version, "package-lock root version must match package.json");
-    assert.equal(lock.packages?.[""]?.version, packageJson.version, "package-lock packages[''] version must match package.json");
+    assert.equal(
+      lock.packages?.[target.lockKey]?.version,
+      releasePackage.version,
+      `package-lock packages['${target.lockKey}'] version must match ${releasePackage.name}`,
+    );
   }
 
   const changelog = readFileSync(join(ROOT, "CHANGELOG.md"), "utf8");
-  const escaped = packageJson.version.replaceAll(".", "\\.");
+  const escaped = releasePackage.version.replaceAll(".", "\\.");
   assert.match(changelog, new RegExp(`^## \\[${escaped}\\] - \\d{4}-\\d{2}-\\d{2}$`, "m"), "CHANGELOG must contain a dated current-version entry");
 
   for (const path of [join(ROOT, "README.md"), ...walkMarkdown(join(ROOT, "docs"))]) {
@@ -61,8 +71,8 @@ function checkReleaseState() {
     const installPattern = /pi install npm:([^\s`]+)@(\d+\.\d+\.\d+)/g;
     for (const match of content.matchAll(installPattern)) {
       const referencedName = match[1];
-      if (referencedName === packageJson.name) {
-        assert.equal(match[2], packageJson.version, `${relative(ROOT, path)} pins stale package version ${match[2]}`);
+      if (referencedName === releasePackage.name) {
+        assert.equal(match[2], releasePackage.version, `${relative(ROOT, path)} pins stale package version ${match[2]}`);
       }
     }
   }
