@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import {
   copyFileSync,
   existsSync,
+  lstatSync,
   mkdirSync,
   readdirSync,
   readFileSync,
@@ -128,12 +129,7 @@ export function assertNoPlaceholders(outputDir) {
 
 export function scaffoldProject(outputDir, options) {
   const templateRoot = resolveTemplateRoot();
-  if (existsSync(outputDir)) {
-    const entries = readdirSync(outputDir);
-    if (entries.length > 0) {
-      throw new Error(`Output directory already exists and is not empty: ${outputDir}`);
-    }
-  }
+  assertOutputDirectoryAvailable(outputDir);
 
   copyDirectory(templateRoot, outputDir);
 
@@ -215,6 +211,9 @@ export function resolveOutputDirectory(cwd, directoryName) {
 export function assertOutputDirectoryAvailable(outputDir) {
   if (!existsSync(outputDir)) {
     return;
+  }
+  if (lstatSync(outputDir).isSymbolicLink()) {
+    throw new Error(`Output path exists but is unsafe: ${outputDir}`);
   }
   if (!statSync(outputDir).isDirectory()) {
     throw new Error(`Output path exists but is not a directory: ${outputDir}`);

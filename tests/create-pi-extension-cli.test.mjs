@@ -1,11 +1,16 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { BOOTSTRAP_DOC_PATHS, resolveOutputDirectory, scaffoldProject } from "../packages/create-pi-extension/src/scaffold.mjs";
+import {
+  assertOutputDirectoryAvailable,
+  BOOTSTRAP_DOC_PATHS,
+  resolveOutputDirectory,
+  scaffoldProject,
+} from "../packages/create-pi-extension/src/scaffold.mjs";
 import { parsePackageArg } from "../packages/create-pi-extension/src/utils.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -129,6 +134,20 @@ test("create-pi-extension rejects scoped package names that smuggle path syntax"
       /Invalid scoped package name/,
       `expected ${fixture} to be rejected as a path-boundary fixture`,
     );
+  }
+});
+
+test("create-pi-extension rejects an empty output-directory symbolic link", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-link-"));
+  const outsideRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-outside-"));
+  try {
+    const outputDir = join(tempRoot, "linked-package");
+    symlinkSync(outsideRoot, outputDir, "junction");
+
+    assert.throws(() => assertOutputDirectoryAvailable(outputDir), /Output path exists but is unsafe/);
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+    rmSync(outsideRoot, { recursive: true, force: true });
   }
 });
 
