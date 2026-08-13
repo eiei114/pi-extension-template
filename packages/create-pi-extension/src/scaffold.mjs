@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import {
   copyFileSync,
   existsSync,
+  lstatSync,
   mkdirSync,
   readdirSync,
   readFileSync,
@@ -9,7 +10,7 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseOwnerRepo } from "./utils.mjs";
 
@@ -128,12 +129,7 @@ export function assertNoPlaceholders(outputDir) {
 
 export function scaffoldProject(outputDir, options) {
   const templateRoot = resolveTemplateRoot();
-  if (existsSync(outputDir)) {
-    const entries = readdirSync(outputDir);
-    if (entries.length > 0) {
-      throw new Error(`Output directory already exists and is not empty: ${outputDir}`);
-    }
-  }
+  assertOutputDirectoryAvailable(outputDir);
 
   copyDirectory(templateRoot, outputDir);
 
@@ -185,13 +181,39 @@ export function runPostSetup(outputDir) {
   execFileSync("bun", ["install"], { cwd: outputDir, stdio: "inherit" });
 }
 
+function assertSafeOutputDirectoryName(directoryName) {
+  if (typeof directoryName !== "string" || !directoryName) {
+    throw new Error("Output directory name is required.");
+  }
+  if (
+    directoryName !== directoryName.trim() ||
+    directoryName === "." ||
+    directoryName === ".." ||
+    directoryName.includes("/") ||
+    directoryName.includes("\\") ||
+    directoryName.includes(":")
+  ) {
+    throw new Error(`Output directory must be a single relative directory name: ${directoryName}`);
+  }
+}
+
 export function resolveOutputDirectory(cwd, directoryName) {
-  return join(cwd, directoryName);
+  assertSafeOutputDirectoryName(directoryName);
+  const root = resolve(cwd);
+  const outputDir = resolve(root, directoryName);
+  const relativePath = relative(root, outputDir);
+  if (!relativePath || relativePath === ".." || relativePath.startsWith(`..${sep}`) || isAbsolute(relativePath)) {
+    throw new Error(`Output directory escapes current working directory: ${directoryName}`);
+  }
+  return outputDir;
 }
 
 export function assertOutputDirectoryAvailable(outputDir) {
   if (!existsSync(outputDir)) {
     return;
+  }
+  if (lstatSync(outputDir).isSymbolicLink()) {
+    throw new Error(`Output path exists but is unsafe: ${outputDir}`);
   }
   if (!statSync(outputDir).isDirectory()) {
     throw new Error(`Output path exists but is not a directory: ${outputDir}`);
