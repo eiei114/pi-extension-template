@@ -143,6 +143,17 @@ function mentionsPullRequestTrigger(value) {
   return /\bpull_request(?:_target)?\b/.test(value);
 }
 
+function resolveScalarAlias(lines, alias) {
+  const anchor = alias.trim().match(/^\*([A-Za-z0-9_-]+)$/)?.[1];
+  if (!anchor) return alias;
+  const anchorPattern = new RegExp(`&${anchor}\\s+([^#\\s][^#]*)`);
+  for (const sourceLine of lines) {
+    const match = stripInlineComment(sourceLine).match(anchorPattern);
+    if (match) return match[1].trim();
+  }
+  return alias;
+}
+
 function workflowHasPullRequestTrigger(content) {
   const lines = splitLines(content);
   for (let index = 0; index < lines.length; index += 1) {
@@ -153,7 +164,7 @@ function workflowHasPullRequestTrigger(content) {
     const match = trimmed.match(/^["']?on["']?:\s*(.*)$/);
     if (!match) continue;
 
-    const value = match[1].trim();
+    const value = resolveScalarAlias(lines, match[1].trim());
     if (mentionsPullRequestTrigger(value)) return true;
     if (value) return false;
 

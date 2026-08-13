@@ -22,6 +22,11 @@ test("G8 workflow validator rejects PR workflows without explicit permissions", 
   assert.match(problems.join("\n"), /must declare top-level permissions with contents: read/);
 });
 
+test("G8 workflow validator recognizes aliased pull_request triggers", async () => {
+  const problems = await validateFixture("invalid-aliased-trigger.yml");
+  assert.match(problems.join("\n"), /must declare top-level permissions with contents: read/);
+});
+
 test("G8 workflow validator rejects write permissions in PR jobs", async () => {
   const problems = await validateFixture("invalid-write-permissions.yml");
   assert.match(problems.join("\n"), /must not grant contents: write/);
