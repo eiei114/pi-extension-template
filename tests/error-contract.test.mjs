@@ -53,6 +53,27 @@ test("missing fallback rechecks canonical state before creating replacement", as
   assert.deepEqual(calls, ["action", "readCanonical"]);
 });
 
+test("missing fallback runs when canonical state is absent", async () => {
+  const calls = [];
+  const result = await fallbackAfterCanonicalRecheck(
+    async () => {
+      calls.push("action");
+      throw Object.assign(new Error("missing candidate"), { code: "ENOENT" });
+    },
+    async () => {
+      calls.push("readCanonical");
+      return undefined;
+    },
+    async () => {
+      calls.push("fallback");
+      return "fallback";
+    },
+  );
+
+  assert.equal(result, "fallback");
+  assert.deepEqual(calls, ["action", "readCanonical", "fallback"]);
+});
+
 test("check-mode style fallback is not reached for non-missing known errors", async () => {
   const calls = [];
   const permission = Object.assign(new Error("denied"), { code: "EPERM" });
