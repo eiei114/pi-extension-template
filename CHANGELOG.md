@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Align README install paths and npm badges with the live `create-pi-extension` npm package; mark the repository root `package.json` as `private` so the template source is not advertised as a publish target.
+
 All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.

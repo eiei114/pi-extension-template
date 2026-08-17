@@ -10,7 +10,7 @@ maintainer) can pick the next bounded micro-maintenance candidate without
 re-discovering project state. Update it whenever a release ships, a major item
 is resolved, or the seed backlog is exhausted.
 
-Status snapshot date: **2026-07-14**.
+Status snapshot date: **2026-08-17**.
 
 ---
 
@@ -18,10 +18,10 @@ Status snapshot date: **2026-07-14**.
 
 | Aspect | State |
 |---|---|
-| Latest GitHub release / tag | `v0.1.6` (2026-07-08) |
-| Root `package.json` version | `0.1.6` (synced into `create-pi-extension` on publish) |
-| `create-pi-extension` on npm | **Not published** — `404 Not Found`. Every `publish.yml` run on `main` fails with `E404` on `PUT create-pi-extension` (see §4, blocker). |
-| Legacy `pi-extension-template` on npm | `0.1.6` is present (legacy root package; docs say it should *not* be published). |
+| Latest GitHub release / tag | `v0.2.0` (2026-08-12) |
+| Root `package.json` version | `0.2.0` (synced into `create-pi-extension` on publish) |
+| `create-pi-extension` on npm | **Published** — `0.2.0` via Trusted Publishing (`publish.yml` green on tagged releases). |
+| Legacy `pi-extension-template` on npm | `0.1.6` remains on npm as a legacy root package; README steers users to `create-pi-extension`. |
 | CI (`.github/workflows/ci.yml`) | Green on `main`. Runs typecheck, `sync:template`, tests, `pack:check`, and template-sync assertions. |
 | Pi SDK alignment | Examples refreshed to Pi **0.80.x** (`@earendil-works/*` devDeps at `0.80.6`). `ctx.hasUI` guards, lifecycle events, TUI custom entries current. |
 | Example coverage | extension (`hello`, typed tool, TUI dashboard, skill-bridge, package-layout), Agent Skill, prompt template, theme (all 51 tokens). |
@@ -40,12 +40,9 @@ Status snapshot date: **2026-07-14**.
 
 ### 1.2 What is at risk
 
-- **`create-pi-extension` has never reached npm.** README badges, Quick start,
-  and docs all point to a package that 404s. This is the single highest-impact
-  issue and is **human-owned** (npm Trusted Publisher / package ownership).
 - **Two package names on npm are out of sync with intent**: the legacy root
-  `pi-extension-template` is published while the intended `create-pi-extension`
-  is not.
+  `pi-extension-template` is still published while `create-pi-extension` is the
+  intended onboarding artifact (TD-02, human-owned deprecation decision).
 - **No runtime validation of example extensions in CI** — only static
   `smoke.test.mjs` assertions. Example drift can land green and only surface
   for users who scaffold.
@@ -64,8 +61,9 @@ ecosystem. Its job is to make a new contributor productive in minutes:
 
 **Priorities (in order):**
 
-1. **Make the package installable.** `create-pi-extension` must exist on npm.
-   Everything else is secondary until onboarding actually works end-to-end.
+1. **Keep onboarding docs accurate** — README badges and install paths must
+   reference the live `create-pi-extension` npm package, not the legacy root
+   name.
 2. **Keep examples correct** against the latest Pi SDK (the template's core
    value proposition is "examples that compile and run today").
 3. **Keep the scaffold CLI ergonomic** (interactive defaults, scoped names,
@@ -114,7 +112,7 @@ load time, not just statically.
 
 | ID | Item | Severity | Ownership | Notes |
 |---|---|---|---|---|
-| TD-01 | `create-pi-extension` not on npm; `publish.yml` fails `E404` on every `main` push | **Blocker** | **Human** (npm Trusted Publisher / package ownership) | PUT returns 404 → Trusted Publisher not configured for the `create-pi-extension` name, or the package was never created on npm. README/docs/badges reference a 404 package. |
+| TD-01 | ~~`create-pi-extension` not on npm~~ — **resolved** for `0.1.8` / `0.2.0` publishes; keep `publish.yml` diagnostics for first-time forks | ~~Blocker~~ Closed (this repo) | **Human** for new forks | README + `publish.yml` now distinguish unregistered package vs already-published skip. |
 | TD-02 | Legacy root `pi-extension-template` is published on npm (`0.1.6`) despite docs saying it is not | High | **Human** (npm ownership) | Decide: deprecate on npm, or transfer. Coordinate with TD-01. |
 | TD-03 | No runtime validation of example extensions — only static `smoke` assertions | Medium | AI | Examples can drift and stay green until a user scaffolds. Covered by seed S-06. |
 | TD-04 | `CHANGELOG.md` has duplicate `### Changed` headers under `Unreleased` and an undated `[0.1.0] - YYYY-MM-DD` | Low | AI | Covered by seed S-04. |
@@ -140,7 +138,7 @@ it through and move the detail into the relevant release section above.
 |---|---|---|---|---|
 | **S-01** ✅ | ~~Add `ROADMAP.md` to the repository~~ — done (PR #63, DOT-858) | — | — | — |
 | **S-02** | Diagnose + clarify `publish.yml` `E404` failure | ~60 min | — | TD-01 (code side) |
-| **S-03** | Hardening: README must not advertise a 404 npm package | ~30 min | — | TD-01 (docs side) |
+| **S-03** ✅ | ~~Hardening: README must not advertise a 404 npm package~~ — done (DOT-1539) | ~30 min | — | TD-01 (docs side) |
 | **S-04** | Reconcile `CHANGELOG.md` (dates, no dup headers) | ~45 min | — | TD-04 |
 | **S-05** ✅ | ~~Remove stale follow-up issue references from docs~~ — done (DOT-1218) | ~30 min | — | TD-05 |
 | **S-06** | Add extension entrypoint shape assertion test | ~60 min | — | TD-03 |
@@ -162,10 +160,11 @@ it through and move the detail into the relevant release section above.
 - [ ] `docs/release.md` gains a "First publish / Trusted Publisher not configured" troubleshooting subsection.
 - [ ] CI still green. (Does **not** perform the publish — that is human-owned.)
 
-**S-03 — README must not advertise a 404 npm package**
-- [ ] Either the npm badge + Quick start reflect that `create-pi-extension` is pending first publish, or (after TD-01 resolves) point at the live package.
-- [ ] No broken claim that `bunx create-pi-extension` resolves from npm while it 404s.
-- [ ] `npm run ci` passes.
+**S-03 — README must not advertise a 404 npm package** ✅
+- [x] npm badge + Quick start point at the live `create-pi-extension` package on npm.
+- [x] No install/quick-start command advertises the legacy `pi-extension-template` npm name.
+- [x] `npm run ci` passes.
+- *Status: ✅ complete — README install paths use `create-pi-extension@latest`, root `package.json` is marked `private`, and sync tests guard npm badge targets (DOT-1539).*
 
 **S-04 — Reconcile `CHANGELOG.md`**
 - [ ] Every `[x.y.z]` header that shipped has a real ISO date (fix `[0.1.0] - YYYY-MM-DD`).

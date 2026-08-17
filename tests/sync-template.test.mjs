@@ -22,6 +22,9 @@ const STANDARD_BADGES = [
   "Trusted Publishing",
 ];
 
+const PUBLISHED_CLI_PACKAGE = "create-pi-extension";
+const LEGACY_NPM_PACKAGE = "pi-extension-template";
+
 const STANDARD_HEADINGS = [
   "## What this is",
   "## Features",
@@ -85,6 +88,38 @@ test("synced template README comes from scaffold source", () => {
   assert.match(templateReadme, /PACKAGE_DISPLAY_NAME/);
   assert.doesNotMatch(templateReadme, /bunx create-pi-extension/);
   assert.match(templateReadme, /PACKAGE_NAME@PACKAGE_VERSION/);
+});
+
+test("repository README advertises the live npm CLI package", () => {
+  const readme = readFileSync(ROOT_README, "utf8");
+
+  assert.match(readme, new RegExp(String.raw`img\.shields\.io/npm/v/${PUBLISHED_CLI_PACKAGE}`));
+  assert.match(readme, new RegExp(String.raw`img\.shields\.io/npm/dm/${PUBLISHED_CLI_PACKAGE}`));
+  assert.match(readme, /## Links[\s\S]*?npmjs\.com\/package\/create-pi-extension/);
+  assert.doesNotMatch(
+    readme.match(/## Links[\s\S]*?(?=\n## |$)/)?.[0] ?? "",
+    new RegExp(`npmjs\.com/package/${LEGACY_NPM_PACKAGE}`),
+  );
+  assert.match(readme, /bunx create-pi-extension@latest/);
+
+  for (const heading of ["## Install", "## Quick start"]) {
+    const start = readme.indexOf(heading);
+    assert.ok(start >= 0, `${heading} missing`);
+    const end = readme.indexOf("\n## ", start + 1);
+    const section = end === -1 ? readme.slice(start) : readme.slice(start, end);
+
+    for (const [, command] of section.matchAll(/`([^`]+)`/g)) {
+      if (!/(?:bunx|npm install|pi install)/.test(command)) continue;
+      assert.doesNotMatch(
+        command,
+        new RegExp(LEGACY_NPM_PACKAGE),
+        `${heading} install command must not advertise the legacy npm package: ${command}`,
+      );
+      if (/bunx create-pi/.test(command)) {
+        assert.match(command, new RegExp(PUBLISHED_CLI_PACKAGE));
+      }
+    }
+  }
 });
 
 test("repository and scaffold READMEs keep the standard public contract", () => {
