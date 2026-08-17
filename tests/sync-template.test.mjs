@@ -93,8 +93,8 @@ test("synced template README comes from scaffold source", () => {
 test("repository README advertises the live npm CLI package", () => {
   const readme = readFileSync(ROOT_README, "utf8");
 
-  assert.match(readme, new RegExp(`img\.shields\.io/npm/v/${PUBLISHED_CLI_PACKAGE}`));
-  assert.match(readme, new RegExp(`img\.shields\.io/npm/dm/${PUBLISHED_CLI_PACKAGE}`));
+  assert.match(readme, new RegExp(String.raw`img\.shields\.io/npm/v/${PUBLISHED_CLI_PACKAGE}`));
+  assert.match(readme, new RegExp(String.raw`img\.shields\.io/npm/dm/${PUBLISHED_CLI_PACKAGE}`));
   assert.match(readme, /## Links[\s\S]*?npmjs\.com\/package\/create-pi-extension/);
   assert.doesNotMatch(
     readme.match(/## Links[\s\S]*?(?=\n## |$)/)?.[0] ?? "",

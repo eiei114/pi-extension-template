@@ -76,6 +76,7 @@ test("package is discoverable as a Pi package", () => {
 test("repository root is private template source, CLI package is public", () => {
   assert.equal(packageJson.private, true);
   assert.equal(packageJson.publishConfig, undefined);
+  assert.notEqual(cliPackageJson.private, true);
   assert.equal(cliPackageJson.publishConfig?.access, "public");
 });
 
