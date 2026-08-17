@@ -8,7 +8,7 @@
 
 CLI が placeholder 置換・bootstrap doc 削除・`git init` / `bun install` を担当する。手動作業は最小限でよい。
 
-- [ ] `bunx create-pi-extension <package-name>` でプロジェクトを生成する
+- [ ] `bunx create-pi-extension@latest <package-name>` でプロジェクトを生成する
 - [ ] CLI の next steps（`npm run ci` など）に従う
 - [ ] 下記 **Recommended flow** の Vault / PRD / Issues フローに入る
 - [ ] README / feature list / quick start をプロジェクト向けに更新する

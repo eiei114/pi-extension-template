@@ -15,7 +15,9 @@
 
 ## What this is
 
-This repository is the **template source** for new Pi extension OSS projects. The published npm package is [`create-pi-extension`](https://www.npmjs.com/package/create-pi-extension), not the root `pi-extension-template` name.
+This repository is the **template source** for new Pi extension OSS projects. The published npm package is [`create-pi-extension`](https://www.npmjs.com/package/create-pi-extension) (the scaffold CLI). The repository root is **not** published to npm.
+
+`create-pi-extension` is live on npm — use `bunx create-pi-extension@latest` to scaffold a new project.
 
 ## Features
 
@@ -37,10 +39,10 @@ bunx create-pi-extension@latest my-pi-package
 
 ### Primary path (recommended)
 
-Scaffold a new project with the CLI:
+Scaffold a new project with the published CLI:
 
 ```bash
-bunx create-pi-extension my-pi-package
+bunx create-pi-extension@latest my-pi-package
 ```
 
 The CLI copies the bundled template, replaces placeholders, removes bootstrap docs, and can run `git init` plus `bun install`. See [`docs/template-checklist.md`](docs/template-checklist.md) for the minimal follow-up checklist.
@@ -48,7 +50,7 @@ The CLI copies the bundled template, replaces placeholders, removes bootstrap do
 For a scoped package name:
 
 ```bash
-bunx create-pi-extension @my-scope/my-pi-tool
+bunx create-pi-extension@latest @my-scope/my-pi-tool
 ```
 
 ### Secondary path: GitHub Template
@@ -66,7 +68,7 @@ That checklist first copies `scaffold/package-readme.md` to `README.md`, giving 
 
 ## Legacy npm package
 
-Do **not** use `pi install npm:pi-extension-template` as the main onboarding path. Use **`create-pi-extension`** to scaffold a new project instead. The legacy root-package install will be removed from npm in a future release. After you publish your own extension, install it with `pi install npm:YOUR_PACKAGE_NAME` as documented in that project's README.
+Do **not** use `pi install npm:pi-extension-template` as the main onboarding path. That legacy [`pi-extension-template`](https://www.npmjs.com/package/pi-extension-template) npm package predates the scaffold CLI and is not maintained as the onboarding artifact. Use **`create-pi-extension`** to scaffold a new project instead. After you publish your own extension, install it with `pi install npm:YOUR_PACKAGE_NAME` as documented in that project's README.
 
 ## Package contents
 

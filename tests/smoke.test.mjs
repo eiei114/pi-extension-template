@@ -12,6 +12,9 @@ const STALE_DOC_PATTERNS = [
 ];
 
 const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+const cliPackageJson = JSON.parse(
+  await readFile(new URL("../packages/create-pi-extension/package.json", import.meta.url), "utf8"),
+);
 const autoReleaseWorkflow = await readFile(new URL("../.github/workflows/auto-release.yml", import.meta.url), "utf8");
 const publishWorkflow = await readFile(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8");
 const exampleTheme = JSON.parse(await readFile(new URL("../themes/example-theme.json", import.meta.url), "utf8"));
@@ -70,8 +73,10 @@ test("package is discoverable as a Pi package", () => {
   assert.ok(packageJson.keywords.includes("pi-package"));
 });
 
-test("package uses public publish config", () => {
-  assert.equal(packageJson.publishConfig.access, "public");
+test("repository root is private template source, CLI package is public", () => {
+  assert.equal(packageJson.private, true);
+  assert.equal(packageJson.publishConfig, undefined);
+  assert.equal(cliPackageJson.publishConfig?.access, "public");
 });
 
 test("template includes npm release workflow handoff", () => {
