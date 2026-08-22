@@ -26,7 +26,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: npm-publish-${{ github.event.inputs.ref || github.ref }}
+  # Serialize push and workflow_dispatch triggers so the same version cannot race itself.
+  group: npm-publish
   cancel-in-progress: false
 
 jobs:
