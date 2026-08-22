@@ -18,9 +18,9 @@ Status snapshot date: **2026-08-17**.
 
 | Aspect | State |
 |---|---|
-| Latest GitHub release / tag | `v0.2.0` (2026-08-12) |
-| Root `package.json` version | `0.2.0` (synced into `create-pi-extension` on publish) |
-| `create-pi-extension` on npm | **Published** — `0.2.0` via Trusted Publishing (`publish.yml` green on tagged releases). |
+| Latest GitHub release / tag | `v0.2.1` (2026-08-22) |
+| Root `package.json` version | `0.2.1` (synced into `create-pi-extension` on publish) |
+| `create-pi-extension` on npm | **Published** — `0.2.1` via Trusted Publishing (`publish.yml` green on tagged releases). |
 | Legacy `pi-extension-template` on npm | `0.1.6` remains on npm as a legacy root package; README steers users to `create-pi-extension`. |
 | CI (`.github/workflows/ci.yml`) | Green on `main`. Runs typecheck, `sync:template`, tests, `pack:check`, and template-sync assertions. |
 | Pi SDK alignment | Examples refreshed to Pi **0.80.x** (`@earendil-works/*` devDeps at `0.80.6`). `ctx.hasUI` guards, lifecycle events, TUI custom entries current. |
