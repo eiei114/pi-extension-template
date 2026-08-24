@@ -225,3 +225,35 @@ test("docs do not reference resolved follow-up issue placeholders", async () => 
     }
   }
 });
+
+test("maintainer docs describe the actual npm run ci pipeline", async () => {
+  const templateSyncDoc = await readFile(join(DOCS_DIR, "template-sync.md"), "utf8");
+  assert.doesNotMatch(
+    templateSyncDoc,
+    /sync:template:check/,
+    "template-sync.md must not claim CI runs sync:template:check",
+  );
+  assert.match(templateSyncDoc, /sync:template/, "template-sync.md must document sync:template in CI");
+  assert.match(templateSyncDoc, /review:guardrails/, "template-sync.md must document review:guardrails in CI");
+
+  const checklist = await readFile(join(DOCS_DIR, "template-sync-checklist.md"), "utf8");
+  assert.match(
+    checklist,
+    /review:guardrails/,
+    "template-sync-checklist.md must document review:guardrails in template ci script",
+  );
+  assert.doesNotMatch(
+    checklist,
+    /npm run typecheck && npm test && npm run pack:check"/,
+    "template-sync-checklist.md must not omit review:guardrails from template ci script",
+  );
+
+  const readme = await readFile(new URL("../README.md", import.meta.url), "utf8");
+  const developmentSection = readme.match(/## Development[\s\S]*?(?=\n## |$)/)?.[0];
+  assert.ok(developmentSection, "README must have Development section");
+  assert.match(
+    developmentSection,
+    /review:guardrails/,
+    "README Development section must mention review:guardrails",
+  );
+});
