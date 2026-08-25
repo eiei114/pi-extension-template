@@ -86,7 +86,7 @@ npm install
 npm run ci
 ```
 
-`npm run ci` runs typecheck, `sync:template`, CLI scaffold tests, a `create-pi-extension` pack check, and template sync assertions.
+`npm run ci` runs typecheck, `sync:template`, tests, `review:guardrails`, a `create-pi-extension` pack check, and template sync assertions.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`docs/template-sync.md`](docs/template-sync.md).
 

@@ -34,7 +34,7 @@ The synced `template/package.json` has monorepo-only fields removed (`workspaces
 
 ## CI check
 
-`npm run ci` runs `sync:template:check`, which regenerates the template and runs `tests/sync-template.test.mjs`.
+`npm run ci` runs typecheck, `sync:template`, the full test suite, `review:guardrails`, the `create-pi-extension` pack check, and `tests/sync-template.test.mjs`.
 
 ## See also
 
