@@ -11,6 +11,46 @@ const STALE_DOC_PATTERNS = [
   /follow-up issue `[0-9]/,
 ];
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function parseCiPipeline(ciScript) {
+  return ciScript.split(/\s+&&\s+/).map((step) => step.trim());
+}
+
+function ciStepDocPatterns(step) {
+  const npmRunMatch = step.match(/^npm run (\S+)/);
+  if (npmRunMatch) {
+    const script = npmRunMatch[1];
+    if (script === "pack:check") {
+      return [/pack:check/, /pack check/i];
+    }
+    return [new RegExp(escapeRegExp(script))];
+  }
+  if (step === "npm test") {
+    return [/\btests?\b/i];
+  }
+  const nodeTestMatch = step.match(/^node --test (\S+)/);
+  if (nodeTestMatch) {
+    const testFile = nodeTestMatch[1];
+    if (testFile.includes("sync-template")) {
+      return [/sync-template/, /template sync/i];
+    }
+    return [new RegExp(escapeRegExp(testFile))];
+  }
+  return [new RegExp(escapeRegExp(step))];
+}
+
+function assertCiStepDocumented(step, docText) {
+  const patterns = ciStepDocPatterns(step);
+  const matched = patterns.some((pattern) => pattern.test(docText));
+  assert.ok(
+    matched,
+    `maintainer docs must document CI step "${step}" (expected one of: ${patterns.map(String).join(", ")})`,
+  );
+}
+
 const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 const cliPackageJson = JSON.parse(
   await readFile(new URL("../packages/create-pi-extension/package.json", import.meta.url), "utf8"),
@@ -227,33 +267,22 @@ test("docs do not reference resolved follow-up issue placeholders", async () => 
 });
 
 test("maintainer docs describe the actual npm run ci pipeline", async () => {
+  const ciScript = packageJson.scripts?.ci;
+  assert.ok(ciScript, "package.json must define scripts.ci");
+
   const templateSyncDoc = await readFile(join(DOCS_DIR, "template-sync.md"), "utf8");
   assert.doesNotMatch(
     templateSyncDoc,
     /sync:template:check/,
     "template-sync.md must not claim CI runs sync:template:check",
   );
-  assert.match(templateSyncDoc, /sync:template/, "template-sync.md must document sync:template in CI");
-  assert.match(templateSyncDoc, /review:guardrails/, "template-sync.md must document review:guardrails in CI");
-
-  const checklist = await readFile(join(DOCS_DIR, "template-sync-checklist.md"), "utf8");
-  assert.match(
-    checklist,
-    /review:guardrails/,
-    "template-sync-checklist.md must document review:guardrails in template ci script",
-  );
-  assert.doesNotMatch(
-    checklist,
-    /npm run typecheck && npm test && npm run pack:check"/,
-    "template-sync-checklist.md must not omit review:guardrails from template ci script",
-  );
 
   const readme = await readFile(new URL("../README.md", import.meta.url), "utf8");
   const developmentSection = readme.match(/## Development[\s\S]*?(?=\n## |$)/)?.[0];
   assert.ok(developmentSection, "README must have Development section");
-  assert.match(
-    developmentSection,
-    /review:guardrails/,
-    "README Development section must mention review:guardrails",
-  );
+
+  const maintainerDocs = `${templateSyncDoc}\n${developmentSection}`;
+  for (const step of parseCiPipeline(ciScript)) {
+    assertCiStepDocumented(step, maintainerDocs);
+  }
 });
