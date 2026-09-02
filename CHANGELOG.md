@@ -1,18 +1,25 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+This project follows semantic versioning.
+
 ## Unreleased
+
+### Fixed
+
+- Serialize npm publish workflow runs so concurrent publishes no longer race.
+
+### Changed
+
+- Align maintainer docs with the actual `npm run ci` pipeline (`sync:template`, `review:guardrails`, and related checks).
 
 ## [0.2.1] - 2026-08-22
 
 ### Changed
 
 - Align the Pi coding-agent and TUI development dependencies on the 0.84.2 SDK line so the dashboard example uses one compatible TUI type graph.
-
 - Align README install paths and npm badges with the live `create-pi-extension` npm package; mark the repository root `package.json` as `private` so the template source is not advertised as a publish target.
-
-All notable changes to this project will be documented in this file.
-
-This project follows semantic versioning.
 
 ## [0.2.0] - 2026-08-12
 
