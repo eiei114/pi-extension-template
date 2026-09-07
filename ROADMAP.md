@@ -90,8 +90,8 @@ Goal: ship the unreleased fixes already on `main` and tighten publish
 diagnostics so fork maintainers get actionable errors.
 
 - Tag and release unreleased items (publish serialization, maintainer CI docs).
-- Harden `publish.yml` so a "package name not registered" failure is diagnosed
-  clearly instead of a bare `E404` (seed S-02).
+- ~~Harden `publish.yml` so a "package name not registered" failure is diagnosed
+  clearly instead of a bare `E404` (seed S-02).~~ ✅ done (DOT-1228 / DOT-1744).
 - Apply `npm pkg fix` and verify publish warning clears (seed S-10).
 
 ### v0.3.0 — "ergonomic + verified scaffold" (minor)
@@ -141,7 +141,7 @@ it through and move the detail into the relevant release section above.
 | Seed | Title | Estimate | Depends on | Why needed |
 |---|---|---|---|---|
 | **S-01** ✅ | ~~Add `ROADMAP.md` to the repository~~ — done (PR #63, DOT-858) | — | — | — |
-| **S-02** | Diagnose + clarify `publish.yml` `E404` failure | ~60 min | — | Fork maintainers hit opaque `E404` on first publish; actionable errors reduce support burden and unblock TD-01 code-side. |
+| **S-02** ✅ | ~~Diagnose + clarify `publish.yml` `E404` failure~~ — done (DOT-1228, DOT-1744) | ~60 min | — | — |
 | **S-03** ✅ | ~~Hardening: README must not advertise a 404 npm package~~ — done (DOT-1539) | ~30 min | — | — |
 | **S-04** ✅ | ~~Reconcile `CHANGELOG.md` (dates, no dup headers)~~ — done (DOT-1693, PR #105) | ~45 min | — | — |
 | **S-05** ✅ | ~~Remove stale follow-up issue references from docs~~ — done (DOT-1218) | ~30 min | — | — |
@@ -159,10 +159,11 @@ it through and move the detail into the relevant release section above.
 - [x] Status snapshot, priorities, and ≥3 seeds with acceptance criteria present.
 - *Status: ✅ complete — `ROADMAP.md` added and linked from `README.md` in PR #63 (DOT-858).*
 
-**S-02 — Diagnose + clarify `publish.yml` `E404` failure**
-- [ ] `publish.yml` distinguishes "package name not registered on npm" from "version already published" and prints an actionable message for the former.
-- [ ] `docs/release.md` gains a "First publish / Trusted Publisher not configured" troubleshooting subsection.
-- [ ] CI still green. (Does **not** perform the publish — that is human-owned.)
+**S-02 — Diagnose + clarify `publish.yml` `E404` failure** ✅
+- [x] `publish.yml` distinguishes "package name not registered on npm" from "version already published" and prints an actionable message for the former.
+- [x] `docs/release.md` gains a "First publish / Trusted Publisher not configured" troubleshooting subsection.
+- [x] CI still green. (Does **not** perform the publish — that is human-owned.)
+- *Status: ✅ complete — publish diagnostics and release troubleshooting shipped in PR #73 (DOT-1228); ROADMAP reconciliation and doc regression guard in DOT-1744.*
 
 **S-03 — README must not advertise a 404 npm package** ✅
 - [x] npm badge + Quick start point at the live `create-pi-extension` package on npm.
