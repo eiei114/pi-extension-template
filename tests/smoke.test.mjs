@@ -103,6 +103,17 @@ test("publish workflow distinguishes unregistered package from already-published
   assert.match(publishWorkflow, /npm error code E404/);
 });
 
+test("release docs document first publish and Trusted Publisher troubleshooting", async () => {
+  const releaseDoc = await readFile(join(DOCS_DIR, "release.md"), "utf8");
+  assert.match(releaseDoc, /### First publish \/ Trusted Publisher not configured/);
+  const section = releaseDoc
+    .split("### First publish / Trusted Publisher not configured")[1]
+    .split(/^## /m)[0];
+  assert.match(section, /publish intentionally skipped/);
+  assert.match(section, /npm error code E404/);
+  assert.match(section, /workflow_dispatch/);
+});
+
 test("ci pack check targets create-pi-extension workspace", () => {
   assert.equal(
     packageJson.scripts.ci,
