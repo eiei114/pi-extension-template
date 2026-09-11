@@ -39,6 +39,13 @@ export function getGitConfig(key) {
   }
 }
 
+export function formatOwnerSlug(value) {
+  return value
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+}
+
 export function defaultGitHubOwner() {
   const githubUser = getGitConfig("github.user");
   if (githubUser) {
@@ -50,10 +57,11 @@ export function defaultGitHubOwner() {
     return "";
   }
 
-  return userName
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
+  return formatOwnerSlug(userName);
+}
+
+export function resolveOwnerSlug(fallback = "", readOwner = defaultGitHubOwner) {
+  return readOwner() || fallback;
 }
 
 export function parseOwnerRepo(value) {
