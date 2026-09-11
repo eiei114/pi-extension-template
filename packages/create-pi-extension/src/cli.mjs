@@ -9,7 +9,7 @@ import {
   runPostSetup,
   scaffoldProject,
 } from "./scaffold.mjs";
-import { getGitConfig, parsePackageArg } from "./utils.mjs";
+import { getGitConfig, parsePackageArg, resolveOwnerSlug } from "./utils.mjs";
 
 function printHelp() {
   console.log(`Usage: create-pi-extension <package-name>
@@ -37,13 +37,7 @@ async function main() {
   const outputDir = resolveOutputDirectory(cwd(), directoryName);
   assertOutputDirectoryAvailable(outputDir);
 
-  const githubOwner = getGitConfig("github.user") || getGitConfig("user.name");
-  const ownerSlug = githubOwner
-    ? githubOwner
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9-]/g, "")
-    : "your-name";
+  const ownerSlug = resolveOwnerSlug("your-name");
 
   const defaults = {
     displayName: directoryName,

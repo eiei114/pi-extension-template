@@ -11,7 +11,7 @@ import {
   resolveOutputDirectory,
   scaffoldProject,
 } from "../packages/create-pi-extension/src/scaffold.mjs";
-import { parsePackageArg } from "../packages/create-pi-extension/src/utils.mjs";
+import { formatOwnerSlug, parsePackageArg, resolveOwnerSlug } from "../packages/create-pi-extension/src/utils.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const CLI = join(ROOT, "packages", "create-pi-extension", "src", "cli.mjs");
@@ -46,6 +46,18 @@ function readProject(cwd, directoryName) {
   const license = readFileSync(join(projectDir, "LICENSE"), "utf8");
   return { projectDir, packageJson, readme, license };
 }
+
+test("formatOwnerSlug normalizes git user.name values for GitHub owner defaults", () => {
+  assert.equal(formatOwnerSlug("Ada Lovelace"), "ada-lovelace");
+  assert.equal(formatOwnerSlug("Mixed Case!"), "mixed-case");
+  assert.equal(formatOwnerSlug("already-slug"), "already-slug");
+});
+
+test("resolveOwnerSlug prefers git owner lookup and otherwise uses fallback", () => {
+  assert.equal(resolveOwnerSlug("fallback-owner", () => ""), "fallback-owner");
+  assert.equal(resolveOwnerSlug("fallback-owner", () => "configured-owner"), "configured-owner");
+  assert.equal(resolveOwnerSlug("fallback-owner", () => "My GitHub"), "My GitHub");
+});
 
 test("create-pi-extension scaffolds an unscoped package", () => {
   const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-"));

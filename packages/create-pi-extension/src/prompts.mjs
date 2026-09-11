@@ -1,9 +1,9 @@
 import * as p from "@clack/prompts";
 import { isCancel } from "@clack/prompts";
-import { defaultGitHubOwner, isInteractive, parseOwnerRepo } from "./utils.mjs";
+import { isInteractive, parseOwnerRepo, resolveOwnerSlug } from "./utils.mjs";
 
 export async function collectProjectOptions({ packageName, directoryName, defaults }) {
-  const owner = defaultGitHubOwner() || defaults.owner;
+  const owner = resolveOwnerSlug(defaults.owner);
   const defaultOwnerRepo = owner ? `${owner}/${directoryName}` : defaults.ownerRepo;
 
   if (!isInteractive()) {
