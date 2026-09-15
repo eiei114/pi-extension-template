@@ -97,8 +97,20 @@ Important: tags or releases created by `GITHUB_TOKEN` do not reliably fan out in
 - No `NPM_TOKEN`
 - `npm publish` from `packages/create-pi-extension` in the configured workflow file
 
+## Local validation before publish
+
+Before merging a version bump or dispatching `publish.yml`, run the checks in [`docs/publish-local-validation.md`](publish-local-validation.md). At minimum:
+
+```bash
+npm ci
+npm run ci
+```
+
+Then verify the `create-pi-extension` dry-run tarball includes `template/` (see the doc for the exact command). Publishing itself remains GitHub Actions only.
+
 ## First release checklist
 
+- [ ] Local validation in [`docs/publish-local-validation.md`](publish-local-validation.md) passes
 - [ ] Root `package.json` version is final (synced into `create-pi-extension` on publish)
 - [ ] `packages/create-pi-extension/package.json` name is `create-pi-extension`
 - [ ] `repository.url` points to the real GitHub repository

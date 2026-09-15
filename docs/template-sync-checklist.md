@@ -59,6 +59,7 @@
 
 ## Before publish
 
+- [ ] [`docs/publish-local-validation.md`](publish-local-validation.md) の手順（`npm run ci` と tarball 確認）が通る
 - [ ] CHANGELOG.md に新しいバージョンのリリースノートを追記した
 - [ ] 既存の issue / PR と競合していないことを確認した
 - [ ] `docs/release.md` の手順に従って publish する準備ができている
