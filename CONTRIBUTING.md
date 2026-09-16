@@ -29,7 +29,7 @@ Before opening a PR:
 
 Releases publish **`create-pi-extension`** to npm through Trusted Publishing. The root template source is not published. Do not add `NPM_TOKEN` to GitHub Secrets.
 
-Before bumping the version, run the local validation steps in `docs/publish-local-validation.md` (at minimum `npm run ci` plus the tarball check).
+Before bumping the version, run the local validation steps in `docs/publish-local-validation.md` (at minimum `npm ci`, `npm run ci`, plus the tarball check).
 
 ```bash
 npm version patch

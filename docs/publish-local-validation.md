@@ -31,7 +31,7 @@ npm run ci
 5. `npm run pack:check` — `npm pack --dry-run` for the `create-pi-extension` workspace
 6. `node --test tests/sync-template.test.mjs` — assert the bundled template matches the source
 
-If this passes, you have covered the same validation steps as the publish workflow (except the registry skip guard and Trusted Publishing).
+If this passes, you have covered the CI validation steps from the publish workflow. Run the Tarball check below as a separate required check.
 
 ## Tarball check (publish workflow parity)
 
@@ -48,7 +48,9 @@ On Windows PowerShell:
 ```powershell
 cd packages/create-pi-extension
 npm pack --dry-run 2>&1 | Tee-Object -Variable pack
-$pack -match 'template/'
+if (-not ($pack -match 'template/')) {
+  throw 'Bundled template is missing from the dry-run tarball.'
+}
 ```
 
 If `grep` / `-match` fails, the bundled template is missing from the published package. Re-run `npm run sync:template` and check [`docs/template-sync-checklist.md`](template-sync-checklist.md).
