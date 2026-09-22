@@ -39,11 +39,23 @@ function releaseTarget() {
   return { args: ["pack", "--dry-run", "--json"], lockKey: "", manifest: packageJson, prefix: "" };
 }
 
+function runNpm(args) {
+  const npmExecPath = process.env.npm_execpath;
+  // `npm run` sets npm_execpath to npm-cli.js, but `bun run` sets it to the bun binary,
+  // which cannot be executed by node. Fall back to the npm CLI in that case.
+  if (npmExecPath && /\.(?:c?js|mjs)$/.test(npmExecPath)) {
+    return execFileSync(process.execPath, [npmExecPath, ...args], { cwd: ROOT, encoding: "utf8" });
+  }
+  return execFileSync(process.platform === "win32" ? "npm.cmd" : "npm", args, {
+    cwd: ROOT,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+}
+
 function packedFiles() {
   const target = releaseTarget();
-  const npmCli = process.env.npm_execpath;
-  assert.ok(npmCli, "npm_execpath is required; run this guard through npm run review:guardrails");
-  const output = execFileSync(process.execPath, [npmCli, ...target.args], { cwd: ROOT, encoding: "utf8" });
+  const output = runNpm(target.args);
   const result = JSON.parse(output);
   assert.equal(result.length, 1, "npm pack must return exactly one package");
   return { files: new Set(result[0].files.map((item) => item.path)), prefix: target.prefix };

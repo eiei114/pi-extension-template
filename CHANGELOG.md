@@ -4,15 +4,26 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
-## Unreleased
-
-### Fixed
-
-- Serialize npm publish workflow runs so concurrent publishes no longer race.
+## [0.3.0] - 2026-09-22
 
 ### Changed
 
+- Scaffolded projects now get a standalone test suite: repository-only suites (`create-pi-extension` CLI, template sync) and `scripts/sync-template.ts` are excluded from the bundled template, and the generated `test` script only lists suites that exist in the generated project. A fresh `bunx create-pi-extension` project passes `bun run ci` on the first run.
+- `review:guardrails` runs `npm pack` through the npm CLI instead of assuming `npm_execpath` points at npm, so `bun run ci` works in this repository and in scaffolded projects.
 - Align maintainer docs with the actual `npm run ci` pipeline (`sync:template`, `review:guardrails`, and related checks).
+
+### Fixed
+
+- Include `SECURITY.md` in the published tarball. The scaffold README links it, and the generated-package guardrail failed when the file was missing from `files`.
+- Serialize npm publish workflow runs so concurrent publishes no longer race.
+
+### Deprecated
+
+- The legacy npm package `pi-extension-template` is deprecated with the message `Use: bunx create-pi-extension`. Use the **Primary start path** (`bunx create-pi-extension`) or the **Secondary start path** (GitHub Template) instead.
+
+### Migration
+
+- Template consumers: replace `pi install npm:pi-extension-template` onboarding with `bunx create-pi-extension <package-name>`. The GitHub Template start path is unchanged, and this repository root stays private and unpublished.
 
 ## [0.2.1] - 2026-08-22
 

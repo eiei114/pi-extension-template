@@ -1,10 +1,19 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const DOCS_DIR = fileURLToPath(new URL("../docs", import.meta.url));
+const CLI_PACKAGE_PATH = fileURLToPath(new URL("../packages/create-pi-extension/package.json", import.meta.url));
+// Scaffolded packages carry this suite too but have no CLI package, so the CLI manifest
+// assertions are repository-only.
+const repositoryHasCliPackage = existsSync(CLI_PACKAGE_PATH);
+// Scaffolded packages carry this suite too; monorepo-only assertions are skipped there.
+const repositoryOnly = repositoryHasCliPackage
+  ? false
+  : "repository-only assertion: scaffolded packages have no create-pi-extension workspace";
 const STALE_DOC_PATTERNS = [
   /DOT-710/,
   /05-implement-create-pi-extension-cli/,
@@ -12,9 +21,9 @@ const STALE_DOC_PATTERNS = [
 ];
 
 const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
-const cliPackageJson = JSON.parse(
-  await readFile(new URL("../packages/create-pi-extension/package.json", import.meta.url), "utf8"),
-);
+const cliPackageJson = repositoryHasCliPackage
+  ? JSON.parse(await readFile(CLI_PACKAGE_PATH, "utf8"))
+  : null;
 const autoReleaseWorkflow = await readFile(new URL("../.github/workflows/auto-release.yml", import.meta.url), "utf8");
 const publishWorkflow = await readFile(new URL("../.github/workflows/publish.yml", import.meta.url), "utf8");
 const exampleTheme = JSON.parse(await readFile(new URL("../themes/example-theme.json", import.meta.url), "utf8"));
@@ -73,12 +82,19 @@ test("package is discoverable as a Pi package", () => {
   assert.ok(packageJson.keywords.includes("pi-package"));
 });
 
-test("repository root is private template source, CLI package is public", () => {
+test("repository root is private template source", () => {
   assert.equal(packageJson.private, true);
   assert.equal(packageJson.publishConfig, undefined);
-  assert.notEqual(cliPackageJson.private, true);
-  assert.equal(cliPackageJson.publishConfig?.access, "public");
 });
+
+test(
+  "create-pi-extension CLI package is published publicly",
+  { skip: repositoryOnly },
+  () => {
+    assert.notEqual(cliPackageJson.private, true);
+    assert.equal(cliPackageJson.publishConfig?.access, "public");
+  },
+);
 
 test("template includes npm release workflow handoff", () => {
   assert.match(autoReleaseWorkflow, /actions:\s*write/);
@@ -114,7 +130,7 @@ test("release docs document first publish and Trusted Publisher troubleshooting"
   assert.match(section, /workflow_dispatch/);
 });
 
-test("ci pack check targets create-pi-extension workspace", () => {
+test("ci pack check targets create-pi-extension workspace", { skip: repositoryOnly }, () => {
   assert.equal(
     packageJson.scripts.ci,
     "npm run typecheck && npm run sync:template && npm test && npm run review:guardrails && npm run pack:check && node --test tests/sync-template.test.mjs",
@@ -237,7 +253,7 @@ test("docs do not reference resolved follow-up issue placeholders", async () => 
   }
 });
 
-test("maintainer docs describe the actual npm run ci pipeline", async () => {
+test("maintainer docs describe the actual npm run ci pipeline", { skip: repositoryOnly }, async () => {
   const templateSyncDoc = await readFile(join(DOCS_DIR, "template-sync.md"), "utf8");
   assert.doesNotMatch(
     templateSyncDoc,
