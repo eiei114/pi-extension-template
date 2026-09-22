@@ -65,8 +65,46 @@ test("synced template excludes monorepo paths", () => {
     "docs/repository-settings.md",
     "docs/template-sync.md",
     "docs/typescript.md",
+    "scripts/sync-template.ts",
+    "tests/create-pi-extension-cli.test.mjs",
+    "tests/sync-template.test.mjs",
   ]) {
     assert.equal(existsSync(templatePath(path)), false, `CLI template must omit bootstrap-only ${path}`);
+  }
+});
+
+test("synced template test script only references files that exist", () => {
+  const templatePackageJson = JSON.parse(readFileSync(templatePath("package.json"), "utf8"));
+  const [, ...testArgs] = templatePackageJson.scripts.test.split(/\s+/).filter(Boolean);
+  const testFiles = testArgs.filter((arg) => arg.startsWith("tests/"));
+
+  assert.ok(testFiles.length > 0, "template test script must still run the package test suite");
+  for (const testFile of testFiles) {
+    assert.ok(existsSync(templatePath(testFile)), `template test script references missing ${testFile}`);
+  }
+  assert.equal(
+    existsSync(templatePath("tests/create-pi-extension-cli.test.mjs")),
+    false,
+    "scaffolded packages must not run the create-pi-extension CLI suite",
+  );
+});
+
+test("template publishes every file the scaffold README links", () => {
+  const templatePackageJson = JSON.parse(readFileSync(templatePath("package.json"), "utf8"));
+  const scaffoldReadme = readFileSync(templatePath("README.md"), "utf8");
+  const published = templatePackageJson.files.map((entry) => entry.replace(/^\.\//, ""));
+  const isPublished = (target) =>
+    published.some(
+      (entry) => entry === target || (entry.endsWith("/") && target.startsWith(entry)),
+    );
+
+  for (const [, link] of scaffoldReadme.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
+    const target = link.split("#", 1)[0].trim();
+    if (!target || /^(?:https?:|mailto:|npm:)/.test(target) || target.startsWith("../")) continue;
+    assert.ok(
+      isPublished(target),
+      `template files must include ${target} because the scaffold README links it`,
+    );
   }
 });
 

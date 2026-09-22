@@ -13,7 +13,7 @@
 ## Run sync
 
 - [ ] `bun run sync:template` を実行して `packages/create-pi-extension/template/` を再生成する
-- [ ] 生成されたファイル数が期待通りであることを確認する（目安: 54 ファイル。`ROADMAP.md` は maintainer-only のため除外）
+- [ ] 生成されたファイル数が期待通りであることを確認する（目安: 52 ファイル。`ROADMAP.md`、`scripts/sync-template.ts`、CLI・sync 用の repository-only テストは除外）
 
 ## Verify synced template
 
