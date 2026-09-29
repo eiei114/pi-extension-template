@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -61,6 +62,26 @@ const EXPECTED_EXTENSION_ENTRIES = [
   "./extensions/skill-bridge/index.ts",
   "./extensions/package-layout/index.ts",
 ];
+const REPOSITORY_ONLY_PACKAGE_PATHS = [
+  "tests/",
+  "scripts/",
+  "packages/",
+  ".github/",
+  "ROADMAP.md",
+  "package-lock.json",
+];
+
+function packedPaths() {
+  const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+  const output = execFileSync(npm, ["pack", "--dry-run", "--json"], {
+    cwd: fileURLToPath(new URL("..", import.meta.url)),
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  const result = JSON.parse(output);
+  assert.equal(result.length, 1, "npm pack must return exactly one package");
+  return new Set(result[0].files.map(({ path }) => path));
+}
 
 test("package declares pi resources", () => {
   assert.deepEqual(packageJson.pi.extensions, EXPECTED_EXTENSION_ENTRIES);
@@ -80,6 +101,25 @@ test("pi.extensions lists each entrypoint explicitly (not directory shorthand)",
 
 test("package is discoverable as a Pi package", () => {
   assert.ok(packageJson.keywords.includes("pi-package"));
+});
+
+test("package tarball includes documented extensions", () => {
+  const packed = packedPaths();
+
+  for (const extension of packageJson.pi.extensions) {
+    assert.ok(packed.has(extension.replace(/^\.\//, "")), `${extension} is documented but absent from npm tarball`);
+  }
+});
+
+test("repository-only files are excluded from the root package tarball", { skip: repositoryOnly }, () => {
+  const packed = packedPaths();
+
+  for (const repositoryOnlyPath of REPOSITORY_ONLY_PACKAGE_PATHS) {
+    assert.ok(
+      ![...packed].some((path) => path === repositoryOnlyPath || path.startsWith(repositoryOnlyPath)),
+      `${repositoryOnlyPath} is repository-only but present in npm tarball`,
+    );
+  }
 });
 
 test("repository root is private template source", () => {
