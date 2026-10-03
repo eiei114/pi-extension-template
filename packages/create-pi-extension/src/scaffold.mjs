@@ -12,7 +12,7 @@ import {
 } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseOwnerRepo } from "./utils.mjs";
+import { getRepositoryMetadata } from "./utils.mjs";
 
 const PACKAGE_ROOT = fileURLToPath(new URL("..", import.meta.url));
 const TEMPLATE_ROOT = join(PACKAGE_ROOT, "template");
@@ -83,7 +83,7 @@ function walkFiles(directory, visitor) {
 }
 
 function patchPackageJson(packageJsonPath, options) {
-  const { owner, repo } = parseOwnerRepo(options.ownerRepo);
+  const repository = getRepositoryMetadata(options.ownerRepo);
   const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
 
   packageJson.name = options.packageName;
@@ -91,12 +91,12 @@ function patchPackageJson(packageJsonPath, options) {
   packageJson.author = options.author;
   packageJson.repository = {
     type: "git",
-    url: `https://github.com/${owner}/${repo}`,
+    url: repository.url,
   };
   packageJson.bugs = {
-    url: `https://github.com/${owner}/${repo}/issues`,
+    url: repository.bugsUrl,
   };
-  packageJson.homepage = `https://github.com/${owner}/${repo}#readme`;
+  packageJson.homepage = repository.homepage;
 
   if (packageJson.scripts && typeof packageJson.scripts === "object") {
     const scripts = { ...packageJson.scripts };
@@ -133,16 +133,16 @@ export function scaffoldProject(outputDir, options) {
 
   copyDirectory(templateRoot, outputDir);
 
-  const { owner, repo } = parseOwnerRepo(options.ownerRepo);
+  const repository = getRepositoryMetadata(options.ownerRepo);
   const templatePackageJson = JSON.parse(readFileSync(join(templateRoot, "package.json"), "utf8"));
   const replacements = [
-    ["OWNER/REPO", `${owner}/${repo}`],
+    ["OWNER/REPO", `${repository.owner}/${repository.repo}`],
     ["PACKAGE_NAME", options.packageName],
     ["PACKAGE_DISPLAY_NAME", options.displayName],
     ["PACKAGE_VERSION", templatePackageJson.version],
     ["YOUR_NAME", options.author],
-    ["OWNER", owner],
-    ["REPO", repo],
+    ["OWNER", repository.owner],
+    ["REPO", repository.repo],
   ];
 
   walkFiles(outputDir, (filePath) => {

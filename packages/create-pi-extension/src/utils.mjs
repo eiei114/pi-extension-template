@@ -73,6 +73,18 @@ export function parseOwnerRepo(value) {
   return { owner: match[1], repo: match[2] };
 }
 
+export function getRepositoryMetadata(value) {
+  const { owner, repo } = parseOwnerRepo(value);
+  const baseUrl = `https://github.com/${owner}/${repo}`;
+  return {
+    owner,
+    repo,
+    url: baseUrl,
+    bugsUrl: `${baseUrl}/issues`,
+    homepage: `${baseUrl}#readme`,
+  };
+}
+
 export function isInteractive() {
   if (process.env.CREATE_PI_EXTENSION_YES === "1") {
     return false;

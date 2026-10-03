@@ -11,7 +11,12 @@ import {
   resolveOutputDirectory,
   scaffoldProject,
 } from "../packages/create-pi-extension/src/scaffold.mjs";
-import { formatOwnerSlug, parsePackageArg, resolveOwnerSlug } from "../packages/create-pi-extension/src/utils.mjs";
+import {
+  formatOwnerSlug,
+  getRepositoryMetadata,
+  parsePackageArg,
+  resolveOwnerSlug,
+} from "../packages/create-pi-extension/src/utils.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const CLI = join(ROOT, "packages", "create-pi-extension", "src", "cli.mjs");
@@ -57,6 +62,16 @@ test("resolveOwnerSlug prefers git owner lookup and otherwise uses fallback", ()
   assert.equal(resolveOwnerSlug("fallback-owner", () => ""), "fallback-owner");
   assert.equal(resolveOwnerSlug("fallback-owner", () => "configured-owner"), "configured-owner");
   assert.equal(resolveOwnerSlug("fallback-owner", () => "My GitHub"), "My GitHub");
+});
+
+test("getRepositoryMetadata centralizes GitHub repository URLs", () => {
+  assert.deepEqual(getRepositoryMetadata("fixture-owner/fixture-pi-package"), {
+    owner: "fixture-owner",
+    repo: "fixture-pi-package",
+    url: "https://github.com/fixture-owner/fixture-pi-package",
+    bugsUrl: "https://github.com/fixture-owner/fixture-pi-package/issues",
+    homepage: "https://github.com/fixture-owner/fixture-pi-package#readme",
+  });
 });
 
 test("create-pi-extension scaffolds an unscoped package", () => {
