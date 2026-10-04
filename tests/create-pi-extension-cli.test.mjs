@@ -216,6 +216,7 @@ test("create-pi-extension replaces template placeholders in scaffold output", ()
       },
     );
     assert.match(readme, /fixture-pi-package/);
+    assert.match(readme, /https:\/\/github\.com\/fixture-owner\/fixture-pi-package/);
     assert.doesNotMatch(readme, /PACKAGE_NAME|OWNER\/REPO|YOUR_NAME|\bOWNER\b|\bREPO\b/);
     assert.match(license, /Copyright \(c\) 2026 Fixture Author/);
     assert.doesNotMatch(license, /YOUR_NAME/);
