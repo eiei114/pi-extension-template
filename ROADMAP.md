@@ -173,7 +173,7 @@ it through and move the detail into the relevant release section above.
 - *Status: ✅ complete — stale DOT-710 reference removed from `docs/template-sync.md`; regression test added in `tests/smoke.test.mjs` (DOT-1218).*
 
 **S-06 — Extension entrypoint shape assertion test** ✅
-- [x] A test asserts each `pi.extensions` entrypoint exports the shape Pi loads (default export / named handlers as appropriate) beyond the current static string checks.
+- [x] A test loads each `pi.extensions` entrypoint and asserts a function-valued default export, then invokes it with a proxy API object.
 - [x] Test fails loudly if an entrypoint regresses; runs in CI.
 - [x] `npm run ci` passes.
 - *Status: ✅ complete — runtime entrypoint shape coverage added in PR #117.*
