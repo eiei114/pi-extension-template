@@ -10,7 +10,7 @@ maintainer) can pick the next bounded micro-maintenance candidate without
 re-discovering project state. Update it whenever a release ships, a major item
 is resolved, or the seed backlog is exhausted.
 
-Status snapshot date: **2026-09-05**.
+Status snapshot date: **2026-10-05**.
 
 ---
 
@@ -18,14 +18,14 @@ Status snapshot date: **2026-09-05**.
 
 | Aspect | State |
 |---|---|
-| Latest GitHub release / tag | `v0.2.1` (2026-08-22) |
-| Root `package.json` version | `0.2.1` (synced into `create-pi-extension` on publish) |
-| `create-pi-extension` on npm | **Published** — `0.2.1` via Trusted Publishing (`publish.yml` green on tagged releases). |
+| Latest GitHub release / tag | `v0.3.1` (2026-09-30) |
+| Root `package.json` version | `0.3.1` (synced into `create-pi-extension` on publish) |
+| `create-pi-extension` on npm | **Published** — `0.3.1` via Trusted Publishing (`publish.yml` green on tagged releases). |
 | Legacy `pi-extension-template` on npm | `0.1.6` remains on npm as a legacy root package; README steers users to `create-pi-extension`. |
 | CI (`.github/workflows/ci.yml`) | Green on `main`. Runs typecheck, `sync:template`, tests, `review:guardrails`, `pack:check`, and template-sync assertions. |
-| Pi SDK alignment | Examples on Pi **0.84.x** (`@earendil-works/*` devDeps at `0.84.2`). `ctx.hasUI` guards, lifecycle events, TUI custom entries current. |
-| Example coverage | extension (`hello`, typed tool, TUI dashboard, skill-bridge, package-layout), Agent Skill, prompt template, theme (all 51 tokens). |
-| Tests | `greeting`, `format-table`, `config-contract`, `error-contract`, `create-pi-extension` CLI scaffold (unscoped + scoped), `smoke` (theme tokens, manifest entries, workflow shape, stale-doc guard), `review-guardrails`, `sync-template`. |
+| Pi SDK alignment | Examples on Pi **0.99.x** (`@earendil-works/*` devDeps at `0.99.1`). `ctx.hasUI` guards, lifecycle events, TUI custom entries current. |
+| Example coverage | Extension (`hello`, typed tool, TUI dashboard, skill-bridge, package-layout), Agent Skill, prompt template, theme (all 51 tokens), plus entrypoint-shape checks. |
+| Tests | `greeting`, `format-table`, `config-contract`, `error-contract`, `create-pi-extension` CLI scaffold (unscoped + scoped), `smoke` (theme tokens, manifest entries, workflow shape, stale-doc guard), runtime entrypoint shapes, package contents, `review-guardrails`, `sync-template`. |
 
 ### 1.1 What is healthy
 
@@ -34,8 +34,7 @@ Status snapshot date: **2026-09-05**.
 - **Dependabot** keeps `@earendil-works/*` and `typebox` current via a weekly
   multi-ecosystem group; PRs merge cleanly because examples track the latest
   patterns.
-- **Examples are fresh** as of DOT-784 / DOT-789 / DOT-800 / DOT-815 / DOT-827 /
-  DOT-828 (Pi lifecycle + TUI patterns) and the 0.84.2 SDK bump (PR #92–#94).
+- **Examples are fresh** through the Pi 0.99.1 SDK bump (PR #119); entrypoint runtime-shape and package-content checks now cover common scaffold regressions (PR #117–#118).
 - **Release plumbing is well-documented** (`docs/release.md`,
   `docs/publish-rerun-rollout.md`, `auto-release.yml` → `publish.yml` handoff).
 - **Publish workflow races fixed** — concurrent publish runs are serialized (PR #98).
@@ -48,11 +47,8 @@ Status snapshot date: **2026-09-05**.
 - **Two package names on npm are out of sync with intent**: the legacy root
   `pi-extension-template` is still published while `create-pi-extension` is the
   intended onboarding artifact (TD-02, human-owned deprecation decision).
-- **No runtime validation of example extensions in CI** — only static
-  `smoke.test.mjs` assertions. Example drift can land green and only surface
-  for users who scaffold.
-- **Unreleased work is accumulating** — publish serialization and maintainer CI
-  doc fixes are on `main` but not yet tagged as `v0.2.2`.
+- **Runtime coverage is still partial** — entrypoint shape checks catch export regressions, but the examples are not exercised in a real Pi session. Further drift can still surface only after scaffolding.
+- **Post-release maintenance is accumulating** — the latest tests and metadata refactors landed after `v0.3.1`; a human should decide when to cut the next release.
 
 ---
 
@@ -84,31 +80,24 @@ ecosystem. Its job is to make a new contributor productive in minutes:
 
 ## 3. Short-term goals (next 1–2 releases)
 
-### v0.2.2 — "publish hygiene + unreleased cleanup" (patch)
+### v0.3.2 — "maintenance follow-up" (next patch candidate)
 
-Goal: ship the unreleased fixes already on `main` and tighten publish
-diagnostics so fork maintainers get actionable errors.
+Goal: package the post-`v0.3.1` maintenance changes after human review, without
+performing a release as part of roadmap triage.
 
-- Tag and release unreleased items (publish serialization, maintainer CI docs).
-- ~~Harden `publish.yml` so a "package name not registered" failure is diagnosed
-  clearly instead of a bare `E404` (seed S-02).~~ ✅ done (DOT-1228 / DOT-1744).
+- Decide whether the post-release test and metadata changes warrant a patch release.
 - Apply `npm pkg fix` and verify publish warning clears (seed S-10).
 
-### v0.3.0 — "ergonomic + verified scaffold" (minor)
+### v0.4.0 — "ergonomic + broader scaffold" (next feature line)
 
-Goal: the CLI is usable non-interactively and the examples are verified at
-load time, not just statically.
+Goal: make the CLI usable non-interactively and extend verification without
+sacrificing the minimal template surface.
 
 - Non-interactive / flag-driven CLI mode (`--name`, `--yes`, `--version`) for
   CI and scripted use (seed S-08).
-- Extension entrypoint shape assertion in tests (seed S-06).
-- Grouped Dependabot updates for `@earendil-works/*` (seed S-09).
 - Consolidate bootstrap docs per minimal-docs policy (seed S-07).
-
-### v0.4.0 — "broader example coverage" (minor, later)
-
-- Additional examples (e.g. MCP / custom provider, multi-extension manifest).
-- Package-manager choice in the CLI (npm / pnpm / yarn), not only `bun`.
+- Group `@earendil-works/*` Dependabot updates separately from Actions (seed S-09).
+- Add broader runtime validation for examples beyond export-shape assertions.
 
 ---
 
@@ -118,7 +107,7 @@ load time, not just statically.
 |---|---|---|---|---|
 | TD-01 | ~~`create-pi-extension` not on npm~~ — **resolved** for `0.1.8` / `0.2.x` publishes; keep `publish.yml` diagnostics for first-time forks | ~~Blocker~~ Closed (this repo) | **Human** for new forks | README + `publish.yml` now distinguish unregistered package vs already-published skip. |
 | TD-02 | Legacy root `pi-extension-template` is published on npm (`0.1.6`) despite docs saying it is not | High | **Human** (npm ownership) | Decide: deprecate on npm, or transfer. |
-| TD-03 | No runtime validation of example extensions — only static `smoke` assertions | Medium | AI | Examples can drift and stay green until a user scaffolds. Covered by seed S-06. |
+| TD-03 | No full Pi-session validation of example extensions — export-shape checks now exist | Medium | AI | Examples can still drift beyond load-time shape checks. Broader coverage is a v0.4.0 candidate. |
 | TD-04 | ~~`CHANGELOG.md` has duplicate headers / undated versions~~ — **resolved** (DOT-1693) | ~~Low~~ Closed | AI | All shipped versions now have ISO dates; `Unreleased` holds only pending work. |
 | TD-05 | ~~Docs reference resolved follow-up placeholders~~ — **resolved** (DOT-1218) | ~~Low~~ Closed | AI | Regression test in `tests/smoke.test.mjs` guards against reintroduction. |
 | TD-06 | Bootstrap docs (`github-template.md`, `repository-settings.md`, `typescript.md`) labeled delete-or-merge but still standalone | Low | AI | Minimal-docs policy. Covered by seed S-07. |
@@ -145,9 +134,9 @@ it through and move the detail into the relevant release section above.
 | **S-03** ✅ | ~~Hardening: README must not advertise a 404 npm package~~ — done (DOT-1539) | ~30 min | — | — |
 | **S-04** ✅ | ~~Reconcile `CHANGELOG.md` (dates, no dup headers)~~ — done (DOT-1693, PR #105) | ~45 min | — | — |
 | **S-05** ✅ | ~~Remove stale follow-up issue references from docs~~ — done (DOT-1218) | ~30 min | — | — |
-| **S-06** | Add extension entrypoint shape assertion test | ~60 min | — | Static smoke checks miss export-shape regressions; users discover breakage only after scaffolding (TD-03). |
+| **S-06** ✅ | ~~Add extension entrypoint shape assertion test~~ — done (PR #117) | — | — | Runtime shape checks catch export regressions before scaffolding. |
 | **S-07** | Consolidate bootstrap docs (minimal-docs policy) | ~75 min | — | Standalone bootstrap docs violate minimal-docs policy and confuse new maintainers (TD-06). |
-| **S-08** | Non-interactive flags for `create-pi-extension` CLI | ~90 min | — | CI and scripted onboarding need `--name` / `--yes` / `--version` without interactive prompts (v0.3.0 goal). |
+| **S-08** | Non-interactive flags for `create-pi-extension` CLI | ~90 min | — | CI and scripted onboarding need `--name` / `--yes` / `--version` without interactive prompts (v0.4.0 goal). |
 | **S-09** | Group `@earendil-works/*` Dependabot updates | ~30 min | — | Current multi-ecosystem group bundles npm + Actions; Pi SDK bumps deserve a dedicated group to reduce review noise. |
 | **S-10** | Apply `npm pkg fix` and verify publish warning clears | ~30 min | — | Publish logs warn about auto-corrected `package.json`; fixing metadata prevents silent drift (TD-08). |
 
@@ -183,10 +172,11 @@ it through and move the detail into the relevant release section above.
 - [x] `npm run ci` passes.
 - *Status: ✅ complete — stale DOT-710 reference removed from `docs/template-sync.md`; regression test added in `tests/smoke.test.mjs` (DOT-1218).*
 
-**S-06 — Extension entrypoint shape assertion test**
-- [ ] A test asserts each `pi.extensions` entrypoint exports the shape Pi loads (default export / named handlers as appropriate) beyond the current static string checks.
-- [ ] Test fails loudly if an entrypoint regresses; runs in CI.
-- [ ] `npm run ci` passes.
+**S-06 — Extension entrypoint shape assertion test** ✅
+- [x] A test loads each `pi.extensions` entrypoint and asserts a function-valued default export, then invokes it with a proxy API object.
+- [x] Test fails loudly if an entrypoint regresses; runs in CI.
+- [x] `npm run ci` passes.
+- *Status: ✅ complete — runtime entrypoint shape coverage added in PR #117.*
 
 **S-07 — Consolidate bootstrap docs**
 - [ ] `docs/github-template.md` and `docs/repository-settings.md` folded into `docs/template-checklist.md` (or removed) per minimal-docs policy.
