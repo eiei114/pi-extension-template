@@ -73,7 +73,7 @@
     "protobufjs": ">=7.6.3 <8.0.0"
   },
   "devDependencies": {
-    "@earendil-works/pi-agent-core": "^0.99.1",
+    "@earendil-works/pi-agent-core": "^1.0.4",
     "@earendil-works/pi-ai": "^0.99.1",
     "@earendil-works/pi-coding-agent": "^0.99.1",
     "@earendil-works/pi-tui": "^0.99.1",
