@@ -18,6 +18,16 @@ exercise extension loading, handled and malformed input, process cleanup, and
 the Windows/native host boundary. The machine-readable result is committed at
 `docs/verification/pi-sdk-smoke.json`; the harness is executed by `npm run ci`.
 
+The report uses `verification_contract=pi-sdk-behavior-v2`. Each case contains
+named assertions and captured actual observations. Reload/cleanup parses a second
+real Pi host's registration status, handled prompt response and feature notification,
+plus clean exit; exit zero alone is insufficient. Parser regressions deliberately
+omit each response to prove the harness fails closed. The host-shell case launches
+the pinned local CLI through native PowerShell on Windows or `/bin/sh` on POSIX.
+The harness resolves the CLI from the installed SDK manifest and checks actual
+installed versions against exact dev/test pins, rather than trusting global `pi`.
+It uses an isolated temporary agent directory and leaves global Pi settings intact.
+
 The smoke uses an offline deterministic command path, so it does not make paid
 model requests. It does not mock Pi's extension loader or lifecycle: the real
 `pi` process loads the package and receives RPC input. Provider inference remains

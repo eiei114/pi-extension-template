@@ -1,80 +1,100 @@
 {
   "schema_version": 1,
+  "verification_contract": "pi-sdk-behavior-v2",
   "sdk_versions": {
     "@earendil-works/pi-agent-core": "1.1.0",
     "@earendil-works/pi-ai": "1.1.0",
     "@earendil-works/pi-coding-agent": "1.1.0",
     "@earendil-works/pi-tui": "1.1.0"
   },
+  "platform": "win32",
+  "model_inference": "none; actual Pi extension-handled RPC input",
   "unhandled_errors": 0,
   "extension_load_errors": 0,
   "cases": [
     {
       "name": "extension_load",
-      "command": "pi.cmd --offline --no-session --no-tools --no-extensions -e . --mode rpc",
+      "command": "npm run smoke:pi",
       "exit_code": 0,
       "passed": true,
-      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"815caf2f-9c6d-4ab0-bcf9-999d7bb3e0f7\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"7691a88d-14f6-4a08-8809-95f5db3d97bc\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"802d8839-2fac-4846-80b6-08d8041bf789\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"73c024ad-6ccd-4e6b-95e2-6b6c8cc4ea00\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"46d4bce7-c062-42ed-a448-001de2a46d3d\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"d8d63504-aab9-4228-a572-2202f379dac2\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"129bc14b-37d1-4d66-928b-52c9b68a5bcc\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"dff4edd9-0b1e-49d0-bec0-341a4c75ddcc\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
       "assertions": [
         {
-          "expected": "Pi loads the package extension and emits its handled prompt response",
-          "observed": "template extension status and handled response are present",
+          "id": "extension_registered",
+          "expected": "Actual Pi emits the template session-start status",
+          "observed": "{\"type\":\"extension_ui_request\",\"id\":\"46d4bce7-c062-42ed-a448-001de2a46d3d\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}",
           "passed": true
         }
       ]
     },
     {
       "name": "happy_path",
-      "command": "pi.cmd --offline --no-session --no-tools --no-extensions -e . --mode rpc",
+      "command": "npm run smoke:pi",
       "exit_code": 0,
       "passed": true,
-      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"3f80ad0f-d801-4640-b532-0766c16c94bc\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"6ee547d8-5b7a-40b0-bf8b-6cc6d6537466\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"d151b65a-40d4-43ce-8ef0-3c6c8fc33f18\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"72d71271-8095-41a6-83a2-e8ef3d0bcfbc\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"4401969b-9693-4e3c-a553-ce777d2dc2b2\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"7d532244-4155-4daf-aab3-13b95e10ce5f\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"9a0b94a8-9894-4744-a9d1-a1f2156a16aa\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"23c8fee2-abb5-40a8-9a72-4f375a172084\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
       "assertions": [
         {
-          "expected": "The template command is handled without an LLM request",
-          "observed": "response command=prompt success=true data.disposition=handled",
+          "id": "feature_response",
+          "expected": "Template input emits its notification and handled RPC response",
+          "observed": "{\"prompt\":{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}},\"notification\":{\"type\":\"extension_ui_request\",\"id\":\"23c8fee2-abb5-40a8-9a72-4f375a172084\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}}",
           "passed": true
         }
       ]
     },
     {
       "name": "error_path",
-      "command": "pi.cmd --offline --no-session --no-tools --no-extensions -e . --mode rpc",
+      "command": "npm run smoke:pi",
       "exit_code": 0,
       "passed": true,
-      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"72d83633-a81d-4420-a0f4-096725ea4215\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"06f9b409-c371-4954-88db-dab4c8347ac9\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"0a628956-5fd4-4eb9-bf66-96ea9ee10e5d\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"response\",\"command\":\"parse\",\"success\":false,\"error\":\"Failed to parse command: Unexpected token 'o', \\\"not-json\\\" is not valid JSON\"}\n",
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"0310951b-e0a9-4fe4-8bbd-c00482e28f4a\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"4b94dd3f-c0ba-4bf1-b2c9-7bf1b17e855e\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"1d96bf43-5f3c-4e1b-a150-14aa40c9abd7\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"response\",\"command\":\"parse\",\"success\":false,\"error\":\"Failed to parse command: Unexpected token 'o', \\\"not-json\\\" is not valid JSON\"}\n",
       "assertions": [
         {
-          "expected": "Malformed RPC input is reported as a parse error without an unhandled exception",
-          "observed": "parse failure is reported and the process exits cleanly",
+          "id": "handled_error",
+          "expected": "Malformed RPC input returns success=false with a parse error",
+          "observed": "{\"type\":\"response\",\"command\":\"parse\",\"success\":false,\"error\":\"Failed to parse command: Unexpected token 'o', \\\"not-json\\\" is not valid JSON\"}",
           "passed": true
         }
       ]
     },
     {
       "name": "reload_cleanup",
-      "command": "pi.cmd --offline --no-session --no-tools --no-extensions -e . --mode rpc",
+      "command": "npm run smoke:pi",
       "exit_code": 0,
       "passed": true,
-      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"788769b2-8ffb-433c-964a-8e3d4d093473\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"4b306591-5069-4ad5-8d0f-9d5f0c862ecd\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"9970040d-6432-4470-915e-32a48b5461cc\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"55c11fc3-3632-49d5-9bf7-46b8839e56b2\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"d4d9188b-c2b9-4812-b43e-13d9691ab133\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"3d144d4d-0151-4aec-9efd-ad223011a31c\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"83edc01a-71e8-4329-bf3e-8c7ad2c45545\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"f0c29c8a-1a7c-40a9-8566-280992215f76\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
       "assertions": [
         {
-          "expected": "A second isolated Pi process can load and shut down the extension cleanly",
-          "observed": "process exits cleanly with no shutdown error",
+          "id": "reloaded_extension_registered",
+          "expected": "The second isolated Pi host emits template session-start status",
+          "observed": "{\"type\":\"extension_ui_request\",\"id\":\"d4d9188b-c2b9-4812-b43e-13d9691ab133\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}",
+          "passed": true
+        },
+        {
+          "id": "reloaded_feature_response",
+          "expected": "The second host handles template input and emits the real feature notification",
+          "observed": "{\"prompt\":{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}},\"notification\":{\"type\":\"extension_ui_request\",\"id\":\"f0c29c8a-1a7c-40a9-8566-280992215f76\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}}",
+          "passed": true
+        },
+        {
+          "id": "clean_shutdown",
+          "expected": "The actual host exits zero without unhandled/shutdown errors",
+          "observed": "{\"exit_code\":0,\"errors\":false}",
           "passed": true
         }
       ]
     },
     {
       "name": "host_shell",
-      "command": "pi.cmd --version",
+      "command": "npm run smoke:pi",
       "exit_code": 0,
       "passed": true,
       "evidence": "1.1.0\n",
       "assertions": [
         {
-          "expected": "The host shell is the pinned Pi 1.1.0 runtime",
-          "observed": "version command completes successfully",
+          "id": "native_shell_boundary",
+          "expected": "Native host shell launches locally pinned Pi and returns its exact version",
+          "observed": "{\"exit_code\":0,\"output\":\"1.1.0\",\"expectedVersion\":\"1.1.0\"}",
           "passed": true
         }
       ]

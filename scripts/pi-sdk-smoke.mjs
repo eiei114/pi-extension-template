@@ -1,132 +1,75 @@
 import { spawnSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
+import {
+  behaviorAssertions, EXTENSION_LOAD_ERROR_PATTERN, parseJsonLines, SDK_NAMES,
+  UNHANDLED_ERROR_PATTERN, VERIFICATION_CONTRACT,
+} from "./pi-sdk-smoke-contract.mjs";
 
 const root = resolve(import.meta.dirname, "..");
-const piCommand = process.platform === "win32" ? "pi.cmd" : "pi";
 const reportPath = resolve(root, "docs/verification/pi-sdk-smoke.json");
-const sdkVersions = {
-  "@earendil-works/pi-agent-core": "1.1.0",
-  "@earendil-works/pi-ai": "1.1.0",
-  "@earendil-works/pi-coding-agent": "1.1.0",
-  "@earendil-works/pi-tui": "1.1.0",
-};
-
-const UNHANDLED_ERROR_PATTERN = /UnhandledPromiseRejection|uncaught exception/i;
-
-function parseJsonLines(output) {
-  return output.split(/\r?\n/).flatMap((line) => {
-    if (!line.trim()) return [];
-    try {
-      return [JSON.parse(line)];
-    } catch {
-      return [];
-    }
-  });
+const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
+const manifest = readJson(resolve(root, "package.json"));
+const sdkVersions = Object.fromEntries(SDK_NAMES.map((name) =>
+  [name, readJson(resolve(root, "node_modules", name, "package.json")).version]));
+for (const name of SDK_NAMES) {
+  if (manifest.devDependencies?.[name] !== sdkVersions[name]) {
+    throw new Error(`Smoke requires the exact dev/test SDK pin for ${name}: installed ${sdkVersions[name]}`);
+  }
 }
+// Run this checkout's actual pinned CLI, not a possibly stale global pi.cmd.
+const piManifest = readJson(resolve(root, "node_modules/@earendil-works/pi-coding-agent/package.json"));
+const piCli = resolve(root, "node_modules/@earendil-works/pi-coding-agent", piManifest.bin.pi);
+const agentDir = mkdtempSync(resolve(tmpdir(), "pi-sdk-smoke-"));
+const env = { ...process.env, PI_CODING_AGENT_DIR: agentDir };
+const rpcArgs = [piCli, "--offline", "--no-session", "--no-tools", "--no-extensions", "--no-skills",
+  "--no-context-files", "--no-prompt-templates", "--no-mcp", "-e", ".", "--mode", "rpc"];
+const templateInput = '{"type":"prompt","message":"?template"}\n';
 
-function responseFor(responses, command) {
-  return responses.find((item) => item?.type === "response" && item.command === command);
-}
-
-function isHandledPromptResponse(response) {
-  return (
-    response?.type === "response" &&
-    response.command === "prompt" &&
-    response.success === true &&
-    response.data?.disposition === "handled"
-  );
-}
-
-function run(name, args, input, assertions) {
-  const result = spawnSync(piCommand, args, {
-    cwd: root,
-    input,
-    encoding: "utf8",
-    timeout: 30_000,
-    windowsHide: true,
-    shell: process.platform === "win32",
+function run(name, executable, args, input) {
+  const result = spawnSync(executable, args, {
+    cwd: root, env, input, encoding: "utf8", timeout: 30_000, windowsHide: true,
   });
   const fullOutput = `${result.stdout ?? ""}${result.stderr ?? ""}`;
+  const exit_code = result.status ?? 1;
   const responses = [...parseJsonLines(result.stdout ?? ""), ...parseJsonLines(result.stderr ?? "")];
+  const assertions = behaviorAssertions(name, { responses, fullOutput, exit_code,
+    expectedVersion: sdkVersions["@earendil-works/pi-coding-agent"] });
   const hasUnhandledError = UNHANDLED_ERROR_PATTERN.test(fullOutput);
-  const passed = result.status === 0 && !hasUnhandledError && assertions.every((item) => item.passed);
-  return {
-    name,
-    command: [piCommand, ...args].join(" "),
-    exit_code: result.status ?? 1,
-    passed,
-    evidence: fullOutput.slice(-4000),
-    assertions,
-    fullOutput,
-    responses,
-    hasUnhandledError,
-  };
+  const hasLoadError = EXTENSION_LOAD_ERROR_PATTERN.test(fullOutput);
+  return { name, command: "npm run smoke:pi", exit_code,
+    passed: exit_code === 0 && !result.error && !hasUnhandledError && !hasLoadError && assertions.every((a) => a.passed),
+    evidence: fullOutput.slice(-6000) || String(result.error?.message ?? "No output captured"), assertions,
+    hasUnhandledError, hasLoadError };
 }
 
-const cases = [
-  run(
-    "extension_load",
-    ["--offline", "--no-session", "--no-tools", "--no-extensions", "-e", ".", "--mode", "rpc"],
-    '{"type":"prompt","message":"?template"}\n',
-    [{ expected: "Pi loads the package extension and emits its handled prompt response", observed: "template extension status and handled response are present", passed: true }],
-  ),
-  run(
-    "happy_path",
-    ["--offline", "--no-session", "--no-tools", "--no-extensions", "-e", ".", "--mode", "rpc"],
-    '{"type":"prompt","message":"?template"}\n',
-    [{ expected: "The template command is handled without an LLM request", observed: "response command=prompt success=true data.disposition=handled", passed: true }],
-  ),
-  run(
-    "error_path",
-    ["--offline", "--no-session", "--no-tools", "--no-extensions", "-e", ".", "--mode", "rpc"],
-    "not-json\n",
-    [{ expected: "Malformed RPC input is reported as a parse error without an unhandled exception", observed: "parse failure is reported and the process exits cleanly", passed: true }],
-  ),
-  run(
-    "reload_cleanup",
-    ["--offline", "--no-session", "--no-tools", "--no-extensions", "-e", ".", "--mode", "rpc"],
-    '{"type":"prompt","message":"?template"}\n',
-    [{ expected: "A second isolated Pi process can load and shut down the extension cleanly", observed: "process exits cleanly with no shutdown error", passed: true }],
-  ),
-  run("host_shell", ["--version"], "", [
-    { expected: "The host shell is the pinned Pi 1.1.0 runtime", observed: "version command completes successfully", passed: true },
-  ]),
-];
-
-for (const item of cases) {
-  if (item.name === "extension_load") {
-    const promptResponse = responseFor(item.responses, "prompt");
-    const loadedStatus = item.responses.some(
-      (response) =>
-        response?.type === "extension_ui_request" &&
-        response.method === "setStatus" &&
-        response.statusKey === "template",
-    );
-    item.assertions[0].passed = loadedStatus && isHandledPromptResponse(promptResponse);
+try {
+  const cases = [
+    run("extension_load", process.execPath, rpcArgs, templateInput),
+    run("happy_path", process.execPath, rpcArgs, templateInput),
+    run("error_path", process.execPath, rpcArgs, "not-json\n"),
+    run("reload_cleanup", process.execPath, rpcArgs, templateInput),
+  ];
+  // Fixed/quoted argv tests the real native shell, not Git Bash/cmd assumptions.
+  if (process.platform === "win32") {
+    const quote = (value) => `'${value.replaceAll("'", "''")}'`;
+    const shell = resolve(process.env.SystemRoot ?? "C:/Windows", "System32/WindowsPowerShell/v1.0/powershell.exe");
+    cases.push(run("host_shell", shell, ["-NoProfile", "-NonInteractive", "-Command",
+      `& ${quote(process.execPath)} ${quote(piCli)} --no-extensions --version; exit $LASTEXITCODE`], ""));
+  } else {
+    cases.push(run("host_shell", "/bin/sh", ["-c", '"$1" "$2" --no-extensions --version', "pi-host-shell", process.execPath, piCli], ""));
   }
-  if (item.name === "happy_path") item.assertions[0].passed = isHandledPromptResponse(responseFor(item.responses, "prompt"));
-  if (item.name === "error_path") {
-    const parseResponse = responseFor(item.responses, "parse");
-    item.assertions[0].passed =
-      parseResponse?.type === "response" &&
-      parseResponse.command === "parse" &&
-      parseResponse.success === false &&
-      typeof parseResponse.error === "string" &&
-      parseResponse.error.length > 0;
-  }
-  if (item.name === "reload_cleanup") item.assertions[0].passed = item.exit_code === 0 && !/Unhandled|shutdown error/i.test(item.fullOutput);
-  if (item.name === "host_shell") item.assertions[0].passed = item.exit_code === 0 && /1\.1\.0/.test(item.fullOutput);
-  item.passed = item.exit_code === 0 && !item.hasUnhandledError && item.assertions.every((assertion) => assertion.passed);
+  const report = { schema_version: 1, verification_contract: VERIFICATION_CONTRACT, sdk_versions: sdkVersions,
+    platform: process.platform, model_inference: "none; actual Pi extension-handled RPC input",
+    unhandled_errors: cases.filter((c) => c.hasUnhandledError).length,
+    extension_load_errors: cases.filter((c) => c.hasLoadError || (c.name === "extension_load" && !c.passed)).length,
+    cases: cases.map(({ hasUnhandledError, hasLoadError, ...item }) => item) };
+  mkdirSync(dirname(reportPath), { recursive: true });
+  writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+  console.log(JSON.stringify({ verification_contract: VERIFICATION_CONTRACT, platform: process.platform,
+    cases: cases.map((c) => ({ name: c.name, passed: c.passed, exit_code: c.exit_code })) }));
+  if (cases.some((c) => !c.passed)) process.exitCode = 1;
+} finally {
+  rmSync(agentDir, { recursive: true, force: true });
 }
-
-const report = {
-  schema_version: 1,
-  sdk_versions: sdkVersions,
-  unhandled_errors: cases.some((item) => item.hasUnhandledError) ? 1 : 0,
-  extension_load_errors: cases.filter((item) => item.name === "extension_load").some((item) => !item.passed) ? 1 : 0,
-  cases: cases.map(({ fullOutput, responses, hasUnhandledError, ...item }) => item),
-};
-mkdirSync(dirname(reportPath), { recursive: true });
-writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
-if (report.unhandled_errors !== 0 || report.extension_load_errors !== 0 || cases.some((item) => !item.passed)) process.exit(1);

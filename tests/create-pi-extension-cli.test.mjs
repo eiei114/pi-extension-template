@@ -254,6 +254,20 @@ test("create-pi-extension scaffold output excludes monorepo paths from bundled t
   }
 });
 
+test("scaffold replacement preserves executable repository identifiers and valid test syntax", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-tokens-"));
+  const projectDir = join(tempRoot, "fixture-pi-package");
+  try {
+    scaffoldProject(projectDir, FIXTURE_OPTIONS);
+    const smokePath = join(projectDir, "tests/smoke.test.mjs");
+    const smoke = readFileSync(smokePath, "utf8");
+    assert.match(smoke, /const REPOSITORY_ONLY_PACKAGE_PATHS/);
+    assert.doesNotThrow(() => execFileSync(process.execPath, ["--check", smokePath], { encoding: "utf8" }));
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
 test("create-pi-extension runs git init and bun install when post-setup is enabled", { timeout: 120_000 }, () => {
   const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-"));
   try {

@@ -61,10 +61,11 @@ function isTextFile(filePath) {
 }
 
 function applyTextReplacements(content, replacements, licenseYear) {
-  let next = content;
-  for (const [from, to] of replacements) {
-    next = next.replaceAll(from, to);
-  }
+  // Match the same actual placeholder tokens the validator checks. Replacing
+  // bare REPO substrings corrupts identifiers such as REPOSITORY_ONLY_PATHS.
+  // One pass also prevents replacement values from being interpreted as tokens.
+  const values = new Map(replacements);
+  let next = content.replace(new RegExp(PLACEHOLDER_PATTERN.source, "g"), (token) => values.get(token) ?? token);
   next = next.replace(/Copyright \(c\) \d{4}/g, `Copyright (c) ${licenseYear}`);
   return next;
 }
