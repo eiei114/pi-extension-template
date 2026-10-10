@@ -83,7 +83,7 @@ test("create-pi-extension scaffolds an unscoped package", () => {
     assert.equal(packageJson.name, "my-pi-package");
     assert.equal(packageJson.author, "Test Author");
     assert.match(packageJson.repository.url, /github\.com\/.+\/my-pi-package$/);
-    assert.equal(packageJson.scripts.ci, "npm run typecheck && npm test && npm run review:guardrails && npm run pack:check");
+    assert.equal(packageJson.scripts.ci, "npm run typecheck && npm test && npm run smoke:pi && npm run review:guardrails && npm run pack:check");
     assert.equal(packageJson.scripts["sync:template"], undefined);
     assert.equal(packageJson.scripts["sync:template:check"], undefined);
     assert.equal(packageJson.scripts["pack:check"], "npm pack --dry-run");

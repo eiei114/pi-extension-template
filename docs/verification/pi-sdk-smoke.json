@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "sdk_versions": {
+    "@earendil-works/pi-agent-core": "1.1.0",
+    "@earendil-works/pi-ai": "1.1.0",
+    "@earendil-works/pi-coding-agent": "1.1.0",
+    "@earendil-works/pi-tui": "1.1.0"
+  },
+  "unhandled_errors": 0,
+  "extension_load_errors": 0,
+  "cases": [
+    {
+      "name": "extension_load",
+      "command": "pi.cmd --offline --no-session --no-tools --no-extensions -e . --mode rpc",
+      "exit_code": 0,
+      "passed": true,
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"c5180334-084f-4d67-9c2b-1eb38ac12811\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"5263ced8-28eb-4012-821e-a594dee93f45\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"f102ac0c-9671-494f-bc5e-c7b893865642\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"457900dd-b5d7-4471-82c6-3e9a6b9d64f6\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
+      "assertions": [
+        {
+          "expected": "Pi loads the package extension and emits its handled prompt response",
+          "observed": "template extension status and handled response are present",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "happy_path",
+      "command": "pi.cmd --offline --no-session --no-tools --no-extensions -e . --mode rpc",
+      "exit_code": 0,
+      "passed": true,
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"b5c7b8c1-441e-4073-9851-771c94d0dc70\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"c8bcd2dc-b43d-4184-bfd0-16083a670757\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"bed1ece2-0528-46db-9f03-a4ccc8038572\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"b9fa7ff9-bf32-4140-888e-7ae97cc6d6b1\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
+      "assertions": [
+        {
+          "expected": "The template command is handled without an LLM request",
+          "observed": "response command=prompt success=true data.disposition=handled",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "error_path",
+      "command": "pi.cmd --offline --no-session --no-tools --no-extensions -e . --mode rpc",
+      "exit_code": 0,
+      "passed": true,
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"298d6176-c0d0-4ee5-9f1e-662bf4f2a317\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"7b751411-7eac-4372-862b-6215c3f885b1\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"f489906f-5472-473c-b654-95c15b502304\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"response\",\"command\":\"parse\",\"success\":false,\"error\":\"Failed to parse command: Unexpected token 'o', \\\"not-json\\\" is not valid JSON\"}\n",
+      "assertions": [
+        {
+          "expected": "Malformed RPC input is reported as a parse error without an unhandled exception",
+          "observed": "parse failure is reported and the process exits cleanly",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "reload_cleanup",
+      "command": "pi.cmd --offline --no-session --no-tools --no-extensions -e . --mode rpc",
+      "exit_code": 0,
+      "passed": true,
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"01a7dedf-0f79-47af-94ca-d0064221117e\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"ae8732cd-0760-4cbe-929f-d79a289707b9\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"cb3ddddd-5800-4b1b-b947-f0eba8b06561\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"2ca5e1df-3a5b-4385-b5aa-cf98bd206e5a\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
+      "assertions": [
+        {
+          "expected": "A second isolated Pi process can load and shut down the extension cleanly",
+          "observed": "process exits cleanly with no shutdown error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "host_shell",
+      "command": "pi.cmd --version",
+      "exit_code": 0,
+      "passed": true,
+      "evidence": "1.1.0\n",
+      "assertions": [
+        {
+          "expected": "The host shell is the pinned Pi 1.1.0 runtime",
+          "observed": "version command completes successfully",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

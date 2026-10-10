@@ -101,7 +101,7 @@ function stripMonorepoFields(packageJsonPath: string): void {
     delete scripts["sync:template"];
     delete scripts["sync:template:check"];
     // Remove monorepo-specific workspace references from CI and pack:check
-    scripts.ci = "npm run typecheck && npm test && npm run review:guardrails && npm run pack:check";
+    scripts.ci = "npm run typecheck && npm test && npm run smoke:pi && npm run review:guardrails && npm run pack:check";
     scripts["pack:check"] = "npm pack --dry-run";
     const testScript = standaloneTestScript(scripts.test);
     if (testScript) {
