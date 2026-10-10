@@ -13,7 +13,7 @@
 ## Run sync
 
 - [ ] `bun run sync:template` を実行して `packages/create-pi-extension/template/` を再生成する
-- [ ] 生成されたファイル数が期待通りであることを確認する（目安: 52 ファイル。`ROADMAP.md`、`scripts/sync-template.ts`、CLI・sync 用の repository-only テストは除外）
+- [ ] 生成されたファイル数が期待通りであることを確認する（目安: 56 ファイル。`ROADMAP.md`、`scripts/sync-template.ts`、CLI・sync 用の repository-only テストは除外）
 
 ## Verify synced template
 
@@ -35,7 +35,7 @@
 ## Verify template package.json
 
 - [ ] `workspaces` フィールドが削除されている
-- [ ] `scripts.ci` が `"npm run typecheck && npm test && npm run review:guardrails && npm run pack:check"` になっている
+- [ ] `scripts.ci` が `"npm run typecheck && npm test && npm run smoke:pi && npm run review:guardrails && npm run pack:check"` になっている
 - [ ] `scripts["sync:template"]` と `scripts["sync:template:check"]` が削除されている
 - [ ] `scripts["pack:check"]` が `"npm pack --dry-run"` になっている
 - [ ] `version` が root `package.json` の repository version と一致している

@@ -122,6 +122,10 @@ npm version patch
 git push
 ```
 
+Code pushes/merges run CI only. After separate release authorization, manually
+dispatch `auto-release.yml` on `main`, or use an explicitly authorized version tag
+or published release. Ordinary maintenance verification must not publish.
+
 See [`docs/release.md`](docs/release.md) for setup details.
 
 ## Docs

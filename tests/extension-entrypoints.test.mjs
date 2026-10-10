@@ -5,25 +5,10 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 
-const BUN_LOADER = String.raw`
-  const packageJson = await Bun.file("package.json").json();
-  const api = new Proxy({}, { get: () => () => undefined });
-
-  for (const entrypoint of packageJson.pi.extensions) {
-    const module = await import(new URL(entrypoint, import.meta.url).href);
-    if (typeof module.default !== "function") {
-      throw new Error(
-        entrypoint +
-          " must export a default Pi extension loader function; got " +
-          typeof module.default,
-      );
-    }
-    module.default(api);
-  }
-`;
+const BUN_LOADER = fileURLToPath(new URL("fixtures/extension-entrypoints/loader.mjs", import.meta.url));
 
 test("every pi.extensions entrypoint has a runtime-loadable Pi shape", () => {
-  const result = spawnSync("bun", ["--eval", BUN_LOADER], {
+  const result = spawnSync("bun", [BUN_LOADER], {
     cwd: ROOT,
     encoding: "utf8",
   });

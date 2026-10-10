@@ -83,7 +83,7 @@ test("create-pi-extension scaffolds an unscoped package", () => {
     assert.equal(packageJson.name, "my-pi-package");
     assert.equal(packageJson.author, "Test Author");
     assert.match(packageJson.repository.url, /github\.com\/.+\/my-pi-package$/);
-    assert.equal(packageJson.scripts.ci, "npm run typecheck && npm test && npm run review:guardrails && npm run pack:check");
+    assert.equal(packageJson.scripts.ci, "npm run typecheck && npm test && npm run smoke:pi && npm run review:guardrails && npm run pack:check");
     assert.equal(packageJson.scripts["sync:template"], undefined);
     assert.equal(packageJson.scripts["sync:template:check"], undefined);
     assert.equal(packageJson.scripts["pack:check"], "npm pack --dry-run");
@@ -249,6 +249,20 @@ test("create-pi-extension scaffold output excludes monorepo paths from bundled t
     assert.equal(existsSync(join(projectDir, "packages")), false);
     assert.equal(existsSync(join(projectDir, ".git")), false);
     assert.equal(existsSync(join(projectDir, "node_modules")), false);
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("scaffold replacement preserves executable repository identifiers and valid test syntax", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-tokens-"));
+  const projectDir = join(tempRoot, "fixture-pi-package");
+  try {
+    scaffoldProject(projectDir, FIXTURE_OPTIONS);
+    const smokePath = join(projectDir, "tests/smoke.test.mjs");
+    const smoke = readFileSync(smokePath, "utf8");
+    assert.match(smoke, /const REPOSITORY_ONLY_PACKAGE_PATHS/);
+    assert.doesNotThrow(() => execFileSync(process.execPath, ["--check", smokePath], { encoding: "utf8" }));
   } finally {
     rmSync(tempRoot, { recursive: true, force: true });
   }

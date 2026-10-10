@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
+## Unreleased
+
+### Fixed
+
+- Require observed second-host extension registration and handled feature responses in SDK reload/cleanup smoke; run the actual locally pinned Pi CLI and native host shell, with negative response-parser regressions.
+- Keep entrypoint-loader input in a file so Windows Bun shims do not reject multiline eval arguments. Limit scaffold placeholder replacement to actual tokens so generated test identifiers remain executable.
+
+### Changed
+
+- Freeze dev/test Pi SDK packages on 1.1.0 and record behavior-v2 runtime verification while preserving wildcard public peers.
+- Separate ordinary code merges from release/publication: release creation is manual on main; npm publication accepts only authorized tags, published releases or explicit dispatch. Keep Trusted Publishing and already-published-version skips.
+
 ## [0.3.1] - 2026-09-30
 
 ### Changed
