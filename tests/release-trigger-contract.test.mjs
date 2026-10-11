@@ -12,6 +12,18 @@ test("code merge cannot directly or indirectly trigger release/publication", () 
   assert.match(release, /gh workflow run publish\.yml/); // explicit handoff is kept for manual release
 });
 
+test("release version validation rejects leading zeroes in numeric components", () => {
+  const pattern = release.match(/grep -Eq '([^']+)'/)?.[1];
+  assert.ok(pattern, "release workflow must validate the version with grep -E");
+  const stableSemver = new RegExp(pattern);
+  for (const version of ["0.0.0", "1.2.3", "10.20.300"]) {
+    assert.match(version, stableSemver);
+  }
+  for (const version of ["01.2.3", "1.02.3", "1.2.03", "1.2", "1.2.3-beta"]) {
+    assert.doesNotMatch(version, stableSemver);
+  }
+});
+
 test("direct main publish, indirect main auto-release and broad tags are rejected", () => {
   assert.throws(() => assertReleaseTriggerContract(release, publish.replace("    tags:", "    branches: [main]\n    tags:")));
   assert.throws(() => assertReleaseTriggerContract(release.replace("  workflow_dispatch:", "  push:\n    branches: [main]"), publish));
