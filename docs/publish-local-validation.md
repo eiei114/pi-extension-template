@@ -87,7 +87,10 @@ Requires Pi only if you also want to run `pi -e .` in the generated project. See
 - [ ] `CHANGELOG.md` has the release notes and date
 - [ ] [`docs/release.md`](release.md) Trusted Publisher settings are unchanged or updated in the same PR
 
-After merge, version bumps on `main` trigger `auto-release.yml`, which tags and dispatches `publish.yml`. See [`docs/release.md`](release.md#publish) for the full release path.
+After merge, CI runs but no release or publication starts. A separately authorized
+manual dispatch of `auto-release.yml` on `main` creates the version tag/release and
+dispatches `publish.yml`. See [`docs/release.md`](release.md#publish). Do not perform
+that protected action during ordinary maintenance verification.
 
 ## Related docs
 

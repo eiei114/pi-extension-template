@@ -36,4 +36,9 @@ npm version patch
 git push
 ```
 
+Merging or pushing a version bump runs CI only; it does not release or publish.
+After separate release authorization, manually dispatch `auto-release.yml` on
+`main` to create the tag/release and hand off to npm publication. Do not execute
+that release step as part of ordinary SDK maintenance verification.
+
 See `docs/release.md` for Trusted Publisher settings and the monorepo publish path.
