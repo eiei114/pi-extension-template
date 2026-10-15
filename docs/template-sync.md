@@ -24,9 +24,11 @@ Everything under the repository root is copied recursively, except the **sync ex
 - root `bun.lock` / `bun.lockb`
 - `ROADMAP.md` (maintainer-only planning doc for this repository)
 
-## Version sync
+## Package versions
 
-The root `package.json` **repository version** is copied into `packages/create-pi-extension/package.json` on every sync.
+The generated template keeps the version in the root `package.json`. The published
+CLI has its own version in `packages/create-pi-extension/package.json`; template
+sync does not change it. The release workflows use the CLI workspace version.
 
 ## Template package.json cleanup
 

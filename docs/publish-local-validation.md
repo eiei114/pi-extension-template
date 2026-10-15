@@ -83,7 +83,7 @@ Requires Pi only if you also want to run `pi -e .` in the generated project. See
 
 - [ ] `npm run ci` passes on the branch that will merge to `main`
 - [ ] Tarball dry-run includes `template/` under `packages/create-pi-extension`
-- [ ] Root `package.json` version is final for the release
+- [ ] `packages/create-pi-extension/package.json` version is final for the release
 - [ ] `CHANGELOG.md` has the release notes and date
 - [ ] [`docs/release.md`](release.md) Trusted Publisher settings are unchanged or updated in the same PR
 

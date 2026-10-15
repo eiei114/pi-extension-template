@@ -180,13 +180,13 @@ test("repository and scaffold READMEs keep the standard public contract", () => 
   }
 });
 
-test("create-pi-extension version matches repository version", () => {
+test("published CLI version stays independent of the private template source version", () => {
   const rootPackageJson = JSON.parse(readFileSync(ROOT_PACKAGE_JSON, "utf8"));
   const cliPackageJson = JSON.parse(readFileSync(CLI_PACKAGE_JSON, "utf8"));
   const packageLock = JSON.parse(readFileSync(ROOT_PACKAGE_LOCK, "utf8"));
-  assert.equal(cliPackageJson.version, rootPackageJson.version);
   assert.equal(cliPackageJson.name, "create-pi-extension");
   assert.equal(packageLock.version, rootPackageJson.version);
   assert.equal(packageLock.packages?.[""]?.version, rootPackageJson.version);
   assert.equal(packageLock.packages?.["packages/create-pi-extension"]?.version, cliPackageJson.version);
+  assert.equal(JSON.parse(readFileSync(templatePath("package.json"), "utf8")).version, rootPackageJson.version);
 });

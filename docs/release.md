@@ -20,7 +20,7 @@ Remove or update any Trusted Publisher entry that still targets the legacy root 
 ## Publish
 
 ```bash
-npm version patch
+npm version patch --workspace create-pi-extension --no-git-tag-version
 git push
 ```
 
@@ -29,7 +29,7 @@ not create tags/releases or publish npm packages. Release/publication is a separ
 authorized action, never an implicit side effect of ordinary maintenance merge.
 
 After separate release authorization, manually dispatch `.github/workflows/auto-release.yml`
-on `main`. It checks the root `package.json` **repository version**. If `v<version>`
+on `main`. It checks `packages/create-pi-extension/package.json`. If `v<version>`
 does not exist, it creates the tag and GitHub Release, then explicitly dispatches
 `.github/workflows/publish.yml` for that tag. Existing tags skip; other branch refs
 are rejected by the job gate. This preserves the explicit publishing handoff
@@ -120,7 +120,7 @@ Then verify the `create-pi-extension` dry-run tarball includes `template/` (see 
 ## First release checklist
 
 - [ ] Local validation in [`docs/publish-local-validation.md`](publish-local-validation.md) passes
-- [ ] Root `package.json` version is final (synced into `create-pi-extension` on publish)
+- [ ] `packages/create-pi-extension/package.json` version and `CHANGELOG.md` are final
 - [ ] `packages/create-pi-extension/package.json` name is `create-pi-extension`
 - [ ] `repository.url` points to the real GitHub repository
 - [ ] npm Trusted Publisher targets `create-pi-extension` + `publish.yml`

@@ -10,7 +10,7 @@ maintainer) can pick the next bounded micro-maintenance candidate without
 re-discovering project state. Update it whenever a release ships, a major item
 is resolved, or the seed backlog is exhausted.
 
-Status snapshot date: **2026-10-05**.
+Status snapshot date: **2026-10-15**.
 
 ---
 
@@ -19,11 +19,11 @@ Status snapshot date: **2026-10-05**.
 | Aspect | State |
 |---|---|
 | Latest GitHub release / tag | `v0.3.1` (2026-09-30) |
-| Root `package.json` version | `0.3.1` (synced into `create-pi-extension` on publish) |
-| `create-pi-extension` on npm | **Published** — `0.3.1` via Trusted Publishing (`publish.yml` green on tagged releases). |
+| Root `package.json` version | `0.3.1` (private template source; retained for generated scaffold projects) |
+| `create-pi-extension` on npm | **Published** — `0.3.1`; workspace manifest is staged at `0.3.2` and remains unpublished until human release authorization. |
 | Legacy `pi-extension-template` on npm | `0.1.6` remains on npm as a legacy root package; README steers users to `create-pi-extension`. |
 | CI (`.github/workflows/ci.yml`) | Green on `main`. Runs typecheck, `sync:template`, tests, `review:guardrails`, `pack:check`, and template-sync assertions. |
-| Pi SDK alignment | Examples on Pi **0.99.x** (`@earendil-works/*` devDeps at `0.99.1`). `ctx.hasUI` guards, lifecycle events, TUI custom entries current. |
+| Pi SDK alignment | Examples are pinned to Pi **1.2.0** (`@earendil-works/*` devDeps at `1.2.0`). `ctx.hasUI` guards, lifecycle events, and TUI custom entries verified against the actual host. |
 | Example coverage | Extension (`hello`, typed tool, TUI dashboard, skill-bridge, package-layout), Agent Skill, prompt template, theme (all 51 tokens), plus entrypoint-shape checks. |
 | Tests | `greeting`, `format-table`, `config-contract`, `error-contract`, `create-pi-extension` CLI scaffold (unscoped + scoped), `smoke` (theme tokens, manifest entries, workflow shape, stale-doc guard), runtime entrypoint shapes, package contents, `review-guardrails`, `sync-template`. |
 
@@ -210,9 +210,11 @@ it through and move the detail into the relevant release section above.
 
 ## 7. Conventions
 
-- **Versioning:** the root `package.json` version is the source of truth and is
-  synced into `create-pi-extension` on publish. Bump via `npm version
-  <patch|minor|major>`; `auto-release.yml` tags and dispatches `publish.yml`.
+- **Versioning:** `packages/create-pi-extension/package.json` is the published
+  CLI version and release source. The private root version belongs to generated
+  template projects and is not bumped for a CLI release. Bump the workspace via
+  `npm version <patch|minor|major> --workspace create-pi-extension
+  --no-git-tag-version`; `auto-release.yml` tags and dispatches `publish.yml`.
 - **Changelog:** keep `Unreleased` for unreleased work; date every released
   header.
 - **Docs:** follow the Pi OSS minimal-docs policy — `docs/` is optional and
