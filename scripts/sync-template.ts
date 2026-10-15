@@ -11,7 +11,6 @@ import { dirname, join, relative, resolve } from "node:path";
 
 const ROOT = resolve(import.meta.dir, "..");
 const TEMPLATE_DEST = join(ROOT, "packages", "create-pi-extension", "template");
-const CLI_PACKAGE_JSON = join(ROOT, "packages", "create-pi-extension", "package.json");
 
 const TOP_LEVEL_EXCLUSIONS = new Set([
   "packages",
@@ -112,17 +111,6 @@ function stripMonorepoFields(packageJsonPath: string): void {
   writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
 }
 
-function syncRepositoryVersion(): void {
-  const rootPackageJson = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
-    version: string;
-  };
-  const cliPackageJson = JSON.parse(readFileSync(CLI_PACKAGE_JSON, "utf8")) as {
-    version: string;
-  };
-  cliPackageJson.version = rootPackageJson.version;
-  writeFileSync(CLI_PACKAGE_JSON, `${JSON.stringify(cliPackageJson, null, 2)}\n`);
-}
-
 function main(): void {
   if (existsSync(TEMPLATE_DEST)) {
     rmSync(TEMPLATE_DEST, { recursive: true, force: true });
@@ -135,13 +123,10 @@ function main(): void {
   }
   copyFileSync(PACKAGE_README, join(TEMPLATE_DEST, "README.md"));
   stripMonorepoFields(join(TEMPLATE_DEST, "package.json"));
-  syncRepositoryVersion();
 
   const fileCount = countFiles(TEMPLATE_DEST);
   console.log(
-    `Synced template to ${relative(ROOT, TEMPLATE_DEST)} (${fileCount} files). Version: ${
-      JSON.parse(readFileSync(CLI_PACKAGE_JSON, "utf8")).version
-    }`,
+    `Synced template to ${relative(ROOT, TEMPLATE_DEST)} (${fileCount} files).`,
   );
 }
 

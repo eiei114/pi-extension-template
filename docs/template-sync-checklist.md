@@ -38,7 +38,7 @@
 - [ ] `scripts.ci` が `"npm run typecheck && npm test && npm run smoke:pi && npm run review:guardrails && npm run pack:check"` になっている
 - [ ] `scripts["sync:template"]` と `scripts["sync:template:check"]` が削除されている
 - [ ] `scripts["pack:check"]` が `"npm pack --dry-run"` になっている
-- [ ] `version` が root `package.json` の repository version と一致している
+- [ ] バンドル済みテンプレートの `version` が root `package.json` と一致している（CLI workspace の公開バージョンとは独立）
 
 ## CI check
 

@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
-## Unreleased
+## [0.3.2] - 2026-10-15
 
 ### Fixed
 
@@ -13,8 +13,10 @@ This project follows semantic versioning.
 
 ### Changed
 
-- Freeze dev/test Pi SDK packages on 1.1.0 and record behavior-v2 runtime verification while preserving wildcard public peers.
+- Pin the dev/test Pi SDK packages to 1.2.0, record behavior-v2 runtime verification, and preserve wildcard public peers.
 - Separate ordinary code merges from release/publication: release creation is manual on main; npm publication accepts only authorized tags, published releases or explicit dispatch. Keep Trusted Publishing and already-published-version skips.
+
+## Unreleased
 
 ## [0.3.1] - 2026-09-30
 
