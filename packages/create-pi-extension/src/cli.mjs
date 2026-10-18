@@ -69,9 +69,10 @@ async function main() {
   }
 
   console.log("\nNext steps:");
-  console.log("  1. Edit extensions/");
-  console.log("  2. Run bun run ci");
-  console.log("  3. Try pi -e .");
+  console.log(`  1. Enter the project directory: cd ${directoryName}`);
+  console.log("  2. Edit extensions/");
+  console.log("  3. Run bun run ci");
+  console.log("  4. Try pi -e .");
   console.log(`\nCreated ${packageName} at ${outputDir}`);
 }
 

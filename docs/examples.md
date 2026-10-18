@@ -9,6 +9,7 @@ Scaffold a new project to get a copy of the latest examples:
 
 ```bash
 bunx create-pi-extension my-pi-package
+cd my-pi-package
 ```
 
 Then try the examples in your scaffolded project with `pi -e .`.
