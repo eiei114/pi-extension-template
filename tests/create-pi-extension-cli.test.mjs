@@ -191,8 +191,12 @@ test("create-pi-extension omits bootstrap docs and prints next steps", () => {
     assert.doesNotMatch(output, /Removed bootstrap docs:/);
     assert.match(output, /Edit extensions\//);
     assert.match(output, /Run bun run ci/);
-    assert.match(output, /cd cleanup-pkg/);
+    assert.match(output, /Enter the project directory: cd cleanup-pkg/);
     assert.match(output, /Try pi -e \./);
+
+    const enterProjectDirectory = output.indexOf("Enter the project directory: cd cleanup-pkg");
+    assert.ok(enterProjectDirectory < output.indexOf("Edit extensions/"));
+    assert.ok(enterProjectDirectory < output.indexOf("Run bun run ci"));
   } finally {
     rmSync(tempRoot, { recursive: true, force: true });
   }
