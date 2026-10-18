@@ -18,6 +18,12 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+## [0.3.3] - 2026-10-19
+
+### Changed
+
+- Show the generated project directory before the Pi load command in scaffold quickstarts.
+
 ## [0.3.1] - 2026-09-30
 
 ### Changed

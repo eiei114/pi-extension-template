@@ -293,6 +293,16 @@ test("docs do not reference resolved follow-up issue placeholders", async () => 
   }
 });
 
+test("examples quickstart enters the generated package before loading it", { skip: repositoryOnly }, async () => {
+  const examples = await readFile(new URL("../docs/examples.md", import.meta.url), "utf8");
+  assert.match(
+    examples,
+    /```bash\r?\nbunx create-pi-extension my-pi-package\r?\ncd my-pi-package\r?\n```/,
+    "the example must enter the generated directory before running pi -e .",
+  );
+  assert.match(examples, /scaffolded project with `pi -e \.`/);
+});
+
 test("maintainer docs describe the actual npm run ci pipeline", { skip: repositoryOnly }, async () => {
   const templateSyncDoc = await readFile(join(DOCS_DIR, "template-sync.md"), "utf8");
   assert.doesNotMatch(
