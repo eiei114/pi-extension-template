@@ -63,6 +63,23 @@ const mode = StringEnum(["short", "friendly"] as const, {
 
 This emits a JSON Schema `enum`, which is friendlier to model providers than a union of string literals.
 
+Since Pi 1.5.0 the published `@earendil-works/pi-ai` types `StringEnum` as a
+`@earendil-works/pi-schema` `Schema<T>`, so inside `Type.Object` TypeScript infers
+the property as `unknown`. (Inside the Pi host the same import resolves to a
+TypeBox-typed `StringEnum`, so runtime behavior is unchanged.) Wrap it in
+`Type.Unsafe<T>()` to keep the literal type for `params`:
+
+```ts
+import { StringEnum } from "@earendil-works/pi-ai";
+import { Type } from "typebox";
+
+const parameters = Type.Object({
+  mode: Type.Unsafe<"short" | "friendly">(
+    StringEnum(["short", "friendly"] as const, { description: "Greeting style" }),
+  ),
+});
+```
+
 ## TUI availability (`ctx.hasUI`)
 
 Extensions may run in headless or RPC-only sessions where `ctx.ui` is unavailable.
