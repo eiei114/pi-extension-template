@@ -1,19 +1,42 @@
-## Pi SDK 1.2.0 compatibility
+## Pi SDK 1.5.0 compatibility
 
 The template is verified against the frozen Pi SDK wave:
 
-- `@earendil-works/pi-agent-core`: `1.2.0`
-- `@earendil-works/pi-ai`: `1.2.0`
-- `@earendil-works/pi-coding-agent`: `1.2.0`
-- `@earendil-works/pi-tui`: `1.2.0`
+- `@earendil-works/pi-agent-core`: `1.5.0`
+- `@earendil-works/pi-ai`: `1.5.0`
+- `@earendil-works/pi-coding-agent`: `1.5.0`
+- `@earendil-works/pi-tui`: `1.5.0`
 
 These are exact dev/test pins only. Public peer dependency ranges remain `*`.
 The `StringEnum` and TypeBox schemas, explicit extension entrypoints,
 `ctx.hasUI`, `prepareArguments`, `registerTool`, tool renderers, and lifecycle
-events used by this template typecheck and load on 1.2.0. The 1.2.0 release
-notes do not deprecate or remove any of these APIs.
+events used by this template typecheck and load on 1.5.0.
 
-### 1.2.0 migration notes for downstream templates
+### 1.5.0 migration notes for downstream templates
+
+The official [Pi v1.5.0 release notes](https://github.com/earendil-works/pi/releases/tag/v1.5.0)
+move tool argument validation to `@earendil-works/pi-schema`. TypeBox schemas
+are JSON Schema and keep working, but TypeBox features outside JSON Schema
+(`Type.Refine()`, `Type.BigInt()`, `Type.Undefined()`, `Type.Void()`, codecs,
+`Format.Set()` formats) no longer apply to tool arguments; check such
+constraints in `execute()`. Loosely typed arguments are now coerced before
+validation (numeric strings, `"true"`, single value to one-item array), and
+validation errors use pi-schema messages. The template's tool schemas stay
+inside JSON Schema.
+
+The published `@earendil-works/pi-ai` no longer re-exports TypeBox, and its
+`StringEnum` is typed as a pi-schema `Schema<T>`. Inside the Pi host the
+`@earendil-works/pi-ai` import still resolves to an extension view whose
+`StringEnum` is a TypeBox `TUnsafe<T>`, but `tsc` against the npm package sees
+the pi-schema type, so a `StringEnum` property inside `Type.Object` infers as
+`unknown`. The template wraps it as `Type.Unsafe<GreetingMode>(StringEnum(...))`,
+which keeps the emitted `{ type: "string", enum: [...] }` schema identical.
+Import `Type`/`Static` from `typebox` rather than from `@earendil-works/pi-ai`.
+
+`pi-coding-agent` 1.5.0 pins `typebox` to exactly `1.3.27`, so the lockfile
+keeps that version; moving `typebox` to 1.4.x would install a second copy.
+
+### 1.2.0 migration notes (still applicable)
 
 The official [Pi v1.2.0 release notes](https://github.com/earendil-works/pi/releases/tag/v1.2.0)
 change the `before_agent_start` event for extension-triggered runs:

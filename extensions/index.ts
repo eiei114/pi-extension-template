@@ -6,9 +6,14 @@ import { StringEnum } from "@earendil-works/pi-ai";
 
 const greetParameters = Type.Object({
   name: Type.String({ description: "Name to greet" }),
-  mode: StringEnum(["short", "friendly"] as const, {
-    description: "Greeting style. Prefer short unless the user asks for more warmth.",
-  }),
+  // Pi 1.5.0: outside the Pi host, StringEnum is typed as a pi-schema Schema, which
+  // Type.Object cannot infer. Type.Unsafe keeps StringEnum's plain-enum wire schema
+  // while giving TypeBox the literal type, so `params.mode` stays a GreetingMode.
+  mode: Type.Unsafe<GreetingMode>(
+    StringEnum(["short", "friendly"] as const, {
+      description: "Greeting style. Prefer short unless the user asks for more warmth.",
+    }),
+  ),
 });
 
 type GreetParams = {

@@ -23,7 +23,7 @@ Status snapshot date: **2026-10-15**.
 | `create-pi-extension` on npm | **Published** — `0.3.1`; workspace manifest is staged at `0.3.2` and remains unpublished until human release authorization. |
 | Legacy `pi-extension-template` on npm | `0.1.6` remains on npm as a legacy root package; README steers users to `create-pi-extension`. |
 | CI (`.github/workflows/ci.yml`) | Green on `main`. Runs typecheck, `sync:template`, tests, `review:guardrails`, `pack:check`, and template-sync assertions. |
-| Pi SDK alignment | Examples are pinned to Pi **1.2.0** (`@earendil-works/*` devDeps at `1.2.0`). `ctx.hasUI` guards, lifecycle events, and TUI custom entries verified against the actual host. |
+| Pi SDK alignment | Examples are pinned to Pi **1.5.0** (`@earendil-works/*` devDeps at `1.5.0`). `ctx.hasUI` guards, lifecycle events, and TUI custom entries verified against the actual host. |
 | Example coverage | Extension (`hello`, typed tool, TUI dashboard, skill-bridge, package-layout), Agent Skill, prompt template, theme (all 51 tokens), plus entrypoint-shape checks. |
 | Tests | `greeting`, `format-table`, `config-contract`, `error-contract`, `create-pi-extension` CLI scaffold (unscoped + scoped), `smoke` (theme tokens, manifest entries, workflow shape, stale-doc guard), runtime entrypoint shapes, package contents, `review-guardrails`, `sync-template`. |
 

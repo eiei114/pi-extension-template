@@ -18,6 +18,11 @@ This project follows semantic versioning.
 
 ## Unreleased
 
+### Changed
+
+- Upgrade the dev/test Pi SDK pins (`pi-agent-core`, `pi-ai`, `pi-coding-agent`, `pi-tui`) from 1.2.0 to 1.5.0 together, and re-record behavior-v2 runtime verification against the actual Pi 1.5.0 host. Public peer ranges stay `*`; `typebox` stays at 1.3.27 because `pi-coding-agent` 1.5.0 pins it exactly.
+- Wrap the `template_greet` `mode` schema in `Type.Unsafe<GreetingMode>()`: Pi 1.5.0 types the published `StringEnum` as a pi-schema `Schema<T>`, which `Type.Object` infers as `unknown`. The emitted JSON Schema is unchanged.
+
 ## [0.3.3] - 2026-10-19
 
 ### Changed
