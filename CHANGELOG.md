@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 This project follows semantic versioning.
 
+## [Unreleased]
+
+## [0.3.4] - 2026-11-07
+
+### Changed
+
+- Bump the published `create-pi-extension` package to 0.3.4 for the Pi SDK 1.5.0 compatibility update.
+- Upgrade the dev/test Pi SDK pins (`pi-agent-core`, `pi-ai`, `pi-coding-agent`, `pi-tui`) from 1.2.0 to 1.5.0 together, and re-record behavior-v2 runtime verification against the actual Pi 1.5.0 host. Public peer ranges stay `*`; `typebox` stays at 1.3.27 because `pi-coding-agent` 1.5.0 pins it exactly.
+- Wrap the `template_greet` `mode` schema in `Type.Unsafe<GreetingMode>()`: Pi 1.5.0 types the published `StringEnum` as a pi-schema `Schema<T>`, which `Type.Object` infers as `unknown`. The emitted JSON Schema is unchanged.
+
+## [0.3.3] - 2026-10-19
+
+### Changed
+
+- Show the generated project directory before the Pi load command in scaffold quickstarts.
+
 ## [0.3.2] - 2026-10-15
 
 ### Fixed
@@ -15,19 +31,6 @@ This project follows semantic versioning.
 
 - Pin the dev/test Pi SDK packages to 1.2.0, record behavior-v2 runtime verification, and preserve wildcard public peers.
 - Separate ordinary code merges from release/publication: release creation is manual on main; npm publication accepts only authorized tags, published releases or explicit dispatch. Keep Trusted Publishing and already-published-version skips.
-
-## Unreleased
-
-### Changed
-
-- Upgrade the dev/test Pi SDK pins (`pi-agent-core`, `pi-ai`, `pi-coding-agent`, `pi-tui`) from 1.2.0 to 1.5.0 together, and re-record behavior-v2 runtime verification against the actual Pi 1.5.0 host. Public peer ranges stay `*`; `typebox` stays at 1.3.27 because `pi-coding-agent` 1.5.0 pins it exactly.
-- Wrap the `template_greet` `mode` schema in `Type.Unsafe<GreetingMode>()`: Pi 1.5.0 types the published `StringEnum` as a pi-schema `Schema<T>`, which `Type.Object` infers as `unknown`. The emitted JSON Schema is unchanged.
-
-## [0.3.3] - 2026-10-19
-
-### Changed
-
-- Show the generated project directory before the Pi load command in scaffold quickstarts.
 
 ## [0.3.1] - 2026-09-30
 

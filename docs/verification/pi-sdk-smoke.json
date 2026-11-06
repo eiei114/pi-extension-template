@@ -17,12 +17,12 @@
       "command": "npm run smoke:pi",
       "exit_code": 0,
       "passed": true,
-      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"c58ce31d-6d60-4a9f-a69a-80e7a183f647\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"a7ba4ce7-de9f-492d-a6f1-19c54a14cce5\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"e4422448-4cd8-492e-ac94-68270b8c65a9\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"4fc8825c-fb5b-4380-8fc6-923a47e8d88d\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"5f8b03b8-e149-4c28-a41a-6cd86556bde0\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"53218f3e-7408-4433-b176-6cfdfef2c4b4\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"e72a6efc-add2-476c-9b69-62d287c221c8\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"3cbb8c29-1c2a-4e14-aa32-180e3115baa9\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
       "assertions": [
         {
           "id": "extension_registered",
           "expected": "Actual Pi emits the template session-start status",
-          "observed": "{\"type\":\"extension_ui_request\",\"id\":\"c58ce31d-6d60-4a9f-a69a-80e7a183f647\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}",
+          "observed": "{\"type\":\"extension_ui_request\",\"id\":\"5f8b03b8-e149-4c28-a41a-6cd86556bde0\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}",
           "passed": true
         }
       ]
@@ -32,12 +32,12 @@
       "command": "npm run smoke:pi",
       "exit_code": 0,
       "passed": true,
-      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"2dde8b91-51a8-4222-ab27-a1818b37bd69\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"4c37e219-7837-49c7-acd0-2c72049c7c4a\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"f031e4e5-f652-4d3a-8e67-1b55660bb9f7\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"7e8aa54b-3449-4fbd-a09e-5a6ff14a4906\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"395c32c7-860f-45ac-aa47-8b1b6df4bc68\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"ca2d2c95-a99f-4fa5-9c44-74499d8a618b\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"6b009487-6f1c-4bde-a374-e23f00c20f4d\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"8e4b823b-90e1-4dba-a426-cc7a6a4e07ca\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
       "assertions": [
         {
           "id": "feature_response",
           "expected": "Template input emits its notification and handled RPC response",
-          "observed": "{\"prompt\":{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}},\"notification\":{\"type\":\"extension_ui_request\",\"id\":\"7e8aa54b-3449-4fbd-a09e-5a6ff14a4906\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}}",
+          "observed": "{\"prompt\":{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}},\"notification\":{\"type\":\"extension_ui_request\",\"id\":\"8e4b823b-90e1-4dba-a426-cc7a6a4e07ca\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}}",
           "passed": true
         }
       ]
@@ -47,7 +47,7 @@
       "command": "npm run smoke:pi",
       "exit_code": 0,
       "passed": true,
-      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"4cd3af44-60b9-47f5-842c-17607a8fffbe\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"67959853-bf90-4dfc-b40d-1f8ce38d1134\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"97234731-f7d6-4223-b2a8-f06e96b0ed3c\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"response\",\"command\":\"parse\",\"success\":false,\"error\":\"Failed to parse command: Unexpected token 'o', \\\"not-json\\\" is not valid JSON\"}\n",
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"57941812-5225-4f19-b7eb-71b712b52bd2\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"c2ed8a24-c771-4cc4-8a97-e1df38578838\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"6fd8631e-1642-44ec-b465-223b58185b7a\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"response\",\"command\":\"parse\",\"success\":false,\"error\":\"Failed to parse command: Unexpected token 'o', \\\"not-json\\\" is not valid JSON\"}\n",
       "assertions": [
         {
           "id": "handled_error",
@@ -62,18 +62,18 @@
       "command": "npm run smoke:pi",
       "exit_code": 0,
       "passed": true,
-      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"178a7d46-31fc-4266-8dc8-8e7cb4bb574b\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"0e25462e-c85c-48a7-a6d3-725c3d3d7a23\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"084d0b6e-73ef-497c-a226-b25ebfc023c8\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"2625486a-46da-475b-85dd-b66470cfd099\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
+      "evidence": "{\"type\":\"extension_ui_request\",\"id\":\"0e010b1d-93bf-4a0d-8804-527a40de4dd7\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}\n{\"type\":\"extension_ui_request\",\"id\":\"71284707-acd6-4647-8e0a-caf66c3c75ee\",\"method\":\"setStatus\",\"statusKey\":\"template-tui\",\"statusText\":\"dashboard ready\"}\n{\"type\":\"extension_ui_request\",\"id\":\"55cdea92-bb93-48ae-bdbd-0bbe0b2d8a41\",\"method\":\"setStatus\",\"statusKey\":\"layout\",\"statusText\":\"Pi package layout\"}\n{\"type\":\"extension_ui_request\",\"id\":\"04cf80c6-6639-4dc2-a96f-f001f7158aba\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}\n{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}}\n",
       "assertions": [
         {
           "id": "reloaded_extension_registered",
           "expected": "The second isolated Pi host emits template session-start status",
-          "observed": "{\"type\":\"extension_ui_request\",\"id\":\"178a7d46-31fc-4266-8dc8-8e7cb4bb574b\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}",
+          "observed": "{\"type\":\"extension_ui_request\",\"id\":\"0e010b1d-93bf-4a0d-8804-527a40de4dd7\",\"method\":\"setStatus\",\"statusKey\":\"template\",\"statusText\":\"Pi template loaded\"}",
           "passed": true
         },
         {
           "id": "reloaded_feature_response",
           "expected": "The second host handles template input and emits the real feature notification",
-          "observed": "{\"prompt\":{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}},\"notification\":{\"type\":\"extension_ui_request\",\"id\":\"2625486a-46da-475b-85dd-b66470cfd099\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}}",
+          "observed": "{\"prompt\":{\"type\":\"response\",\"command\":\"prompt\",\"success\":true,\"data\":{\"disposition\":\"handled\"}},\"notification\":{\"type\":\"extension_ui_request\",\"id\":\"04cf80c6-6639-4dc2-a96f-f001f7158aba\",\"method\":\"notify\",\"message\":\"Pi extension template loaded. Try /template-hello, /template-dashboard, /template-layout, /template-skill-info, or inspect tool_call / tool_result logs.\",\"notifyType\":\"info\"}}",
           "passed": true
         },
         {
