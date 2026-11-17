@@ -20,6 +20,9 @@ import {
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const CLI = join(ROOT, "packages", "create-pi-extension", "src", "cli.mjs");
+const CLI_VERSION = JSON.parse(
+  readFileSync(join(ROOT, "packages", "create-pi-extension", "package.json"), "utf8"),
+).version;
 
 const FIXTURE_OPTIONS = {
   packageName: "fixture-pi-package",
@@ -30,16 +33,20 @@ const FIXTURE_OPTIONS = {
   licenseYear: 2026,
 };
 
-function runCli(packageName, cwd, env = {}) {
-  return execFileSync(process.execPath, [CLI, packageName], {
+function runCli(args, cwd, env = {}) {
+  const cliEnv = {
+    ...process.env,
+    CREATE_PI_EXTENSION_SKIP_POST_SETUP: "1",
+    CREATE_PI_EXTENSION_AUTHOR: "Test Author",
+    ...env,
+  };
+  if (!Object.hasOwn(env, "CREATE_PI_EXTENSION_YES")) {
+    delete cliEnv.CREATE_PI_EXTENSION_YES;
+  }
+
+  return execFileSync(process.execPath, [CLI, ...(Array.isArray(args) ? args : [args])], {
     cwd,
-    env: {
-      ...process.env,
-      CREATE_PI_EXTENSION_YES: "1",
-      CREATE_PI_EXTENSION_SKIP_POST_SETUP: "1",
-      CREATE_PI_EXTENSION_AUTHOR: "Test Author",
-      ...env,
-    },
+    env: cliEnv,
     encoding: "utf8",
   });
 }
@@ -94,6 +101,50 @@ test("create-pi-extension scaffolds an unscoped package", () => {
     assert.match(license, /Test Author/);
     assert.doesNotMatch(license, /YOUR_NAME/);
     assert.equal(existsSync(join(tempRoot, "my-pi-package", "package-lock.json")), false);
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("create-pi-extension prints the manifest version for --version and -v", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-version-"));
+  try {
+    assert.equal(runCli(["--version"], tempRoot), `${CLI_VERSION}\n`);
+    assert.equal(runCli(["-v"], tempRoot), `${CLI_VERSION}\n`);
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("create-pi-extension --yes and -y work before or after the package name without the env var", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-yes-"));
+  try {
+    for (const args of [
+      ["--yes", "yes-before"],
+      ["yes-after", "--yes"],
+      ["-y", "short-before"],
+      ["short-after", "-y"],
+    ]) {
+      runCli(args, tempRoot);
+      assert.ok(existsSync(join(tempRoot, args.find((arg) => !arg.startsWith("-")), "package.json")));
+    }
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("create-pi-extension rejects unknown flags with an error and usage text", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-unknown-"));
+  try {
+    assert.throws(
+      () => runCli(["unknown-flag-pkg", "--unknown"], tempRoot),
+      (error) => {
+        assert.equal(error.status, 1);
+        assert.match(error.stderr.toString(), /Unknown option: --unknown/);
+        assert.match(error.stderr.toString(), /Usage: create-pi-extension \[options\] <package-name>/);
+        return true;
+      },
+    );
   } finally {
     rmSync(tempRoot, { recursive: true, force: true });
   }

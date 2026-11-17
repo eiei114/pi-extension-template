@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { readFileSync } from "node:fs";
 import { cwd } from "node:process";
 import { collectProjectOptions } from "./prompts.mjs";
 import {
@@ -11,14 +12,19 @@ import {
 } from "./scaffold.mjs";
 import { getGitConfig, parsePackageArg, resolveOwnerSlug } from "./utils.mjs";
 
-function printHelp() {
-  console.log(`Usage: create-pi-extension <package-name>
+function printHelp(write = console.log) {
+  write(`Usage: create-pi-extension [options] <package-name>
 
 Scaffold a new Pi extension project.
 
 Examples:
   bunx create-pi-extension my-pi-package
   bunx create-pi-extension @my-scope/my-pi-tool
+
+Options:
+  -v, --version                       Print the CLI version
+  -y, --yes                           Use defaults without prompts
+  -h, --help                          Show this help
 
 Environment:
   CREATE_PI_EXTENSION_YES=1           Use defaults without prompts
@@ -27,13 +33,52 @@ Environment:
 }
 
 async function main() {
-  const arg = process.argv[2];
-  if (!arg || arg === "-h" || arg === "--help") {
-    printHelp();
-    process.exit(arg ? 0 : 1);
+  let packageNameArg;
+  let showHelp = false;
+  let showVersion = false;
+  let useDefaults = false;
+
+  for (const arg of process.argv.slice(2)) {
+    if (arg === "-h" || arg === "--help") {
+      showHelp = true;
+    } else if (arg === "-v" || arg === "--version") {
+      showVersion = true;
+    } else if (arg === "-y" || arg === "--yes") {
+      useDefaults = true;
+    } else if (arg.startsWith("-")) {
+      console.error(`Unknown option: ${arg}`);
+      printHelp(console.error);
+      process.exitCode = 1;
+      return;
+    } else if (packageNameArg === undefined) {
+      packageNameArg = arg;
+    } else {
+      console.error(`Unexpected argument: ${arg}`);
+      printHelp(console.error);
+      process.exitCode = 1;
+      return;
+    }
   }
 
-  const { packageName, directoryName } = parsePackageArg(arg);
+  if (showVersion) {
+    const packageJson = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+    console.log(packageJson.version);
+    return;
+  }
+
+  if (showHelp || !packageNameArg) {
+    printHelp();
+    if (!showHelp) {
+      process.exitCode = 1;
+    }
+    return;
+  }
+
+  if (useDefaults) {
+    process.env.CREATE_PI_EXTENSION_YES = "1";
+  }
+
+  const { packageName, directoryName } = parsePackageArg(packageNameArg);
   const outputDir = resolveOutputDirectory(cwd(), directoryName);
   assertOutputDirectoryAvailable(outputDir);
 
