@@ -6,6 +6,10 @@ This project follows semantic versioning.
 
 ## [Unreleased]
 
+### Added
+
+- Add `-v`/`--version` and `-y`/`--yes` flags to the `create-pi-extension` CLI. `--version` prints the CLI version, and `--yes` (or `-y`) scaffolds with defaults without prompts (equivalent to `CREATE_PI_EXTENSION_YES=1`). Both flags may appear before or after the package name; unknown options and unexpected extra arguments now fail with usage.
+
 ## [0.3.4] - 2026-11-07
 
 ### Changed
