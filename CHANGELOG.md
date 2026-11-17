@@ -6,12 +6,6 @@ This project follows semantic versioning.
 
 ## [Unreleased]
 
-## [0.4.0] - 2026-11-17
-
-### Added
-
-- Add `--version` and non-interactive `--yes` flags to the `create-pi-extension` CLI.
-
 ## [0.3.4] - 2026-11-07
 
 ### Changed
