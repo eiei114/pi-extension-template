@@ -53,6 +53,8 @@ For a scoped package name:
 bunx create-pi-extension@latest @my-scope/my-pi-tool
 ```
 
+For non-interactive scaffolding, add `--yes` (or `-y`) before or after the package name. Use `--version` (or `-v`) to print the CLI version.
+
 ### Secondary path: GitHub Template
 
 Create a repository from this template when you prefer GitHub-first onboarding:
