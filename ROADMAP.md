@@ -96,7 +96,7 @@ sacrificing the minimal template surface.
 - Non-interactive / flag-driven CLI mode (`--name`, `--yes`, `--version`) for
   CI and scripted use (seed S-08).
 - **Completed (S-07):** Consolidated GitHub Template setup and repository settings into the [template setup checklist](docs/template-checklist.md). The standalone TypeScript guide remains outside this consolidation.
-- Group `@earendil-works/*` Dependabot updates separately from Actions (seed S-09).
+- **Completed (S-09):** Dependabot groups Pi SDK updates in `pi-sdk` and handles GitHub Actions updates separately (see the S-09 evidence below).
 - Add broader runtime validation for examples beyond export-shape assertions.
 
 ---
@@ -137,7 +137,7 @@ it through and move the detail into the relevant release section above.
 | **S-06** ✅ | ~~Add extension entrypoint shape assertion test~~ — done (PR #117) | — | — | Runtime shape checks catch export regressions before scaffolding. |
 | **S-07** ✅ | ~~Consolidate bootstrap docs (minimal-docs policy)~~ — done (DOT-4097) | ~75 min | — | Both setup paths now lead to one checklist. |
 | **S-08** | Non-interactive flags for `create-pi-extension` CLI | ~90 min | — | CI and scripted onboarding need `--name` / `--yes` / `--version` without interactive prompts (v0.4.0 goal). |
-| **S-09** | Group `@earendil-works/*` Dependabot updates | ~30 min | — | Current multi-ecosystem group bundles npm + Actions; Pi SDK bumps deserve a dedicated group to reduce review noise. |
+| **S-09** ✅ | ~~Group `@earendil-works/*` Dependabot updates~~ — done (DOT-4098) | ~30 min | — | Pi SDK bumps use a dedicated npm group; Actions updates are separate. |
 | **S-10** ✅ | ~~Apply `npm pkg fix` and verify publish warning clears~~ — done (DOT-3730) | ~30 min | — | Publish logs warn about auto-corrected `package.json`; fixing metadata prevents silent drift (TD-08). |
 
 ### Seed detail + acceptance criteria
@@ -188,9 +188,9 @@ it through and move the detail into the relevant release section above.
 - [ ] `--name <pkg>` and `--yes` allow a fully non-interactive scaffold for CI.
 - [ ] New CLI test covers the non-interactive path; existing interactive tests still pass.
 
-**S-09 — Grouped Dependabot updates**
-- [ ] `.github/dependabot.yml` groups `@earendil-works/*` into a dedicated PR (separate from github-actions).
-- [ ] `npm run ci` passes; sample grouped config validated.
+**S-09 — Grouped Dependabot updates** ✅
+- [x] [`.github/dependabot.yml`](.github/dependabot.yml) defines the dedicated npm group `pi-sdk` for `@earendil-works/*` and a separate `github-actions` ecosystem.
+- [x] [Dependabot PR #142](https://github.com/eiei114/pi-extension-template/pull/142) shows four Pi SDK updates grouped in one PR. This is evidence of grouping, not of a merge.
 
 **S-10 — Apply `npm pkg fix`** ✅
 - [x] `npm pkg fix` is a no-op on `packages/create-pi-extension` `package.json`.
