@@ -112,7 +112,7 @@ sacrificing the minimal template surface.
 | TD-05 | ~~Docs reference resolved follow-up placeholders~~ — **resolved** (DOT-1218) | ~~Low~~ Closed | AI | Regression test in `tests/smoke.test.mjs` guards against reintroduction. |
 | TD-06 | Bootstrap docs (`github-template.md`, `repository-settings.md`, `typescript.md`) labeled delete-or-merge but still standalone | Low | AI | Minimal-docs policy. Covered by seed S-07. |
 | TD-07 | Root `package.json` `author` is still the `YOUR_NAME` placeholder | Low | AI | Cosmetic; template source only. Tracked here only — not a bounded seed (the one-field change is <30 min). |
-| TD-08 | `publish.yml` log shows `npm warn publish npm auto-corrected some errors in your package.json` | Low | AI | Re-run `npm pkg fix` in `packages/create-pi-extension/`; verify warning clears. Covered by seed S-10. |
+| TD-08 | ~~`publish.yml` log shows `npm warn publish npm auto-corrected some errors in your package.json`~~ — **resolved** (DOT-3730) | ~~Low~~ Closed | AI | `npm pkg fix` normalizations applied to `packages/create-pi-extension/package.json` (`bin` path, `repository.url`); the next publish should no longer warn. |
 
 > **Human-owned areas** (per project policy): release/publish, npm ownership,
 > secrets, billing, permissions. AI agents must not perform these; flag them
@@ -138,7 +138,7 @@ it through and move the detail into the relevant release section above.
 | **S-07** | Consolidate bootstrap docs (minimal-docs policy) | ~75 min | — | Standalone bootstrap docs violate minimal-docs policy and confuse new maintainers (TD-06). |
 | **S-08** | Non-interactive flags for `create-pi-extension` CLI | ~90 min | — | CI and scripted onboarding need `--name` / `--yes` / `--version` without interactive prompts (v0.4.0 goal). |
 | **S-09** | Group `@earendil-works/*` Dependabot updates | ~30 min | — | Current multi-ecosystem group bundles npm + Actions; Pi SDK bumps deserve a dedicated group to reduce review noise. |
-| **S-10** | Apply `npm pkg fix` and verify publish warning clears | ~30 min | — | Publish logs warn about auto-corrected `package.json`; fixing metadata prevents silent drift (TD-08). |
+| **S-10** ✅ | ~~Apply `npm pkg fix` and verify publish warning clears~~ — done (DOT-3730) | ~30 min | — | Publish logs warn about auto-corrected `package.json`; fixing metadata prevents silent drift (TD-08). |
 
 ### Seed detail + acceptance criteria
 
@@ -192,10 +192,11 @@ it through and move the detail into the relevant release section above.
 - [ ] `.github/dependabot.yml` groups `@earendil-works/*` into a dedicated PR (separate from github-actions).
 - [ ] `npm run ci` passes; sample grouped config validated.
 
-**S-10 — Apply `npm pkg fix`**
-- [ ] `npm pkg fix` is a no-op on both root and `packages/create-pi-extension` `package.json`.
-- [ ] Publish warning ("auto-corrected some errors") does not recur on the next `publish.yml` run.
-- [ ] `npm run ci` passes.
+**S-10 — Apply `npm pkg fix`** ✅
+- [x] `npm pkg fix` is a no-op on `packages/create-pi-extension` `package.json`.
+- [ ] Publish warning ("auto-corrected some errors") does not recur on the next `publish.yml` run (verify on the next owner-gated publish).
+- [x] `npm run ci` passes.
+- *Status: ✅ complete — `bin` and `repository.url` normalized in `packages/create-pi-extension/package.json` (DOT-3730).*
 
 ---
 
