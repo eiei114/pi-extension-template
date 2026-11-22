@@ -95,7 +95,7 @@ sacrificing the minimal template surface.
 
 - Non-interactive / flag-driven CLI mode (`--name`, `--yes`, `--version`) for
   CI and scripted use (seed S-08).
-- Consolidate bootstrap docs per minimal-docs policy (seed S-07).
+- **Completed (S-07):** Consolidated GitHub Template setup and repository settings into the [template setup checklist](docs/template-checklist.md). The standalone TypeScript guide remains outside this consolidation.
 - Group `@earendil-works/*` Dependabot updates separately from Actions (seed S-09).
 - Add broader runtime validation for examples beyond export-shape assertions.
 
@@ -110,7 +110,7 @@ sacrificing the minimal template surface.
 | TD-03 | No full Pi-session validation of example extensions — export-shape checks now exist | Medium | AI | Examples can still drift beyond load-time shape checks. Broader coverage is a v0.4.0 candidate. |
 | TD-04 | ~~`CHANGELOG.md` has duplicate headers / undated versions~~ — **resolved** (DOT-1693) | ~~Low~~ Closed | AI | All shipped versions now have ISO dates; `Unreleased` holds only pending work. |
 | TD-05 | ~~Docs reference resolved follow-up placeholders~~ — **resolved** (DOT-1218) | ~~Low~~ Closed | AI | Regression test in `tests/smoke.test.mjs` guards against reintroduction. |
-| TD-06 | Bootstrap docs (`github-template.md`, `repository-settings.md`, `typescript.md`) labeled delete-or-merge but still standalone | Low | AI | Minimal-docs policy. Covered by seed S-07. |
+| TD-06 | ~~GitHub Template and repository settings docs labeled delete-or-merge but still standalone~~ — **resolved** (DOT-4097) | ~~Low~~ Closed | AI | Consolidated in the setup checklist. The separate TypeScript guide remains optional. |
 | TD-07 | Root `package.json` `author` is still the `YOUR_NAME` placeholder | Low | AI | Cosmetic; template source only. Tracked here only — not a bounded seed (the one-field change is <30 min). |
 | TD-08 | ~~`publish.yml` log shows `npm warn publish npm auto-corrected some errors in your package.json`~~ — **resolved** (DOT-3730) | ~~Low~~ Closed | AI | `npm pkg fix` normalizations applied to `packages/create-pi-extension/package.json` (`bin` path, `repository.url`); the next publish should no longer warn. |
 
@@ -135,7 +135,7 @@ it through and move the detail into the relevant release section above.
 | **S-04** ✅ | ~~Reconcile `CHANGELOG.md` (dates, no dup headers)~~ — done (DOT-1693, PR #105) | ~45 min | — | — |
 | **S-05** ✅ | ~~Remove stale follow-up issue references from docs~~ — done (DOT-1218) | ~30 min | — | — |
 | **S-06** ✅ | ~~Add extension entrypoint shape assertion test~~ — done (PR #117) | — | — | Runtime shape checks catch export regressions before scaffolding. |
-| **S-07** | Consolidate bootstrap docs (minimal-docs policy) | ~75 min | — | Standalone bootstrap docs violate minimal-docs policy and confuse new maintainers (TD-06). |
+| **S-07** ✅ | ~~Consolidate bootstrap docs (minimal-docs policy)~~ — done (DOT-4097) | ~75 min | — | Both setup paths now lead to one checklist. |
 | **S-08** | Non-interactive flags for `create-pi-extension` CLI | ~90 min | — | CI and scripted onboarding need `--name` / `--yes` / `--version` without interactive prompts (v0.4.0 goal). |
 | **S-09** | Group `@earendil-works/*` Dependabot updates | ~30 min | — | Current multi-ecosystem group bundles npm + Actions; Pi SDK bumps deserve a dedicated group to reduce review noise. |
 | **S-10** ✅ | ~~Apply `npm pkg fix` and verify publish warning clears~~ — done (DOT-3730) | ~30 min | — | Publish logs warn about auto-corrected `package.json`; fixing metadata prevents silent drift (TD-08). |
@@ -178,10 +178,10 @@ it through and move the detail into the relevant release section above.
 - [x] `npm run ci` passes.
 - *Status: ✅ complete — runtime entrypoint shape coverage added in PR #117.*
 
-**S-07 — Consolidate bootstrap docs**
-- [ ] `docs/github-template.md` and `docs/repository-settings.md` folded into `docs/template-checklist.md` (or removed) per minimal-docs policy.
-- [ ] No broken internal links; `README.md` Docs section updated.
-- [ ] `npm run ci` passes (including `pack:check` file list).
+**S-07 — Consolidate bootstrap docs** ✅
+- [x] GitHub Template and repository settings instructions consolidated in `docs/template-checklist.md`; both original pages removed.
+- [x] README routes both setup paths to the checklist; no live links to the removed pages.
+- [x] `npm run ci` passes (including `pack:check` file list).
 
 **S-08 — Non-interactive CLI flags**
 - [ ] `create-pi-extension --version` prints the package version.
