@@ -34,8 +34,9 @@ CLI はローカルファイルの placeholder を置換する。GitHub 上で�
 
 - [ ] clone 先で package 向けの標準 README を配置する。macOS/Linux: `cd my-pi-package && cp scaffold/package-readme.md README.md`。Windows PowerShell: `Set-Location my-pi-package; Copy-Item scaffold/package-readme.md README.md -Force`。
 - [ ] clone 先で `npm install` を実行する。
-- [ ] 下記 **Repository** 以降を確認し、placeholder の置換と [post-generation cleanup](#post-generation-cleanup-delete-or-merge-template-setup-docs) を済ませる。
+- [ ] [Repository](#repository) から [Before first release](#before-first-release) までの生成先向けの項目を確認し、placeholder の置換と [post-generation cleanup](#post-generation-cleanup-delete-or-merge-template-setup-docs) を済ませる。
 - [ ] `npm run ci` を実行する。
+- [ ] 自分のパッケージを公開する場合は、コピー後の `README.md` の **Release** 節に従う。
 
 ## Recommended flow
 
@@ -135,7 +136,28 @@ CLI はローカルファイルの placeholder を置換する。GitHub 上で�
 - [ ] `package.json.files` に公開対象だけを入れる
 - [ ] 詳細はセットアップ中だけ `docs/typescript.md` を参照し、不要なら post-generation cleanup で削除
 
-## CI / Release
+## npm page
+
+初回 publish 後に確認する。
+
+- [ ] npm package URL を GitHub About と README に追加する
+- [ ] npm page の description と README が意図どおりに表示されるか確認する
+- [ ] provenance が付いているか確認する
+- [ ] 不要なファイルが package に含まれていないか確認する（`npm pack --dry-run` で `docs/` の残し方も確認）
+
+## Before first release
+
+生成先のパッケージを公開する手順は、生成先の `README.md` の **Release** 節を参照する。
+
+- [ ] サンプルコードを実機 Pi でロードする
+- [ ] `pi install git:github.com/OWNER/REPO` を試す
+- [ ] `pi -e .` を試す
+- [ ] README のコマンドがコピペで動くか確認する
+- [ ] CHANGELOG に `0.1.0` を書く
+
+## Upstream template maintainers only: CI / Release
+
+ここからは上流の `pi-extension-template` で CLI をリリースするための手順。生成先プロジェクトには適用しない。
 
 - [ ] `npm run ci` が通る
 - [ ] `packages/create-pi-extension` で `npm pack --dry-run` が通り、`template/` が含まれる
@@ -155,20 +177,3 @@ CLI はローカルファイルの placeholder を置換する。GitHub 上で�
 - [ ] `publish.yml` skips already-published versions via the public npm registry API and logs `publish intentionally skipped` on reruns
 - [ ] Auto release explicitly hands off to publish: `gh workflow run publish.yml --ref "$TAG" -f ref="$TAG"`, or `publish.yml` has an equivalent `workflow_run` / `repository_dispatch` trigger
 - [ ] Do not rely only on `push.tags` or `release.published` when the tag/release is created by `GITHUB_TOKEN`; that can leave npm unchanged after merge
-
-## npm page
-
-初回 publish 後に確認する。
-
-- [ ] npm package URL を GitHub About と README に追加する
-- [ ] npm page の description と README が意図どおりに表示されるか確認する
-- [ ] provenance が付いているか確認する
-- [ ] 不要なファイルが package に含まれていないか確認する（`npm pack --dry-run` で `docs/` の残し方も確認）
-
-## Before first release
-
-- [ ] サンプルコードを実機 Pi でロードする
-- [ ] `pi install git:github.com/OWNER/REPO` を試す
-- [ ] `pi -e .` を試す
-- [ ] README のコマンドがコピペで動くか確認する
-- [ ] CHANGELOG に `0.1.0` を書く
