@@ -5,7 +5,7 @@
   "type": "module",
   "license": "MIT",
   "bin": {
-    "create-pi-extension": "./src/cli.mjs"
+    "create-pi-extension": "src/cli.mjs"
   },
   "files": [
     "src",
@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/eiei114/pi-extension-template",
+    "url": "git+https://github.com/eiei114/pi-extension-template.git",
     "directory": "packages/create-pi-extension"
   },
   "publishConfig": {
