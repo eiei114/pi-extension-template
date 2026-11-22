@@ -147,10 +147,8 @@ Optional maintainer guidance (not a public-user navigation target in mature repo
 
 - [`docs/template-checklist.md`](docs/template-checklist.md)
 
-Template bootstrap docs to delete or merge after setup unless they still teach something project-specific:
+When using GitHub Template, delete or merge any remaining bootstrap docs after setup unless they still teach something project-specific (the CLI omits these pages):
 
-- `docs/github-template.md`
-- `docs/repository-settings.md`
 - `docs/template-sync.md` — monorepo maintainer notes for refreshing the bundled CLI template
 - `docs/typescript.md`
 

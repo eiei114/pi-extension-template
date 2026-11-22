@@ -1,6 +1,6 @@
 # Template Setup Checklist
 
-このテンプレートから新しい Pi 拡張OSSを作った後に埋めること。
+このテンプレートから新しい Pi 拡張プロジェクトを作るときに使う。作成方法を選び、共通の設定・確認に進む。
 
 ## Start paths
 
@@ -14,16 +14,29 @@ CLI が placeholder 置換・bootstrap doc 削除・`git init` / `bun install` �
 - [ ] README / feature list / quick start をプロジェクト向けに更新する
 - [ ] `npm run ci` と `npm pack --dry-run` を通す
 
-Primary path では **Repository** / **README placeholders** / **GitHub Template repo** の多くは CLI が済ませる。残タスクはカスタマイズと release 準備。
+CLI はローカルファイルの placeholder を置換する。GitHub 上での repo 作成・About・branch protection などは、repo をホストする場合に下記 **Repository** を確認する。
 
 ### Secondary path: GitHub Template
 
-`gh repo create --template eiei114/pi-extension-template --clone` で repo を作った場合は、以下の manual checklist を順に埋める。
+自分の fork などをテンプレート元にする場合は、作成前に**元 repo** の **Settings → General → Template repository** を有効にし、`--template` にその repo を指定する。公式テンプレートから作る場合、元 repo の設定変更は不要。
 
-- [ ] `gh repo create OWNER/my-pi-package --template eiei114/pi-extension-template --clone` で作成する
-- [ ] clone先へ移動してpackage向けの標準READMEを配置する: macOS/Linuxは `cd my-pi-package && cp scaffold/package-readme.md README.md`、Windows PowerShellは `Set-Location my-pi-package; Copy-Item scaffold/package-readme.md README.md -Force`
-- [ ] 下記 **Repository** 以降のセクションをすべて確認する
-- [ ] post-generation cleanup（bootstrap docs 削除）を実施する
+- [ ] `your-org` を自分の GitHub ユーザー名か組織名に置き換え、公開範囲に合ったコマンドを一つ実行する。
+
+  ```bash
+  # Public
+  gh repo create your-org/my-pi-package --public --template eiei114/pi-extension-template --clone
+
+  # Private
+  gh repo create your-org/my-pi-package --private --template eiei114/pi-extension-template --clone
+  ```
+
+  元 repo の全ブランチを含めたい場合は `--include-all-branches` を追加する。
+
+- [ ] clone 先で package 向けの標準 README を配置する。macOS/Linux: `cd my-pi-package && cp scaffold/package-readme.md README.md`。Windows PowerShell: `Set-Location my-pi-package; Copy-Item scaffold/package-readme.md README.md -Force`。
+- [ ] clone 先で `npm install` を実行する。
+- [ ] [Repository](#repository) から [Before first release](#before-first-release) までの生成先向けの項目を確認し、placeholder の置換と [post-generation cleanup](#post-generation-cleanup-delete-or-merge-template-setup-docs) を済ませる。
+- [ ] `npm run ci` を実行する。
+- [ ] 自分のパッケージを公開する場合は、コピー後の `README.md` の **Release** 節に従う。
 
 ## Recommended flow
 
@@ -38,13 +51,14 @@ Primary path では **Repository** / **README placeholders** / **GitHub Template
 ## Repository
 
 - [ ] GitHub repository name を決める
-- [ ] GitHub About 欄を書く
+- [ ] GitHub About の Description に Pi package の一行紹介を、Website に npm package URL またはプロジェクトの docs URL を設定する
 - [ ] GitHub topics を設定する
   - [ ] `pi`
   - [ ] `pi-package`
   - [ ] `agent-skill`
   - [ ] `typescript`
-- [ ] GitHub Settingsで `Template repository` をONにする
+- [ ] 作成した repo 自体をテンプレートとして再利用する場合だけ、**Settings → General → Template repository** を有効にする
+- [ ] 公開 package では、既定ブランチの保護ルールで PR 経由のマージと `CI` workflow のステータスチェックの成功を必須にし、force push を禁止する
 - [ ] Repository URL を `package.json` に反映する
 - [ ] 生成先 repo では `package.json` / README 内の `OWNER/REPO` を実リポジトリに置き換える
 
@@ -104,9 +118,9 @@ Primary path では **Repository** / **README placeholders** / **GitHub Template
 
 テンプレート生成直後の bootstrap 用。プロジェクト固有の価値がなければ削除し、必要な内容は README / `docs/release.md` / `docs/examples.md` に統合する。
 
-- [ ] `docs/github-template.md` を削除するか、固有の手順だけ README / Vault に移す
-- [ ] `docs/repository-settings.md` を削除するか、About/topics など必要分だけ README に移す
-- [ ] `docs/typescript.md` を削除するか、TypeScript 方針は README Development に要約する
+- [ ] セットアップ後はこのチェックリストを削除するか、プロジェクト固有の GitHub 設定・手順だけ README / Vault に移す
+- [ ] GitHub Template からの生成先に `docs/template-sync.md` が残っていれば削除する（上流テンプレート用）
+- [ ] `docs/typescript.md` が残っていれば削除するか、TypeScript 方針を README Development に要約する
 - [ ] README の Docs 節から、削除したファイルへのリンクを外す
 - [ ] `package.json` の `files` から、削除した `docs/` パスを外す（残す doc だけ明示する）
 
@@ -122,12 +136,28 @@ Primary path では **Repository** / **README placeholders** / **GitHub Template
 - [ ] `package.json.files` に公開対象だけを入れる
 - [ ] 詳細はセットアップ中だけ `docs/typescript.md` を参照し、不要なら post-generation cleanup で削除
 
-## GitHub Template repo
+## npm page
 
-- [ ] `gh repo create --template OWNER/pi-extension-template` で作成できることを確認する
-- [ ] public/privateどちらの作成例もdocsに載せる（`docs/github-template.md` を残す場合）
+初回 publish 後に確認する。
 
-## CI / Release
+- [ ] npm package URL を GitHub About と README に追加する
+- [ ] npm page の description と README が意図どおりに表示されるか確認する
+- [ ] provenance が付いているか確認する
+- [ ] 不要なファイルが package に含まれていないか確認する（`npm pack --dry-run` で `docs/` の残し方も確認）
+
+## Before first release
+
+生成先のパッケージを公開する手順は、生成先の `README.md` の **Release** 節を参照する。
+
+- [ ] サンプルコードを実機 Pi でロードする
+- [ ] `pi install git:github.com/OWNER/REPO` を試す
+- [ ] `pi -e .` を試す
+- [ ] README のコマンドがコピペで動くか確認する
+- [ ] CHANGELOG に `0.1.0` を書く
+
+## Upstream template maintainers only: CI / Release
+
+ここからは上流の `pi-extension-template` で CLI をリリースするための手順。生成先プロジェクトには適用しない。
 
 - [ ] `npm run ci` が通る
 - [ ] `packages/create-pi-extension` で `npm pack --dry-run` が通り、`template/` が含まれる
@@ -147,18 +177,3 @@ Primary path では **Repository** / **README placeholders** / **GitHub Template
 - [ ] `publish.yml` skips already-published versions via the public npm registry API and logs `publish intentionally skipped` on reruns
 - [ ] Auto release explicitly hands off to publish: `gh workflow run publish.yml --ref "$TAG" -f ref="$TAG"`, or `publish.yml` has an equivalent `workflow_run` / `repository_dispatch` trigger
 - [ ] Do not rely only on `push.tags` or `release.published` when the tag/release is created by `GITHUB_TOKEN`; that can leave npm unchanged after merge
-
-## npm page
-
-- [ ] npm package URL を README に追加する
-- [ ] npm description が適切に表示されるか確認する
-- [ ] provenance が付いているか確認する
-- [ ] 不要なファイルが package に含まれていないか確認する（`npm pack --dry-run` で `docs/` の残し方も確認）
-
-## Before first release
-
-- [ ] サンプルコードを実機 Pi でロードする
-- [ ] `pi install git:github.com/OWNER/REPO` を試す
-- [ ] `pi -e .` を試す
-- [ ] README のコマンドがコピペで動くか確認する
-- [ ] CHANGELOG に `0.1.0` を書く

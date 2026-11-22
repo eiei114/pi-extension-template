@@ -45,7 +45,7 @@ Scaffold a new project with the published CLI:
 bunx create-pi-extension@latest my-pi-package
 ```
 
-The CLI copies the bundled template, replaces placeholders, removes bootstrap docs, and can run `git init` plus `bun install`. See [`docs/template-checklist.md`](docs/template-checklist.md) for the minimal follow-up checklist.
+The CLI copies the bundled template, replaces placeholders, removes bootstrap docs, and can run `git init` plus `bun install`. Follow the [CLI setup checklist](docs/template-checklist.md#primary-path-create-pi-extension-recommended) to finish setup.
 
 For a scoped package name:
 
@@ -57,16 +57,7 @@ For non-interactive scaffolding, add `--yes` (or `-y`) before or after the packa
 
 ### Secondary path: GitHub Template
 
-Create a repository from this template when you prefer GitHub-first onboarding:
-
-```bash
-gh repo create OWNER/my-pi-package \
-  --template eiei114/pi-extension-template \
-  --clone
-```
-
-Then follow the **Secondary path** section in [`docs/template-checklist.md`](docs/template-checklist.md) for manual placeholder replacement, metadata, and post-generation cleanup.
-That checklist first copies `scaffold/package-readme.md` to `README.md`, giving GitHub Template users the same standard badges and README structure as CLI-generated packages.
+Prefer GitHub-first onboarding? Follow the [GitHub Template setup checklist](docs/template-checklist.md#secondary-path-github-template) for public and private creation commands, the standard package README, repository settings, and post-generation cleanup.
 
 ## Legacy npm package
 
@@ -100,7 +91,7 @@ See [`docs/release.md`](docs/release.md) for setup details.
 
 ## Docs
 
-- [`docs/template-checklist.md`](docs/template-checklist.md) — Primary vs Secondary setup flows
+- [Template setup checklist](docs/template-checklist.md) — CLI and GitHub Template setup, repository settings, and cleanup
 - [`docs/template-sync.md`](docs/template-sync.md) — refresh `packages/create-pi-extension/template/` before CLI publish
 - [`docs/template-sync-checklist.md`](docs/template-sync-checklist.md) — checklist for syncing and verifying the bundled template
 - [`docs/examples.md`](docs/examples.md) — extension, skill, prompt, and theme examples
