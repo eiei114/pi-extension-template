@@ -34,7 +34,12 @@ Release snapshot checked: **2026-11-23 UTC**.
 - **Dependabot** keeps `@earendil-works/*` and `typebox` current via a weekly
   multi-ecosystem group; PRs merge cleanly because examples track the latest
   patterns.
-- **Examples are fresh** through the Pi 0.99.1 SDK bump (PR #119); entrypoint runtime-shape and package-content checks now cover common scaffold regressions (PR #117–#118).
+- **Examples use the pinned Pi SDK 1.5.0**, the compatibility baseline for
+  [PR #141](https://github.com/eiei114/pi-extension-template/pull/141). CI
+  typechecks the examples and runs an offline Pi smoke test, not interactive
+  end-to-end tests (see §1.2). Earlier work added entrypoint runtime-shape
+  checks (PR #117) and package-content checks (PR #118); PR #119 updated the
+  SDK to the earlier 0.99.1 baseline.
 - **Release plumbing is well-documented** (`docs/release.md`,
   `docs/publish-rerun-rollout.md`, `auto-release.yml` → `publish.yml` handoff).
 - **Publish workflow races fixed** — concurrent publish runs are serialized (PR #98).
