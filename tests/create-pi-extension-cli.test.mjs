@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -123,6 +123,45 @@ test("create-pi-extension scaffolds an unscoped package", () => {
     assert.match(license, /Test Author/);
     assert.doesNotMatch(license, /YOUR_NAME/);
     assert.equal(existsSync(join(tempRoot, "my-pi-package", "package-lock.json")), false);
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("create-pi-extension scaffolds into an existing empty directory", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-empty-"));
+  const packageName = "empty-target";
+  const outputDir = join(tempRoot, packageName);
+  try {
+    mkdirSync(outputDir);
+
+    runCli(["--yes", packageName], tempRoot);
+
+    const { packageJson, readme } = readProject(tempRoot, packageName);
+    assert.equal(packageJson.name, packageName);
+    assert.match(readme, /empty-target/);
+  } finally {
+    rmSync(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("create-pi-extension rejects a nonempty directory without changing its contents", () => {
+  const tempRoot = mkdtempSync(join(tmpdir(), "create-pi-extension-nonempty-"));
+  const packageName = "nonempty-target";
+  const outputDir = join(tempRoot, packageName);
+  const sentinelPath = join(outputDir, "README.md");
+  const sentinel = "Existing project notes.\n";
+  try {
+    mkdirSync(outputDir);
+    writeFileSync(sentinelPath, sentinel, "utf8");
+
+    assert.throws(() => runCli(["--yes", packageName], tempRoot), (error) => {
+      assert.equal(error.status, 1);
+      assert.equal(error.stderr.trimEnd(), `Output directory already exists and is not empty: ${outputDir}`);
+      return true;
+    });
+    assert.deepEqual(readdirSync(outputDir), ["README.md"]);
+    assert.equal(readFileSync(sentinelPath, "utf8"), sentinel);
   } finally {
     rmSync(tempRoot, { recursive: true, force: true });
   }
