@@ -22,7 +22,7 @@ Release snapshot checked: **2026-11-23 UTC**.
 | Root `package.json` version | `0.3.1` (private template source; retained for generated scaffold projects) |
 | `create-pi-extension` on npm | **Published** — npm `latest` is `0.3.4`, matching the [CLI workspace manifest](packages/create-pi-extension/package.json). |
 | Legacy `pi-extension-template` on npm | `0.1.6` remains on npm as a legacy root package; README steers users to `create-pi-extension`. |
-| CI (`.github/workflows/ci.yml`) | Green on `main`. Runs typecheck, `sync:template`, tests, `review:guardrails`, `pack:check`, and template-sync assertions. |
+| CI (`.github/workflows/ci.yml`) | Green on `main`. Runs typecheck, `sync:template`, tests, `smoke:pi`, `review:guardrails`, `pack:check`, and template-sync assertions. |
 | Pi SDK alignment | Examples are pinned to Pi **1.5.0** (`@earendil-works/*` devDeps at `1.5.0`). `ctx.hasUI` guards, lifecycle events, and TUI custom entries verified against the actual host. |
 | Example coverage | Extension (`hello`, typed tool, TUI dashboard, skill-bridge, package-layout), Agent Skill, prompt template, theme (all 51 tokens), plus entrypoint-shape checks. |
 | Tests | `greeting`, `format-table`, `config-contract`, `error-contract`, `create-pi-extension` CLI scaffold (unscoped + scoped), `smoke` (theme tokens, manifest entries, workflow shape, stale-doc guard), runtime entrypoint shapes, package contents, `review-guardrails`, `sync-template`. |
@@ -47,7 +47,12 @@ Release snapshot checked: **2026-11-23 UTC**.
 - **Two package names on npm are out of sync with intent**: the legacy root
   `pi-extension-template` is still published while `create-pi-extension` is the
   intended onboarding artifact (TD-02, human-owned deprecation decision).
-- **Runtime coverage is still partial** — entrypoint shape checks catch export regressions, but the examples are not exercised in a real Pi session. Further drift can still surface only after scaffolding.
+- **Runtime coverage is still partial** — entrypoint shape checks catch export
+  regressions without launching Pi. CI also runs [`smoke:pi`](scripts/pi-sdk-smoke.mjs),
+  which launches the pinned Pi CLI in offline RPC mode and checks extension
+  startup and the extension-handled `?template` response without model inference.
+  This does not validate every example or cover interactive or model-backed
+  end-to-end flows.
 - **Release snapshot drift** — the published CLI and the private template source are versioned separately. Check the GitHub release, npm `latest`, and both manifests when updating this snapshot.
 
 ---
@@ -88,7 +93,8 @@ sacrificing the minimal template surface.
 - **Completed (S-08, [PR #144](https://github.com/eiei114/pi-extension-template/pull/144)):** `create-pi-extension --yes my-pkg` scaffolds without prompts using a positional package name; `create-pi-extension --version` prints the CLI version.
 - **Completed (S-07):** Consolidated GitHub Template setup and repository settings into the [template setup checklist](docs/template-checklist.md). The standalone TypeScript guide remains outside this consolidation.
 - **Completed (S-09):** Dependabot groups Pi SDK updates in `pi-sdk` and handles GitHub Actions updates separately (see the S-09 evidence below).
-- Add broader runtime validation for examples beyond export-shape assertions.
+- Extend runtime validation beyond entrypoint shape checks and offline RPC smoke
+  to cover more examples and interactive or end-to-end flows.
 
 ---
 
@@ -98,7 +104,7 @@ sacrificing the minimal template surface.
 |---|---|---|---|---|
 | TD-01 | ~~`create-pi-extension` not on npm~~ — **resolved** for `0.1.8` / `0.2.x` publishes; keep `publish.yml` diagnostics for first-time forks | ~~Blocker~~ Closed (this repo) | **Human** for new forks | README + `publish.yml` now distinguish unregistered package vs already-published skip. |
 | TD-02 | Legacy root `pi-extension-template` is published on npm (`0.1.6`) despite docs saying it is not | High | **Human** (npm ownership) | Decide: deprecate on npm, or transfer. |
-| TD-03 | No full Pi-session validation of example extensions — export-shape checks now exist | Medium | AI | Examples can still drift beyond load-time shape checks. Broader coverage is a short-term goal (see §3). |
+| TD-03 | Broader Pi runtime validation of examples remains open | Medium | AI | Export-shape checks validate entrypoints; the [offline RPC smoke](scripts/pi-sdk-smoke.mjs) checks selected behavior in the real Pi host without model inference. Full example coverage and interactive or model-backed end-to-end validation remain open (see §3). |
 | TD-04 | ~~`CHANGELOG.md` has duplicate headers / undated versions~~ — **resolved** (DOT-1693) | ~~Low~~ Closed | AI | All shipped versions now have ISO dates; `Unreleased` holds only pending work. |
 | TD-05 | ~~Docs reference resolved follow-up placeholders~~ — **resolved** (DOT-1218) | ~~Low~~ Closed | AI | Regression test in `tests/smoke.test.mjs` guards against reintroduction. |
 | TD-06 | ~~GitHub Template and repository settings docs labeled delete-or-merge but still standalone~~ — **resolved** (DOT-4097) | ~~Low~~ Closed | AI | Consolidated in the setup checklist. The separate TypeScript guide remains optional. |
