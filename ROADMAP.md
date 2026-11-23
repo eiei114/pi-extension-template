@@ -10,7 +10,7 @@ maintainer) can pick the next bounded micro-maintenance candidate without
 re-discovering project state. Update it whenever a release ships, a major item
 is resolved, or the seed backlog is exhausted.
 
-Status snapshot date: **2026-10-15**.
+Release snapshot checked: **2026-11-23 UTC**.
 
 ---
 
@@ -18,9 +18,9 @@ Status snapshot date: **2026-10-15**.
 
 | Aspect | State |
 |---|---|
-| Latest GitHub release / tag | `v0.3.1` (2026-09-30) |
+| Latest GitHub release / tag | [`v0.3.4`](https://github.com/eiei114/pi-extension-template/releases/tag/v0.3.4) (2026-11-07 UTC) |
 | Root `package.json` version | `0.3.1` (private template source; retained for generated scaffold projects) |
-| `create-pi-extension` on npm | **Published** — `0.3.1`; workspace manifest is staged at `0.3.2` and remains unpublished until human release authorization. |
+| `create-pi-extension` on npm | **Published** — npm `latest` is `0.3.4`, matching the [CLI workspace manifest](packages/create-pi-extension/package.json). |
 | Legacy `pi-extension-template` on npm | `0.1.6` remains on npm as a legacy root package; README steers users to `create-pi-extension`. |
 | CI (`.github/workflows/ci.yml`) | Green on `main`. Runs typecheck, `sync:template`, tests, `review:guardrails`, `pack:check`, and template-sync assertions. |
 | Pi SDK alignment | Examples are pinned to Pi **1.5.0** (`@earendil-works/*` devDeps at `1.5.0`). `ctx.hasUI` guards, lifecycle events, and TUI custom entries verified against the actual host. |
@@ -48,7 +48,7 @@ Status snapshot date: **2026-10-15**.
   `pi-extension-template` is still published while `create-pi-extension` is the
   intended onboarding artifact (TD-02, human-owned deprecation decision).
 - **Runtime coverage is still partial** — entrypoint shape checks catch export regressions, but the examples are not exercised in a real Pi session. Further drift can still surface only after scaffolding.
-- **Post-release maintenance is accumulating** — the latest tests and metadata refactors landed after `v0.3.1`; a human should decide when to cut the next release.
+- **Release snapshot drift** — the published CLI and the private template source are versioned separately. Check the GitHub release, npm `latest`, and both manifests when updating this snapshot.
 
 ---
 
@@ -80,15 +80,7 @@ ecosystem. Its job is to make a new contributor productive in minutes:
 
 ## 3. Short-term goals (next 1–2 releases)
 
-### v0.3.2 — "maintenance follow-up" (next patch candidate)
-
-Goal: package the post-`v0.3.1` maintenance changes after human review, without
-performing a release as part of roadmap triage.
-
-- Decide whether the post-release test and metadata changes warrant a patch release.
-- Apply `npm pkg fix` and verify publish warning clears (seed S-10).
-
-### v0.4.0 — "ergonomic + broader scaffold" (next feature line)
+### CLI ergonomics and broader scaffold validation
 
 Goal: make the CLI usable non-interactively and extend verification without
 sacrificing the minimal template surface.
@@ -106,12 +98,12 @@ sacrificing the minimal template surface.
 |---|---|---|---|---|
 | TD-01 | ~~`create-pi-extension` not on npm~~ — **resolved** for `0.1.8` / `0.2.x` publishes; keep `publish.yml` diagnostics for first-time forks | ~~Blocker~~ Closed (this repo) | **Human** for new forks | README + `publish.yml` now distinguish unregistered package vs already-published skip. |
 | TD-02 | Legacy root `pi-extension-template` is published on npm (`0.1.6`) despite docs saying it is not | High | **Human** (npm ownership) | Decide: deprecate on npm, or transfer. |
-| TD-03 | No full Pi-session validation of example extensions — export-shape checks now exist | Medium | AI | Examples can still drift beyond load-time shape checks. Broader coverage is a v0.4.0 candidate. |
+| TD-03 | No full Pi-session validation of example extensions — export-shape checks now exist | Medium | AI | Examples can still drift beyond load-time shape checks. Broader coverage is a short-term goal (see §3). |
 | TD-04 | ~~`CHANGELOG.md` has duplicate headers / undated versions~~ — **resolved** (DOT-1693) | ~~Low~~ Closed | AI | All shipped versions now have ISO dates; `Unreleased` holds only pending work. |
 | TD-05 | ~~Docs reference resolved follow-up placeholders~~ — **resolved** (DOT-1218) | ~~Low~~ Closed | AI | Regression test in `tests/smoke.test.mjs` guards against reintroduction. |
 | TD-06 | ~~GitHub Template and repository settings docs labeled delete-or-merge but still standalone~~ — **resolved** (DOT-4097) | ~~Low~~ Closed | AI | Consolidated in the setup checklist. The separate TypeScript guide remains optional. |
 | TD-07 | Root `package.json` `author` is still the `YOUR_NAME` placeholder | Low | AI | Cosmetic; template source only. Tracked here only — not a bounded seed (the one-field change is <30 min). |
-| TD-08 | ~~`publish.yml` log shows `npm warn publish npm auto-corrected some errors in your package.json`~~ — **resolved** (DOT-3730) | ~~Low~~ Closed | AI | `npm pkg fix` normalizations applied to `packages/create-pi-extension/package.json` (`bin` path, `repository.url`); the next publish should no longer warn. |
+| TD-08 | ~~CLI manifest metadata needed normalization~~ — **fixed** (DOT-3730) | ~~Low~~ Closed | AI | `npm pkg fix` normalized the CLI workspace's `bin` path and `repository.url`. Whether the publish warning stopped recurring is unverified. |
 
 > **Human-owned areas** (per project policy): release/publish, npm ownership,
 > secrets, billing, permissions. AI agents must not perform these; flag them
@@ -137,7 +129,7 @@ it through and move the detail into the relevant release section above.
 | **S-07** ✅ | ~~Consolidate bootstrap docs (minimal-docs policy)~~ — done (DOT-4097) | ~75 min | — | Both setup paths now lead to one checklist. |
 | **S-08** ✅ | ~~Non-interactive flags for `create-pi-extension` CLI~~ — done ([PR #144](https://github.com/eiei114/pi-extension-template/pull/144)) | ~90 min | — | Use `--yes` with a positional package name for scripted scaffolding; use `--version` to print the CLI version. |
 | **S-09** ✅ | ~~Group `@earendil-works/*` Dependabot updates~~ — done (DOT-4098) | ~30 min | — | Pi SDK bumps use a dedicated npm group; Actions updates are separate. |
-| **S-10** ✅ | ~~Apply `npm pkg fix` and verify publish warning clears~~ — done (DOT-3730) | ~30 min | — | Publish logs warn about auto-corrected `package.json`; fixing metadata prevents silent drift (TD-08). |
+| **S-10** ✅ | ~~Normalize the CLI workspace manifest with `npm pkg fix`~~ — done (DOT-3730) | ~30 min | — | Prevents silent auto-correction of these fields (TD-08). |
 
 ### Seed detail + acceptance criteria
 
@@ -193,9 +185,9 @@ it through and move the detail into the relevant release section above.
 
 **S-10 — Apply `npm pkg fix`** ✅
 - [x] `npm pkg fix` is a no-op on `packages/create-pi-extension` `package.json`.
-- [ ] Publish warning ("auto-corrected some errors") does not recur on the next `publish.yml` run (verify on the next owner-gated publish).
 - [x] `npm run ci` passes.
 - *Status: ✅ complete — `bin` and `repository.url` normalized in `packages/create-pi-extension/package.json` (DOT-3730).*
+- Publish warning follow-up: no publish logs were checked for this snapshot, so warning clearance is not confirmed.
 
 ---
 
