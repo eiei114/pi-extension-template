@@ -31,14 +31,14 @@ Releases publish **`create-pi-extension`** to npm through Trusted Publishing. Th
 
 Before bumping the version, run the local validation steps in `docs/publish-local-validation.md` (at minimum `npm ci`, `npm run ci`, plus the tarball check).
 
+From the repository root, bump the published CLI workspace version, not the
+private root `pi-extension-template` package version:
+
 ```bash
-npm version patch
-git push
+npm version patch --workspace create-pi-extension --no-git-tag-version
 ```
 
-Merging or pushing a version bump runs CI only; it does not release or publish.
-After separate release authorization, manually dispatch `auto-release.yml` on
-`main` to create the tag/release and hand off to npm publication. Do not execute
-that release step as part of ordinary SDK maintenance verification.
-
-See `docs/release.md` for Trusted Publisher settings and the monorepo publish path.
+Commit the version bump and submit it through the normal PR process. Preparing
+or merging the bump does not create a tag or publish to npm. After separate
+release authorization, follow the [release guide](docs/release.md#publish) to
+manually dispatch `auto-release.yml` on `main`.
