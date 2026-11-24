@@ -6,15 +6,41 @@
 
 ### Primary path: `create-pi-extension` (recommended)
 
-CLI が placeholder 置換・bootstrap doc 削除・`git init` / `bun install` を担当する。手動作業は最小限でよい。
+CLI は placeholder を置換し、bootstrap doc を削除する。その後、デフォルトでは生成先ディレクトリで `git init` → `bun install` の順に実行する。通常は Git と Bun を `PATH` に用意しておく。
 
 - [ ] `bunx create-pi-extension@latest <package-name>` でプロジェクトを生成する
+- [ ] 後処理をスキップした、または後処理だけ失敗した場合は [Scaffold post-setup](#scaffold-post-setup) に従う
 - [ ] CLI の next steps（`npm run ci` など）に従う
 - [ ] 下記 **Recommended flow** の Vault / PRD / Issues フローに入る
 - [ ] README / feature list / quick start をプロジェクト向けに更新する
 - [ ] `npm run ci` と `npm pack --dry-run` を通す
 
 CLI はローカルファイルの placeholder を置換する。GitHub 上での repo 作成・About・branch protection などは、repo をホストする場合に下記 **Repository** を確認する。
+
+#### Scaffold post-setup
+
+新規生成時に `CREATE_PI_EXTENSION_SKIP_POST_SETUP=1` を設定すると、ファイルは生成されるが `git init` と `bun install` はどちらも実行されない。`--yes` は質問にデフォルト値で回答するためのオプションであり、後処理はスキップしない。
+
+PowerShell の例（生成先の親ディレクトリで実行）:
+
+```powershell
+$env:CREATE_PI_EXTENSION_SKIP_POST_SETUP = '1'
+try {
+    bunx create-pi-extension@latest my-pi-package
+} finally {
+    Remove-Item Env:CREATE_PI_EXTENSION_SKIP_POST_SETUP
+}
+```
+
+後処理だけが失敗した場合、生成済みファイルは残る。CLI は空でない同名ディレクトリへの再生成を拒否するので、生成し直さず、失敗原因（Git や Bun が `PATH` にない、依存関係の取得に失敗した、など）を解消してから生成先で残りの作業を行う。
+
+```powershell
+Set-Location my-pi-package
+git init      # このディレクトリで未実行の場合のみ
+bun install
+```
+
+`git init` が成功済みなら、`bun install` から再開する。後処理をスキップした場合は、セットアップを完了するときに両方を順に実行する。完了したら上のチェックリストに戻る。
 
 ### Secondary path: GitHub Template
 

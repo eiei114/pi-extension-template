@@ -45,7 +45,9 @@ Scaffold a new project with the published CLI:
 bunx create-pi-extension@latest my-pi-package
 ```
 
-The CLI copies the bundled template, replaces placeholders, removes bootstrap docs, and can run `git init` plus `bun install`. Follow the [CLI setup checklist](docs/template-checklist.md#primary-path-create-pi-extension-recommended) to finish setup.
+The CLI copies the bundled template, replaces placeholders, and removes bootstrap docs. By default, it then runs `git init` followed by `bun install` in the new directory, so have Git and Bun available on your `PATH`. Follow the [CLI setup checklist](docs/template-checklist.md#primary-path-create-pi-extension-recommended) to finish setup.
+
+To skip those commands on a new scaffold, set `CREATE_PI_EXTENSION_SKIP_POST_SETUP=1` (see the [PowerShell example and recovery steps](docs/template-checklist.md#scaffold-post-setup)). If only post-setup failed, keep the generated files and finish setup inside the new directory instead of rerunning the scaffolder.
 
 For a scoped package name:
 
@@ -53,7 +55,7 @@ For a scoped package name:
 bunx create-pi-extension@latest @my-scope/my-pi-tool
 ```
 
-For non-interactive scaffolding, add `--yes` (or `-y`) before or after the package name. Use `--version` (or `-v`) to print the CLI version.
+For non-interactive scaffolding, add `--yes` (or `-y`) before or after the package name. This accepts the default prompt answers; it does not skip post-setup. Use `--version` (or `-v`) to print the CLI version.
 
 ### Secondary path: GitHub Template
 
