@@ -36,11 +36,11 @@ try {
 
 ```powershell
 Set-Location my-pi-package
-git init      # このディレクトリで未実行の場合のみ
+git init      # このディレクトリでまだ成功していない場合（未実行・失敗を含む）
 bun install
 ```
 
-`git init` が成功済みなら、`bun install` から再開する。後処理をスキップした場合は、セットアップを完了するときに両方を順に実行する。完了したら上のチェックリストに戻る。
+`git init` に失敗していた場合は、原因を解消したあと再実行し、成功してから `bun install` に進む。`git init` が成功済みの場合だけ、`bun install` から再開する。後処理をスキップした場合は、セットアップを完了するときに両方を順に実行する。完了したら上のチェックリストに戻る。
 
 ### Secondary path: GitHub Template
 
