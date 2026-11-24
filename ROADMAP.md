@@ -21,7 +21,7 @@ Release snapshot checked: **2026-11-23 UTC**.
 | Latest GitHub release / tag | [`v0.3.4`](https://github.com/eiei114/pi-extension-template/releases/tag/v0.3.4) (2026-11-07 UTC) |
 | Root `package.json` version | `0.3.1` (private template source; retained for generated scaffold projects) |
 | `create-pi-extension` on npm | **Published** — npm `latest` is `0.3.4`, matching the [CLI workspace manifest](packages/create-pi-extension/package.json). |
-| Legacy `pi-extension-template` on npm | `0.1.6` remains on npm as a legacy root package; README steers users to `create-pi-extension`. |
+| Legacy `pi-extension-template` on npm | `0.1.6` is still available and tagged `latest`, but is **deprecated**. The npm deprecation message recommends `bunx create-pi-extension`. |
 | CI (`.github/workflows/ci.yml`) | Green on `main`. Runs typecheck, `sync:template`, tests, `smoke:pi`, `review:guardrails`, `pack:check`, and template-sync assertions. |
 | Pi SDK alignment | Examples are pinned to Pi **1.5.0** (`@earendil-works/*` devDeps at `1.5.0`). `ctx.hasUI` guards, lifecycle events, and TUI custom entries verified against the actual host. |
 | Example coverage | Extension (`hello`, typed tool, TUI dashboard, skill-bridge, package-layout), Agent Skill, prompt template, theme (all 51 tokens), plus entrypoint-shape checks. |
@@ -49,9 +49,9 @@ Release snapshot checked: **2026-11-23 UTC**.
 
 ### 1.2 What is at risk
 
-- **Two package names on npm are out of sync with intent**: the legacy root
-  `pi-extension-template` is still published while `create-pi-extension` is the
-  intended onboarding artifact (TD-02, human-owned deprecation decision).
+- **Onboarding confusion** — the deprecated `pi-extension-template@0.1.6`
+  remains available on npm. Direct new users to `bunx create-pi-extension`;
+  the npm deprecation does not affect use of this repository as a GitHub Template.
 - **Runtime coverage is still partial** — entrypoint shape checks catch export
   regressions without launching Pi. CI also runs [`smoke:pi`](scripts/pi-sdk-smoke.mjs),
   which launches the pinned Pi CLI in offline RPC mode and checks extension
@@ -108,7 +108,7 @@ sacrificing the minimal template surface.
 | ID | Item | Severity | Ownership | Notes |
 |---|---|---|---|---|
 | TD-01 | ~~`create-pi-extension` not on npm~~ — **resolved** for `0.1.8` / `0.2.x` publishes; keep `publish.yml` diagnostics for first-time forks | ~~Blocker~~ Closed (this repo) | **Human** for new forks | README + `publish.yml` now distinguish unregistered package vs already-published skip. |
-| TD-02 | Legacy root `pi-extension-template` is published on npm (`0.1.6`) despite docs saying it is not | High | **Human** (npm ownership) | Decide: deprecate on npm, or transfer. |
+| TD-02 | ~~Deprecate the legacy `pi-extension-template` npm package~~ — **resolved** (DOT-714) | ~~High~~ Closed | **Human** (npm ownership) | `0.1.6` remains available on npm with the deprecation message `Use: bunx create-pi-extension`. |
 | TD-03 | Broader Pi runtime validation of examples remains open | Medium | AI | Export-shape checks validate entrypoints; the [offline RPC smoke](scripts/pi-sdk-smoke.mjs) checks selected behavior in the real Pi host without model inference. Full example coverage and interactive or model-backed end-to-end validation remain open (see §3). |
 | TD-04 | ~~`CHANGELOG.md` has duplicate headers / undated versions~~ — **resolved** (DOT-1693) | ~~Low~~ Closed | AI | All shipped versions now have ISO dates; `Unreleased` holds only pending work. |
 | TD-05 | ~~Docs reference resolved follow-up placeholders~~ — **resolved** (DOT-1218) | ~~Low~~ Closed | AI | Regression test in `tests/smoke.test.mjs` guards against reintroduction. |
@@ -118,7 +118,7 @@ sacrificing the minimal template surface.
 
 > **Human-owned areas** (per project policy): release/publish, npm ownership,
 > secrets, billing, permissions. AI agents must not perform these; flag them
-> and stop. TD-02 requires a human maintainer to act on npm.
+> and stop.
 
 ---
 
@@ -206,7 +206,8 @@ it through and move the detail into the relevant release section above.
 
 1. Read §1 (status) and §4 (debt) to confirm nothing changed since last week.
 2. Pick the **first non-struck seed in §5** whose dependencies are met and
-   whose ownership allows an AI run (avoid TD-02 — human-owned).
+   whose ownership allows an AI run. Closed debt entries such as TD-02 do not
+   need new seeds.
 3. Promote it to a backlog issue scoped to the listed acceptance criteria.
 4. When the seed's PR merges, strike the row here and record it under the
    target release in §3.
