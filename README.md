@@ -81,7 +81,9 @@ npm install
 npm run ci
 ```
 
-`npm run ci` runs typecheck, `sync:template`, tests, `review:guardrails`, a `create-pi-extension` pack check, and template sync assertions.
+`npm run ci` runs typecheck, `sync:template`, tests, `smoke:pi`, `review:guardrails`, a `create-pi-extension` pack check, and template sync assertions.
+
+`smoke:pi` exercises selected extension behavior in the pinned Pi host offline. It does not provide interactive or model-backed end-to-end coverage. See the [Pi SDK compatibility guide](docs/pi-sdk-compatibility.md#runtime-verification) for details.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`docs/template-sync.md`](docs/template-sync.md).
 
