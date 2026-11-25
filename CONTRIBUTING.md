@@ -4,6 +4,10 @@ Thanks for helping improve this Pi package.
 
 ## Development
 
+Run these commands from the repository root with Node.js 24 (to match CI),
+npm, and Bun on your `PATH`. Although you start validation with npm,
+`npm run ci` calls `sync:template`, which uses Bun to run the template sync script.
+
 ```bash
 npm install
 npm run ci
