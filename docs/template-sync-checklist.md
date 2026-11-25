@@ -42,14 +42,13 @@
 
 ## CI check
 
+以下はテンプレートのリポジトリルート（生成されたプロジェクトではない）で実行する。
+
 - [ ] `npm run typecheck` が通る
-- [ ] `npm test` がすべてのテストにパスする
-  - [ ] `tests/greeting.test.mjs`
-  - [ ] `tests/format-table.test.mjs`
-  - [ ] `tests/smoke.test.mjs`
-  - [ ] `tests/create-pi-extension-cli.test.mjs`
-- [ ] `npm run sync:template` を再実行して `tests/sync-template.test.mjs` がパスする
-- [ ] `node --test tests/sync-template.test.mjs` がパスする
+- [ ] `npm test` が通る（リポジトリルート専用の CLI テスト `tests/create-pi-extension-cli.test.mjs` を含む）
+- [ ] `npm run sync:template:check` でバンドル済みテンプレートを再生成し、リポジトリルート専用の `tests/sync-template.test.mjs` が通る
+
+CLI テストと同期テストは生成されたプロジェクトに含まれない。次のセクションの `npm run ci` は、生成されたプロジェクトのルートで実行する別の確認。
 
 ## CLI scaffold test（オプションだが推奨）
 
