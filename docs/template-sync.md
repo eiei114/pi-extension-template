@@ -14,15 +14,25 @@ This writes to `packages/create-pi-extension/template/`. The directory is gitign
 
 ## What gets copied
 
-Everything under the repository root is copied recursively, except the **sync exclusion list**:
+[`scripts/sync-template.ts`](../scripts/sync-template.ts) is the source of truth
+for what goes into the CLI bundle. It walks the repository directory and copies
+regular files recursively; it does not use Git's tracked-file list or
+`.gitignore` as a filter. Run sync from a clean checkout: unrelated local files
+can be copied if they don't match an exclusion.
 
-- `packages/`
-- `scaffold/`
-- `node_modules/`
-- `.git/`
-- root `package-lock.json`
-- root `bun.lock` / `bun.lockb`
-- `ROADMAP.md` (maintainer-only planning doc for this repository)
+- **Top-level exclusions:** `packages/`, `scaffold/`, `node_modules/`, `.git/`,
+  `package-lock.json`, `bun.lock`, `bun.lockb`, and the maintainer-only
+  `ROADMAP.md`.
+- **Nested exclusions:** `.git` and `node_modules` are also skipped at any depth.
+- **Path-specific exclusions:** the script's `CLI_TEMPLATE_EXCLUSIONS` list
+  skips specific repository-only docs, tooling, and tests, such as this page,
+  `scripts/sync-template.ts`, and `tests/sync-template.test.mjs`.
+- **README replacement:** sync skips the root `README.md` and copies
+  `scaffold/package-readme.md` separately as the bundle's `README.md`.
+
+These rules apply when building the bundle. Later, when the CLI creates a new
+project from that bundle, it removes any bootstrap docs still present in the
+generated project. That cleanup is separate from the sync exclusions.
 
 ## Package versions
 
